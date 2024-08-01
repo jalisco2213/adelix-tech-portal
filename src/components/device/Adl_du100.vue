@@ -35,7 +35,7 @@ const exportToZIP = async () => {
   let y = topMargin;
 
   for (let i = 0; i < shields.value.length; i++) {
-    const element = document.querySelectorAll('.du110-info')[i];
+    const element = document.querySelectorAll('.du100-info')[i];
     if (element) {
       const canvas = await html2canvas(element);
       const image = canvas.toDataURL("image/png");
@@ -58,20 +58,20 @@ const exportToZIP = async () => {
 
 
       const imageBlob = await new Promise(resolve => canvas.toBlob(resolve));
-      zip.file(`ADL-DU110_${shields.value[i].serial}.png`, imageBlob);
+      zip.file(`ADL-DU100_${shields.value[i].serial}.png`, imageBlob);
     }
   }
 
   const pdfBlob = pdf.output('blob');
-  zip.file(`ADL-DU110_${serial.value}.pdf`, pdfBlob);
+  zip.file(`ADL-DU100_${serial.value}.pdf`, pdfBlob);
 
   const cdrBlob = pdf.output('blob');
-  zip.file(`ADL-DU110_${serial.value}.cdr`, cdrBlob);
+  zip.file(`ADL-DU100_${serial.value}.cdr`, cdrBlob);
 
   const content = await zip.generateAsync({ type: 'blob' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(content);
-  link.download = `ADL-DU110_${serial.value}.zip`;
+  link.download = `ADL-DU100_${serial.value}.zip`;
   link.click();
 };
 
@@ -88,7 +88,7 @@ const showSample = async () => {
   let y = topMargin;
 
   for (let i = 0; i < shields.value.length; i++) {
-    const element = document.querySelectorAll('.du110-info')[i];
+    const element = document.querySelectorAll('.du100-info')[i];
     if (element) {
       const canvas = await html2canvas(element);
       const image = canvas.toDataURL("image/png");
@@ -125,7 +125,7 @@ let country = ref(false);
 </script>
 
 <template>
-  <div class="du110-country" style="display: flex; align-items: center;">
+  <div class="du100-country" style="display: flex; align-items: center;">
     <input type="checkbox" v-model="country" id="country">
     <label for="country">Украина</label>
   </div>
@@ -152,27 +152,30 @@ let country = ref(false);
   <button @click="addShield">Добавить шильд</button>
 
   <div class="shields-container">
-    <div class="du110-container" v-for="(shield, index) in shields" :key="shield.id">
-      <div class="du110-info">
-        <div class="du110-content">
-          <div class="du110-header">
-            <p v-if="!country" style="padding-top: 10px; font-size: 13px; font-weight: bold;">PORTABLE UNIVERSAL <br> HARDNESS TESTER</p>
-            <p v-else style="padding-top: 10px; font-size: 13px; font-weight: bold;">Універсальний твердомір</p>
-            
+    <div class="du100-container" v-for="(shield, index) in shields" :key="shield.id">
+      <div class="du100-info">
+        <div class="du100-content">
+          <div class="du100-header">
+            <p v-if="!country" style="padding-top: 10px; font-size: 13px; font-weight: bold;"> PORTABLE DYNAMIC <br>
+              HARDNESS TESTER</p>
+            <p v-else style="padding-top: 10px; font-size: 13px; font-weight: bold;">ПОРТАТИВНИЙ <br> ДИНАМІЧНИЙ ТВЕРДОМІР</p>
+
             <h1 v-if="!country" style="padding: 7px 0 10px; line-height: 1;">
               <span style="font-weight: 900; letter-spacing: 1px; color: rgb(43, 149, 238);">ADELIX</span> <br>
-              <span style="font-size: 25px; letter-spacing: 1px; font-weight: 800;">ADL-DU110</span>
+              <span style="font-size: 25px; letter-spacing: 1px; font-weight: 800;">ADL-DU100</span>
             </h1>
 
             <h1 v-else style="padding: 7px 0 10px; line-height: .8;">
               <span style="font-weight: 900; letter-spacing: 1px; color: rgb(43, 149, 238);">ADELIX</span> <br>
-              <span style="font-weight: 400; font-size: 25px; letter-spacing: 1px; color: rgb(255, 237, 0);">УКРАЇНА</span> <br>
-              <span style="font-size: 25px; letter-spacing: 1px; font-weight: 800;">ADL-DU110</span>
+              <span
+                style="font-weight: 400; font-size: 25px; letter-spacing: 1px; color: rgb(255, 237, 0);">УКРАЇНА</span>
+              <br>
+              <span style="font-size: 25px; letter-spacing: 1px; font-weight: 800;">ADL-DU100</span>
             </h1>
           </div>
 
-          <div class="du110-center">
-            <div class="du110-main">
+          <div class="du100-center">
+            <div class="du100-main">
               <div>
                 <label v-if="!country" for="serial">S/N:</label>
                 <label v-else for="serial">Сер №:</label>
@@ -187,17 +190,18 @@ let country = ref(false);
               </div>
             </div>
 
-            <div style="margin-top: 5px;" class="du110-part">
+            <div style="margin-top: 5px;" class="du100-part">
               <label v-if="!country" for="age">Art/N:</label>
               <label v-else for="age">Парт №:</label>
-              
-              <input type="text" style="font-size: 17px; width: 100%; margin-bottom: 8px;" id="part" v-model="shield.part">
+
+              <input type="text" style="font-size: 17px; width: 100%; margin-bottom: 8px;" id="part"
+                v-model="shield.part">
             </div>
           </div>
 
-          <div class="du110-footer"
+          <div class="du100-footer"
             style="display: flex; gap: 10px; justify-content: space-between; align-items: center;">
-            <img style="width: 110px; height: 45px; " src="/logo.png"  alt="logo">
+            <img style="width: 110px; height: 45px; " src="/logo.png" alt="logo">
             <img style="width: 50px" src="/qrcode.png" alt="qr">
           </div>
         </div>
@@ -256,26 +260,25 @@ button {
   margin-top: 10px;
 }
 
-.du110-container {
+.du100-container {
   border: 1px solid #111;
   width: 220px;
   position: absolute;
   left: -500px;
 }
 
-.du110-content {
+.du100-content {
   padding: 7px;
 }
 
-
-.du110-info {
+.du100-info {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: auto auto;
   border: 1px solid #111;
 
-  .du110-header {
+  .du100-header {
 
     h1,
     p {
@@ -294,17 +297,17 @@ label {
   font-size: 12px;
 }
 
-.du110-header {
+.du100-header {
   text-align: center;
   background: #111;
 }
 
-.du110-footer {
+.du100-footer {
   background: #111;
   padding: 10px;
 }
 
-.du110-center {
+.du100-center {
   background: rgb(43, 149, 238);
   padding: 15px;
 
@@ -313,7 +316,7 @@ label {
     border: 0;
   }
 
-  .du110-main {
+  .du100-main {
     display: flex;
     gap: 8px;
     justify-content: space-between;

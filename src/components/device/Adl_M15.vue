@@ -6,15 +6,14 @@ import { jsPDF } from "jspdf";
 
 let age = ref('2024');
 let serial = ref('');
-let part = ref('');
 let pdfPreview = ref(null);
 let isModalVisible = ref(false);
 
-const shields = ref([{ id: 1, serial: '', part: '' }]);
+const shields = ref([{ id: 1, serial: '' }]);
 const newShieldId = ref(2);
 
 const addShield = () => {
-  shields.value.push({ id: newShieldId.value++, serial: '', part: '' });
+  shields.value.push({ id: newShieldId.value++, serial: '' });
 };
 
 const removeShield = (id) => {
@@ -24,8 +23,8 @@ const removeShield = (id) => {
 const exportToZIP = async () => {
   const zip = new JSZip();
   const pdf = new jsPDF('p', 'mm', 'a4');
-  const imgWidth = 39.5;
-  const imgHeight = 55;
+  const imgWidth = 65.3;
+  const imgHeight = 24.7;
   const topMargin = 5;
   const rightMargin = 5;
   const bottomMargin = 0;
@@ -35,9 +34,9 @@ const exportToZIP = async () => {
   let y = topMargin;
 
   for (let i = 0; i < shields.value.length; i++) {
-    const element = document.querySelectorAll('.du110-info')[i];
+    const element = document.querySelectorAll('.M15-info')[i];
     if (element) {
-      const canvas = await html2canvas(element);
+      const canvas = await html2canvas(element, { scale: 2 });
       const image = canvas.toDataURL("image/png");
 
 
@@ -58,27 +57,27 @@ const exportToZIP = async () => {
 
 
       const imageBlob = await new Promise(resolve => canvas.toBlob(resolve));
-      zip.file(`ADL-DU110_${shields.value[i].serial}.png`, imageBlob);
+      zip.file(`ADL-M15_${shields.value[i].serial}.png`, imageBlob);
     }
   }
 
   const pdfBlob = pdf.output('blob');
-  zip.file(`ADL-DU110_${serial.value}.pdf`, pdfBlob);
+  zip.file(`ADL-M15_${serial.value}.pdf`, pdfBlob);
 
   const cdrBlob = pdf.output('blob');
-  zip.file(`ADL-DU110_${serial.value}.cdr`, cdrBlob);
+  zip.file(`ADL-M15_${serial.value}.cdr`, cdrBlob);
 
   const content = await zip.generateAsync({ type: 'blob' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(content);
-  link.download = `ADL-DU110_${serial.value}.zip`;
+  link.download = `ADL-M15_${serial.value}.zip`;
   link.click();
 };
 
 const showSample = async () => {
   const pdf = new jsPDF('p', 'mm', 'a4');
-  const imgWidth = 39.5;
-  const imgHeight = 55;
+  const imgWidth = 65.3;
+  const imgHeight = 24.7;
   const topMargin = 5;
   const rightMargin = 5;
   const bottomMargin = 0;
@@ -88,11 +87,11 @@ const showSample = async () => {
   let y = topMargin;
 
   for (let i = 0; i < shields.value.length; i++) {
-    const element = document.querySelectorAll('.du110-info')[i];
+    const element = document.querySelectorAll('.M15-info')[i];
     if (element) {
-      const canvas = await html2canvas(element);
-      const image = canvas.toDataURL("image/png");
+      const canvas = await html2canvas(element, { scale: 2 });
 
+      const image = canvas.toDataURL("image/png");
 
       if (x < leftMargin) {
         x = pdf.internal.pageSize.getWidth() - imgWidth - rightMargin;
@@ -125,7 +124,7 @@ let country = ref(false);
 </script>
 
 <template>
-  <div class="du110-country" style="display: flex; align-items: center;">
+  <div class="M15-country" style="display: flex; align-items: center;">
     <input type="checkbox" v-model="country" id="country">
     <label for="country">Украина</label>
   </div>
@@ -137,7 +136,6 @@ let country = ref(false);
           style="display: flex; gap: 5px; align-items: center; margin-bottom: 10px;">
           <div style="display: flex; flex-direction: column;;">
             <input type="text" v-model="shield.serial" placeholder="Серийный номер">
-            <input type="text" v-model="shield.part" placeholder="Номер партии">
           </div>
           <button @click="removeShield(shield.id)"
             style="background: red; color: white; border: none; padding: 5px; cursor: pointer;">
@@ -152,53 +150,47 @@ let country = ref(false);
   <button @click="addShield">Добавить шильд</button>
 
   <div class="shields-container">
-    <div class="du110-container" v-for="(shield, index) in shields" :key="shield.id">
-      <div class="du110-info">
-        <div class="du110-content">
-          <div class="du110-header">
-            <p v-if="!country" style="padding-top: 10px; font-size: 13px; font-weight: bold;">PORTABLE UNIVERSAL <br> HARDNESS TESTER</p>
-            <p v-else style="padding-top: 10px; font-size: 13px; font-weight: bold;">Універсальний твердомір</p>
-            
-            <h1 v-if="!country" style="padding: 7px 0 10px; line-height: 1;">
-              <span style="font-weight: 900; letter-spacing: 1px; color: rgb(43, 149, 238);">ADELIX</span> <br>
-              <span style="font-size: 25px; letter-spacing: 1px; font-weight: 800;">ADL-DU110</span>
-            </h1>
+    <div class="M15-container" v-for="(shield, index) in shields" :key="shield.id">
+      <div class="M15-info">
+        <div class="M15-header"
+          style="padding: 8px 15px 4px; display: flex; align-items: center; justify-content: space-between; gap: 5px;">
+          <img v-if="!country" style="width: 75px;" src="/logo.png" alt="logo">
+          <img v-else style="width: 70px;" src="/logo.png" alt="logo">
 
-            <h1 v-else style="padding: 7px 0 10px; line-height: .8;">
-              <span style="font-weight: 900; letter-spacing: 1px; color: rgb(43, 149, 238);">ADELIX</span> <br>
-              <span style="font-weight: 400; font-size: 25px; letter-spacing: 1px; color: rgb(255, 237, 0);">УКРАЇНА</span> <br>
-              <span style="font-size: 25px; letter-spacing: 1px; font-weight: 800;">ADL-DU110</span>
-            </h1>
+
+          <p v-if="!country" style="color: #eee; margin: 0; padding: 0; font-weight: 700;">
+            <span style="color: #2b95ee; font-weight: 900">ADELIX</span> PORTABLE <br> VIBRATION METER
+          </p>
+
+          <p v-else style="color: #eee; margin: 0; padding: 0; font-weight: 700;">
+            <span style="font-size: 11px;">ПОРТАТИВНИЙ ВІБРОМЕТР</span> <br>
+          <div class="" style="display: flex; justify-content: space-between;">
+            <p style="font-size: 13px; color: rgb(43, 149, 238)">ADELIX</p>
+            <p style="font-size: 13px; color: #FFED00;">UKRAINE</p>
           </div>
+          </p>
 
-          <div class="du110-center">
-            <div class="du110-main">
-              <div>
-                <label v-if="!country" for="serial">S/N:</label>
-                <label v-else for="serial">Сер №:</label>
 
-                <input style="width: 120px; font-size: 17px;" v-model="shield.serial" type="text" id="serial">
-              </div>
-              <div>
-                <label v-if="!country" for="age">Date:</label>
-                <label v-else for="age">Виг:</label>
+          <img style="height: 30px;" src="/bluetooth.png" alt="logo">
+        </div>
 
-                <input type="text" style="font-size: 17px; width: 100%" id="age" v-model="age">
-              </div>
+        <div class="M15-footer" style="padding: 5px 10px 10px;">
+          <div class="M15-footer_content"
+            style="background: rgb(114, 114, 113); padding: 5px 10px; border-radius: 10px; display: flex; justify-content: space-between;">
+            <p style="font-weight: 700; font-size: 20px; color: #2b95ee;">ADL-M15</p>
+
+            <div class="M15-footer-serial"
+              style="background: #eee; border-radius: 15px; padding: 2px 10px; text-align: center; display: flex; align-items: center;">
+              <p v-if="!country" style="font-weight: 500; font-size: 12px; color: #111;">S/N</p>
+              <p v-else style="font-weight: 700; font-size: 12px; color: #111;">№</p>
+              &nbsp;
+              <span style="font-weight: 700; font-size: 12px;">{{ shield.serial }}</span>
             </div>
 
-            <div style="margin-top: 5px;" class="du110-part">
-              <label v-if="!country" for="age">Art/N:</label>
-              <label v-else for="age">Парт №:</label>
-              
-              <input type="text" style="font-size: 17px; width: 100%; margin-bottom: 8px;" id="part" v-model="shield.part">
+            <div class="M15-footer-year"
+              style="background: #eee; font-weight: 700; border-radius: 15px; font-size: 12px; padding: 2px 10px; text-align: center; display: flex; align-items: center;">
+              2024
             </div>
-          </div>
-
-          <div class="du110-footer"
-            style="display: flex; gap: 10px; justify-content: space-between; align-items: center;">
-            <img style="width: 110px; height: 45px; " src="/logo.png"  alt="logo">
-            <img style="width: 50px" src="/qrcode.png" alt="qr">
           </div>
         </div>
       </div>
@@ -256,67 +248,12 @@ button {
   margin-top: 10px;
 }
 
-.du110-container {
+.M15-info {
   border: 1px solid #111;
-  width: 220px;
+  width: 320px;
+  background: #111;
+  border-radius: 10px;
   position: absolute;
   left: -500px;
-}
-
-.du110-content {
-  padding: 7px;
-}
-
-
-.du110-info {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: auto auto;
-  border: 1px solid #111;
-
-  .du110-header {
-
-    h1,
-    p {
-      padding: 0;
-      margin: 0;
-    }
-  }
-}
-
-h1,
-p {
-  color: #eee;
-}
-
-label {
-  font-size: 12px;
-}
-
-.du110-header {
-  text-align: center;
-  background: #111;
-}
-
-.du110-footer {
-  background: #111;
-  padding: 10px;
-}
-
-.du110-center {
-  background: rgb(43, 149, 238);
-  padding: 15px;
-
-  input {
-    border-radius: 0;
-    border: 0;
-  }
-
-  .du110-main {
-    display: flex;
-    gap: 8px;
-    justify-content: space-between;
-  }
 }
 </style>
