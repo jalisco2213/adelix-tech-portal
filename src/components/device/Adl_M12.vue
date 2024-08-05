@@ -4,6 +4,7 @@ import html2canvas from "html2canvas";
 import JSZip from "jszip";
 import { jsPDF } from "jspdf";
 import Switch from "../utils/SwitchCountry.vue";
+import NavBtn from "../utils/NavBtn.vue";
 
 let age = ref('2024');
 let serial = ref('');
@@ -194,10 +195,7 @@ let country = ref(false);
     </div>
   </div>
 
-  <div class="nav-button">
-    <button @click="exportToZIP" class="nav-btn export-btn">Скачать</button>
-    <button @click="showSample" class="nav-btn sample-btn">Образец</button>
-  </div>
+  <NavBtn :exportToZIP="exportToZIP" :showSample="showSample" />
 
   <div v-if="isModalVisible" class="modal-overlay" @click="hideModal">
     <div class="modal-content" @click.stop>
