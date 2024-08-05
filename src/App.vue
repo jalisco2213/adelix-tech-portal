@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue';
 import Adl_du110 from './components/device/Adl_du110.vue';
 import Adl_du100 from './components/device/Adl_du100.vue';
 import Adl_du120 from './components/device/Adl_du120.vue';
@@ -7,8 +8,8 @@ import Adl_P3 from './components/device/Adl_p3.vue';
 import Adl_M12 from './components/device/Adl_M12.vue';
 import Adl_M15 from './components/device/Adl_M15.vue';
 import Adl_M20 from './components/device/Adl_M20.vue';
-
-import { ref } from 'vue';
+import Adl_ut20 from './components/device/Adl_ut20.vue';
+import Adl_ut25 from './components/device/Adl_ut25.vue';
 
 const selectedDevice = ref('standart');
 </script>
@@ -30,8 +31,9 @@ const selectedDevice = ref('standart');
           <option value="ADL-M15">M15</option>
           <option value="ADL-M20">M20</option>
         </optgroup>
-        <optgroup label="Виброанализаторы">
-          
+        <optgroup label="Толщиномеры">
+          <option value="ADL-UT20">UT20</option>
+          <option value="ADL-UT25">UT25</option>
         </optgroup>
       </select>
     </div>
@@ -45,6 +47,8 @@ const selectedDevice = ref('standart');
       <Adl_M12 v-if="selectedDevice === 'ADL-M12'" />
       <Adl_M15 v-if="selectedDevice === 'ADL-M15'" />
       <Adl_M20 v-if="selectedDevice === 'ADL-M20'" />
+      <Adl_ut20 v-if="selectedDevice === 'ADL-UT20'" />
+      <Adl_ut25 v-if="selectedDevice === 'ADL-UT25'" />
     </div>
   </div>
 </template>
