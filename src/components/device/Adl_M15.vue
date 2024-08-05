@@ -3,11 +3,16 @@ import { ref, computed } from "vue";
 import html2canvas from "html2canvas";
 import JSZip from "jszip";
 import { jsPDF } from "jspdf";
+import Switch from "../utils/SwitchCountry.vue";
 
 let age = ref('2024');
 let serial = ref('');
 let pdfPreview = ref(null);
 let isModalVisible = ref(false);
+
+const updateCountry = (value) => {
+  country.value = value;
+};
 
 const shields = ref([{ id: 1, serial: '' }]);
 const newShieldId = ref(2);
@@ -124,30 +129,23 @@ let country = ref(false);
 </script>
 
 <template>
-  <div class="M15-country" style="display: flex; align-items: center;">
-    <input type="checkbox" v-model="country" id="country">
-    <label for="country">Украина</label>
-  </div>
+  <h1 class="device-header">Портативный виброметр ADL-M15</h1>
 
-  <div class="device-nav" style="display: flex; gap: 10px; align-items: center;">
-    <div>
-      <div>
-        <div v-for="(shield, index) in shields" :key="shield.id"
-          style="display: flex; gap: 5px; align-items: center; margin-bottom: 10px;">
-          <div style="display: flex; flex-direction: column;;">
-            <input type="text" v-model="shield.serial" placeholder="Серийный номер">
-          </div>
-          <button @click="removeShield(shield.id)"
-            style="background: red; color: white; border: none; padding: 5px; cursor: pointer;">
-            <img style="width: 30px; display: flex; justify-content: center; align-items: center" src="/svg/delete.svg"
-              alt="delete">
-          </button>
+  <Switch :country="country" @update:country="updateCountry" />
+
+  <div class="device-nav">
+    <div class="shields-container">
+      <div v-for="(shield, index) in shields" :key="shield.id" class="shield-item">
+        <div class="shield-details">
+          <input type="text" v-model="shield.serial" placeholder="Серийный номер" class="input-field">
         </div>
+        <button @click="removeShield(shield.id)" class="remove-btn">
+          <img src="/svg/delete.svg" alt="delete" class="remove-icon">
+        </button>
       </div>
+      <button @click="addShield" class="add-shield-btn">+</button>
     </div>
   </div>
-
-  <button @click="addShield">Добавить шильд</button>
 
   <div class="shields-container">
     <div class="M15-container" v-for="(shield, index) in shields" :key="shield.id">
@@ -158,15 +156,15 @@ let country = ref(false);
           <img v-else style="width: 70px;" src="/logo.png" alt="logo">
 
 
-          <p v-if="!country" style="color: #eee; margin: 0; padding: 0; font-weight: 700;">
+          <p v-if="!country" style=" font-size: 15px; color: #eee; margin: 0; padding: 0; font-weight: 700;">
             <span style="color: #2b95ee; font-weight: 900">ADELIX</span> PORTABLE <br> VIBRATION METER
           </p>
 
-          <p v-else style="color: #eee; margin: 0; padding: 0; font-weight: 700;">
-            <span style="font-size: 11px;">ПОРТАТИВНИЙ ВІБРОМЕТР</span> <br>
+          <p v-else style="color: #eee; margin: 0; padding: 0; font-weight: 700; ">
+            <span style="font-size: 10px;">ПОРТАТИВНИЙ ВІБРОМЕТР</span> <br>
           <div class="" style="display: flex; justify-content: space-between;">
-            <p style="font-size: 13px; color: rgb(43, 149, 238)">ADELIX</p>
-            <p style="font-size: 13px; color: #FFED00;">UKRAINE</p>
+            <p style="padding-bottom: 5px;font-size: 15px; color: rgb(43, 149, 238)">ADELIX</p>
+            <p style="padding-bottom: 5px;font-size: 15px; color: #FFED00;">UKRAINE</p>
           </div>
           </p>
 
@@ -198,8 +196,8 @@ let country = ref(false);
   </div>
 
   <div class="nav-button">
-    <button @click="exportToZIP">Скачать</button>
-    <button @click="showSample">Образец</button>
+    <button @click="exportToZIP" class="nav-btn export-btn">Скачать</button>
+    <button @click="showSample" class="nav-btn sample-btn">Образец</button>
   </div>
 
   <div v-if="isModalVisible" class="modal-overlay" @click="hideModal">
@@ -224,35 +222,11 @@ let country = ref(false);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-right: 10px;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-
-  &:last-child {
-    margin-right: 0;
-  }
-}
-
-.nav-button {
-  margin-top: 10px;
-}
-
 .M15-info {
   border: 1px solid #111;
-  width: 320px;
+  width: 288px;
   background: #111;
-  border-radius: 10px;
+  border-radius: 5px;
   position: absolute;
   left: -500px;
 }

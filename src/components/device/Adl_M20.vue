@@ -3,12 +3,17 @@ import { ref, computed } from "vue";
 import html2canvas from "html2canvas";
 import JSZip from "jszip";
 import { jsPDF } from "jspdf";
+import Switch from "../utils/SwitchCountry.vue";
 
 let age = ref('2024');
 let serial = ref('');
 let part = ref('');
 let pdfPreview = ref(null);
 let isModalVisible = ref(false);
+
+const updateCountry = (value) => {
+  country.value = value;
+};
 
 const shields = ref([{ id: 1, serial: '', part: '' }]);
 const newShieldId = ref(2);
@@ -125,31 +130,24 @@ let country = ref(false);
 </script>
 
 <template>
-  <div class="M20-country" style="display: flex; align-items: center;">
-    <input type="checkbox" v-model="country" id="country">
-    <label for="country">Украина</label>
-  </div>
+  <h1 class="device-header">Портативный виброметр <br> ADL-M20</h1>
 
-  <div class="device-nav" style="display: flex; gap: 10px; align-items: center;">
-    <div>
-      <div>
-        <div v-for="(shield, index) in shields" :key="shield.id"
-          style="display: flex; gap: 5px; align-items: center; margin-bottom: 10px;">
-          <div style="display: flex; flex-direction: column;;">
-            <input type="text" v-model="shield.serial" placeholder="Серийный номер">
-            <input type="text" v-model="shield.part" placeholder="Номер партии">
-          </div>
-          <button @click="removeShield(shield.id)"
-            style="background: red; color: white; border: none; padding: 5px; cursor: pointer;">
-            <img style="width: 30px; display: flex; justify-content: center; align-items: center" src="/svg/delete.svg"
-              alt="delete">
-          </button>
+  <Switch :country="country" @update:country="updateCountry" />
+
+  <div class="device-nav">
+    <div class="shields-container">
+      <div v-for="(shield, index) in shields" :key="shield.id" class="shield-item">
+        <div class="shield-details">
+          <input type="text" v-model="shield.serial" placeholder="Серийный номер" class="input-field">
+          <input type="text" v-model="shield.part" placeholder="Номер партии" class="input-field">
         </div>
+        <button @click="removeShield(shield.id)" class="remove-btn">
+          <img src="/svg/delete.svg" alt="delete" class="remove-icon">
+        </button>
       </div>
+      <button @click="addShield" class="add-shield-btn">+</button>
     </div>
   </div>
-
-  <button @click="addShield">Добавить шильд</button>
 
   <div class="shields-container">
     <div class="M20-container" v-for="(shield, index) in shields" :key="shield.id">
@@ -200,8 +198,8 @@ let country = ref(false);
   </div>
 
   <div class="nav-button">
-    <button @click="exportToZIP">Скачать</button>
-    <button @click="showSample">Образец</button>
+    <button @click="exportToZIP" class="nav-btn export-btn">Скачать</button>
+    <button @click="showSample" class="nav-btn sample-btn">Образец</button>
   </div>
 
   <div v-if="isModalVisible" class="modal-overlay" @click="hideModal">
@@ -224,30 +222,6 @@ let country = ref(false);
   border-radius: 10px;
   background-color: #f9f9f9;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-right: 10px;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-
-  &:last-child {
-    margin-right: 0;
-  }
-}
-
-.nav-button {
-  margin-top: 10px;
 }
 
 .M20-info {

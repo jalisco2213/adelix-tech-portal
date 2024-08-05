@@ -3,6 +3,7 @@ import { ref, computed } from "vue";
 import html2canvas from "html2canvas";
 import JSZip from "jszip";
 import { jsPDF } from "jspdf";
+import Switch from "../utils/SwitchCountry.vue";
 
 let country = ref(false);
 let age = ref('2024');
@@ -10,6 +11,10 @@ let serial = ref('');
 let part = ref('');
 let pdfPreview = ref(null);
 let isModalVisible = ref(false);
+
+const updateCountry = (value) => {
+  country.value = value;
+};
 
 const hideModal = () => {
   isModalVisible.value = false;
@@ -122,31 +127,23 @@ const showSample = async () => {
 </script>
 
 <template>
-  <div class="du120-country" style="display: flex; align-items: center;">
-    <input type="checkbox" v-model="country" id="country">
-    <label for="country">Украина</label>
-  </div>
+  <h1 class="device-header">Портативный виброметр ADL-P3</h1>
 
-  <div class="device-nav" style="display: flex; gap: 10px; align-items: center;">
-    <div>
-      <div>
-        <div v-for="(shield, index) in shields" :key="shield.id"
-          style="display: flex; gap: 5px; align-items: center; margin-bottom: 10px;">
-          <div style="display: flex; flex-direction: column;;">
-            <input type="text" v-model="shield.serial" placeholder="Серийный номер">
-          </div>
-          <button @click="removeShield(shield.id)"
-            style="background: red; color: white; border: none; padding: 5px; cursor: pointer;">
-            <img style="width: 30px; display: flex; justify-content: center; align-items: center" src="/svg/delete.svg"
-              alt="delete">
-          </button>
+  <Switch :country="country" @update:country="updateCountry" />
+
+  <div class="device-nav">
+    <div class="shields-container">
+      <div v-for="(shield, index) in shields" :key="shield.id" class="shield-item">
+        <div class="shield-details">
+          <input type="text" v-model="shield.serial" placeholder="Серийный номер" class="input-field">
         </div>
+        <button @click="removeShield(shield.id)" class="remove-btn">
+          <img src="/svg/delete.svg" alt="delete" class="remove-icon">
+        </button>
       </div>
+      <button @click="addShield" class="add-shield-btn">+</button>
     </div>
   </div>
-
-  <button @click="addShield">Добавить шильд</button>
-
 
   <div class="p3-container" v-for="(shield, index) in shields" :key="shield.id">
     <div class="p3-content">
@@ -190,8 +187,8 @@ const showSample = async () => {
   </div>
 
   <div class="nav-button">
-    <button @click="exportToZIP">Скачать</button>
-    <button @click="showSample">Образец</button>
+    <button @click="exportToZIP" class="nav-btn export-btn">Скачать</button>
+    <button @click="showSample" class="nav-btn sample-btn">Образец</button>
   </div>
 
   <div v-if="isModalVisible" class="modal-overlay" @click="hideModal">

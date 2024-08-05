@@ -3,24 +3,27 @@ import { ref, computed } from "vue";
 import html2canvas from "html2canvas";
 import JSZip from "jszip";
 import { jsPDF } from "jspdf";
+import Switch from "../utils/SwitchCountry.vue";
 
 let country = ref(false);
-let age = ref('2024');
 let serial = ref('');
-let part = ref('');
 let pdfPreview = ref(null);
 let isModalVisible = ref(false);
+
+const updateCountry = (value) => {
+  country.value = value;
+};
 
 const hideModal = () => {
   isModalVisible.value = false;
   pdfPreview.value = null;
 };
 
-const shields = ref([{ id: 1, serial: '', part: '' }]);
+const shields = ref([{ id: 1, serial: '' }]);
 const newShieldId = ref(2);
 
 const addShield = () => {
-  shields.value.push({ id: newShieldId.value++, serial: '', part: '' });
+  shields.value.push({ id: newShieldId.value++, serial: '' });
 };
 
 const removeShield = (id) => {
@@ -122,31 +125,23 @@ const showSample = async () => {
 </script>
 
 <template>
-  <div class="du120-country" style="display: flex; align-items: center;">
-    <input type="checkbox" v-model="country" id="country">
-    <label for="country">Украина</label>
-  </div>
+  <h1 class="device-header">Портативный виброметр ADL-P1</h1>
 
-  <div class="device-nav" style="display: flex; gap: 10px; align-items: center;">
-    <div>
-      <div>
-        <div v-for="(shield, index) in shields" :key="shield.id"
-          style="display: flex; gap: 5px; align-items: center; margin-bottom: 10px;">
-          <div style="display: flex; flex-direction: column;;">
-            <input type="text" v-model="shield.serial" placeholder="Серийный номер">
-          </div>
-          <button @click="removeShield(shield.id)"
-            style="background: red; color: white; border: none; padding: 5px; cursor: pointer;">
-            <img style="width: 30px; display: flex; justify-content: center; align-items: center" src="/svg/delete.svg"
-              alt="delete">
-          </button>
+  <Switch :country="country" @update:country="updateCountry" />
+
+  <div class="device-nav">
+    <div class="shields-container">
+      <div v-for="(shield, index) in shields" :key="shield.id" class="shield-item">
+        <div class="shield-details">
+          <input type="text" v-model="shield.serial" placeholder="Серийный номер" class="input-field">
         </div>
+        <button @click="removeShield(shield.id)" class="remove-btn">
+          <img src="/svg/delete.svg" alt="delete" class="remove-icon">
+        </button>
       </div>
+      <button @click="addShield" class="add-shield-btn">+</button>
     </div>
   </div>
-
-  <button @click="addShield">Добавить шильд</button>
-
 
   <div class="p1-container" v-for="(shield, index) in shields" :key="shield.id">
     <div class="p1-content">
@@ -175,11 +170,13 @@ const showSample = async () => {
             <div class="p1-power_img" style="display: flex; align-items: center;">
               <img src="/power.png" style="width: 20px; height: 20px;" alt="">
             </div>
-            <div v-if="!country" class="p1-power-subtitle" style="font-size: 10px; line-height: 1; color: #eee; font-weight: 500;">
+            <div v-if="!country" class="p1-power-subtitle"
+              style="font-size: 10px; line-height: 1; color: #eee; font-weight: 500;">
               Power on / <br>
               Measuring
             </div>
-            <div v-else class="p1-power-subtitle" style="font-size: 10px; line-height: 1; color: #eee; font-weight: 500; padding-right: 3px;">
+            <div v-else class="p1-power-subtitle"
+              style="font-size: 10px; line-height: 1; color: #eee; font-weight: 500; padding-right: 3px;">
               Живлення / <br>
               Вимірювання
             </div>
@@ -199,8 +196,8 @@ const showSample = async () => {
   </div>
 
   <div class="nav-button">
-    <button @click="exportToZIP">Скачать</button>
-    <button @click="showSample">Образец</button>
+    <button @click="exportToZIP" class="nav-btn export-btn">Скачать</button>
+    <button @click="showSample" class="nav-btn sample-btn">Образец</button>
   </div>
 
   <div v-if="isModalVisible" class="modal-overlay" @click="hideModal">
@@ -247,7 +244,6 @@ const showSample = async () => {
   width: 290px;
   height: 13px;
   background: rgb(43, 149, 238);
-  // clip-path: polygon(0 0, 99% 0, 100% 100%, 0 100%);
   border-radius: 2px;
 
   span {
@@ -273,7 +269,6 @@ const showSample = async () => {
   width: 115px;
   height: 35px;
   margin: 0 4px 14px 15px;
-  // clip-path: polygon(0 0, 91% 0, 100% 100%, 9% 100%);
   border-radius: 2px;
 }
 
@@ -281,7 +276,6 @@ const showSample = async () => {
   background: rgb(114, 114, 113);
   width: 146px;
   height: 35px;
-  // clip-path: polygon(0 0, 92% 0, 100% 100%, 8% 100%);
   border-radius: 2px;
   display: flex;
   align-items: center;

@@ -3,12 +3,18 @@ import { ref, computed } from "vue";
 import html2canvas from "html2canvas";
 import JSZip from "jszip";
 import { jsPDF } from "jspdf";
+import Switch from "../utils/SwitchCountry.vue";
 
 let age = ref('2024');
 let serial = ref('');
 let part = ref('');
 let pdfPreview = ref(null);
 let isModalVisible = ref(false);
+
+const updateCountry = (value) => {
+  country.value = value;
+};
+
 
 const shields = ref([{ id: 1, serial: '', part: '' }]);
 const newShieldId = ref(2);
@@ -37,7 +43,8 @@ const exportToZIP = async () => {
   for (let i = 0; i < shields.value.length; i++) {
     const element = document.querySelectorAll('.du110-info')[i];
     if (element) {
-      const canvas = await html2canvas(element);
+      const canvas = await html2canvas(element, { scale: 2 });
+
       const image = canvas.toDataURL("image/png");
 
 
@@ -90,7 +97,8 @@ const showSample = async () => {
   for (let i = 0; i < shields.value.length; i++) {
     const element = document.querySelectorAll('.du110-info')[i];
     if (element) {
-      const canvas = await html2canvas(element);
+      const canvas = await html2canvas(element, { scale: 2 });
+
       const image = canvas.toDataURL("image/png");
 
 
@@ -125,40 +133,35 @@ let country = ref(false);
 </script>
 
 <template>
-  <div class="du110-country" style="display: flex; align-items: center;">
-    <input type="checkbox" v-model="country" id="country">
-    <label for="country">Украина</label>
-  </div>
+  <h1 class="device-header">Универсальный твердомер <br> ADL-DU110</h1>
 
-  <div class="device-nav" style="display: flex; gap: 10px; align-items: center;">
-    <div>
-      <div>
-        <div v-for="(shield, index) in shields" :key="shield.id"
-          style="display: flex; gap: 5px; align-items: center; margin-bottom: 10px;">
-          <div style="display: flex; flex-direction: column;;">
-            <input type="text" v-model="shield.serial" placeholder="Серийный номер">
-            <input type="text" v-model="shield.part" placeholder="Номер партии">
-          </div>
-          <button @click="removeShield(shield.id)"
-            style="background: red; color: white; border: none; padding: 5px; cursor: pointer;">
-            <img style="width: 30px; display: flex; justify-content: center; align-items: center" src="/svg/delete.svg"
-              alt="delete">
-          </button>
+  <Switch :country="country" @update:country="updateCountry" />
+
+  <div class="device-nav">
+    <div class="shields-container">
+      <div v-for="(shield, index) in shields" :key="shield.id" class="shield-item">
+        <div class="shield-details">
+          <input type="text" v-model="shield.serial" placeholder="Серийный номер" class="input-field">
+          <input type="text" v-model="shield.part" placeholder="Номер партии" class="input-field">
         </div>
+        <button @click="removeShield(shield.id)" class="remove-btn">
+          <img src="/svg/delete.svg" alt="delete" class="remove-icon">
+        </button>
       </div>
+      <button @click="addShield" class="add-shield-btn">+</button>
     </div>
   </div>
 
-  <button @click="addShield">Добавить шильд</button>
 
   <div class="shields-container">
     <div class="du110-container" v-for="(shield, index) in shields" :key="shield.id">
       <div class="du110-info">
         <div class="du110-content">
           <div class="du110-header">
-            <p v-if="!country" style="padding-top: 10px; font-size: 13px; font-weight: bold;">PORTABLE UNIVERSAL <br> HARDNESS TESTER</p>
+            <p v-if="!country" style="padding-top: 10px; font-size: 13px; font-weight: bold;">PORTABLE UNIVERSAL <br>
+              HARDNESS TESTER</p>
             <p v-else style="padding-top: 10px; font-size: 13px; font-weight: bold;">Універсальний твердомір</p>
-            
+
             <h1 v-if="!country" style="padding: 7px 0 10px; line-height: 1;">
               <span style="font-weight: 900; letter-spacing: 1px; color: rgb(43, 149, 238);">ADELIX</span> <br>
               <span style="font-size: 25px; letter-spacing: 1px; font-weight: 800;">ADL-DU110</span>
@@ -166,7 +169,9 @@ let country = ref(false);
 
             <h1 v-else style="padding: 7px 0 10px; line-height: .8;">
               <span style="font-weight: 900; letter-spacing: 1px; color: rgb(43, 149, 238);">ADELIX</span> <br>
-              <span style="font-weight: 400; font-size: 25px; letter-spacing: 1px; color: rgb(255, 237, 0);">УКРАЇНА</span> <br>
+              <span
+                style="font-weight: 400; font-size: 25px; letter-spacing: 1px; color: rgb(255, 237, 0);">УКРАЇНА</span>
+              <br>
               <span style="font-size: 25px; letter-spacing: 1px; font-weight: 800;">ADL-DU110</span>
             </h1>
           </div>
@@ -190,14 +195,15 @@ let country = ref(false);
             <div style="margin-top: 5px;" class="du110-part">
               <label v-if="!country" for="age">Art/N:</label>
               <label v-else for="age">Парт №:</label>
-              
-              <input type="text" style="font-size: 17px; width: 100%; margin-bottom: 8px;" id="part" v-model="shield.part">
+
+              <input type="text" style="font-size: 17px; width: 100%; margin-bottom: 8px;" id="part"
+                v-model="shield.part">
             </div>
           </div>
 
           <div class="du110-footer"
             style="display: flex; gap: 10px; justify-content: space-between; align-items: center;">
-            <img style="width: 110px; height: 45px; " src="/logo.png"  alt="logo">
+            <img style="width: 110px; height: 45px; " src="/logo.png" alt="logo">
             <img style="width: 50px" src="/qrcode.png" alt="qr">
           </div>
         </div>
@@ -206,8 +212,8 @@ let country = ref(false);
   </div>
 
   <div class="nav-button">
-    <button @click="exportToZIP">Скачать</button>
-    <button @click="showSample">Образец</button>
+    <button @click="exportToZIP" class="nav-btn export-btn">Скачать</button>
+    <button @click="showSample" class="nav-btn sample-btn">Образец</button>
   </div>
 
   <div v-if="isModalVisible" class="modal-overlay" @click="hideModal">
@@ -232,33 +238,9 @@ let country = ref(false);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-right: 10px;
-
-  &:hover {
-    background-color: #0056b3;
-  }
-
-  &:last-child {
-    margin-right: 0;
-  }
-}
-
-.nav-button {
-  margin-top: 10px;
-}
-
 .du110-container {
   border: 1px solid #111;
-  width: 220px;
+  width: 270px;
   position: absolute;
   left: -500px;
 }
@@ -266,7 +248,6 @@ button {
 .du110-content {
   padding: 7px;
 }
-
 
 .du110-info {
   display: flex;
@@ -311,6 +292,7 @@ label {
   input {
     border-radius: 0;
     border: 0;
+    padding: 5px 0;
   }
 
   .du110-main {
