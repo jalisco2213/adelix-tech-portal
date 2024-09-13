@@ -1,54 +1,134 @@
 <script setup>
-import { ref } from 'vue';
-import Adl_du110 from './components/device/Adl_du110.vue';
-import Adl_du100 from './components/device/Adl_du100.vue';
-import Adl_du120 from './components/device/Adl_du120.vue';
-import Adl_P1 from './components/device/Adl_p1.vue';
-import Adl_P3 from './components/device/Adl_p3.vue';
-import Adl_M12 from './components/device/Adl_M12.vue';
-import Adl_M15 from './components/device/Adl_M15.vue';
-import Adl_M20 from './components/device/Adl_M20.vue';
-import Adl_ut20 from './components/device/Adl_ut20.vue';
-import Adl_ut25 from './components/device/Adl_ut25.vue';
+import JSZip from "jszip";
+import {jsPDF} from "jspdf";
+import html2canvas from 'html2canvas';
+import {ref, computed, markRaw} from 'vue';
+import AdlDu from "@/components/device/AdlDu.vue";
 
-const selectedDevice = ref('standart');
+const imgData = ref({});
+const shields = ref([{id: 1, serial: '', part: ''}]);
+let pdfPreview = ref(null);
+let isModalVisible = ref(false);
+let isCheck = ref(false);
+
+const devices = ref([
+  {id: 'ADL-DU100', label: 'PORTABLE DYNAMIC \n HARDNESS TESTER', quantity: 0, selected: false, className: 'adl-du100'},
+  {id: 'ADL-DU110', label: 'PORTABLE UNIVERSAL \n HARDNESS TESTER', quantity: 0, selected: false, className: 'adl-du110'},
+  {id: 'ADL-DU120 mini', label: 'PORTABLE UNIVERSAL \n HARDNESS TESTER', quantity: 0, selected: false, className: 'adl-du120'},
+]);
+
+const handleUpdateData = (data) => {
+  imgData.value = data;
+};
+
+const handleQuantityChange = (deviceId, quantity) => {
+  const device = devices.value.find(d => d.id === deviceId);
+  if (device && device.selected) {
+    device.quantity = parseInt(quantity, 10) || 0;
+  }
+
+  isCheck.value = device.quantity > 0;
+
+};
+
+const selectedDevices = computed(() => {
+  return devices.value.filter(device => device.selected && device.quantity > 0);
+});
+
+const showSample = async () => {
+  const pdf = new jsPDF('l', 'mm', 'a3');
+  const topMargin = 3;
+  const rightMargin = 3;
+  const bottomMargin = 0;
+  const leftMargin = 1;
+
+  let x = pdf.internal.pageSize.getWidth() - imgData.value.imgWidth - rightMargin;
+  let y = topMargin;
+
+  for (let device of selectedDevices.value) {
+    for (let i = 0; i < device.quantity; i++) {
+      const className = device.className;
+      const element = document.querySelectorAll(`.${className}`)[i];
+
+      if (element) {
+        const canvas = await html2canvas(element, {scale: 2});
+        const image = canvas.toDataURL("image/png");
+
+        if (x < leftMargin) {
+          x = pdf.internal.pageSize.getWidth() - imgData.value.imgWidth - rightMargin;
+          y += imgData.value.imgHeight + topMargin;
+        }
+
+        if (y + imgData.value.imgHeight > pdf.internal.pageSize.getHeight() - bottomMargin) {
+          pdf.addPage();
+          x = pdf.internal.pageSize.getWidth() - imgData.value.imgWidth - rightMargin;
+          y = topMargin;
+        }
+
+        pdf.addImage(image, 'PNG', x, y, imgData.value.imgWidth, imgData.value.imgHeight);
+        x -= imgData.value.imgWidth + leftMargin;
+      }
+    }
+  }
+
+  const pdfBlob = pdf.output('blob');
+  pdfPreview.value = URL.createObjectURL(pdfBlob);
+  isModalVisible.value = true;
+};
+
+const hideModal = () => {
+  isModalVisible.value = false;
+  pdfPreview.value = null;
+};
 </script>
 
 <template>
   <div class="container">
+
     <div class="select-wrapper">
-      <select v-model="selectedDevice" class="device-select">
-        <option value="standart">Выберите устройство</option>
-        <optgroup label="Твердомеры">
-          <option value="ADL-DU100">ADL-DU100</option>
-          <option value="ADL-DU110">ADL-DU110</option>
-          <option value="ADL-DU120">ADL-DU120</option>
-        </optgroup>
-        <optgroup label="Виброметры">
-          <option value="ADL-P1">P1</option>
-          <option value="ADL-P3">P3</option>
-          <option value="ADL-M12">M12</option>
-          <option value="ADL-M15">M15</option>
-          <option value="ADL-M20">M20</option>
-        </optgroup>
-        <optgroup label="Толщиномеры">
-          <option value="ADL-UT20">UT20</option>
-          <option value="ADL-UT25">UT25</option>
-        </optgroup>
-      </select>
+
+      <div v-for="device in devices" :key="device.id" class="device-option">
+        <input
+          type="checkbox"
+          :id="device.id"
+          v-model="device.selected"
+        />
+
+        <label :for="device.id">{{ device.id }}</label>
+
+        <input
+          v-if="device.selected"
+          type="number"
+          min="0"
+          :placeholder="'Количество ' + device.label"
+          v-model.number="device.quantity"
+          @input="handleQuantityChange(device.id, device.quantity)"
+        />
+      </div>
+
     </div>
 
-    <div v-if="selectedDevice !== 'standart'" class="device-display">
-      <Adl_du100 v-if="selectedDevice === 'ADL-DU100'" />
-      <Adl_du110 v-if="selectedDevice === 'ADL-DU110'" />
-      <Adl_du120 v-if="selectedDevice === 'ADL-DU120'" />
-      <Adl_P1 v-if="selectedDevice === 'ADL-P1'" />
-      <Adl_P3 v-if="selectedDevice === 'ADL-P3'" />
-      <Adl_M12 v-if="selectedDevice === 'ADL-M12'" />
-      <Adl_M15 v-if="selectedDevice === 'ADL-M15'" />
-      <Adl_M20 v-if="selectedDevice === 'ADL-M20'" />
-      <Adl_ut20 v-if="selectedDevice === 'ADL-UT20'" />
-      <Adl_ut25 v-if="selectedDevice === 'ADL-UT25'" />
+    <div class="device-display" ref="deviceDisplay">
+      <template v-for="device in selectedDevices" :key="device.id">
+        <component
+          v-for="index in device.quantity"
+          :key="`${device.id}-${index}`"
+          :is="AdlDu"
+          :id="device.id"
+          :label="device.label"
+          :class="device.className"
+          @updateData="handleUpdateData"
+        />
+      </template>
+    </div>
+
+    <button v-if="isCheck" @click="showSample" class="nav-btn sample-btn">Образец + печать</button>
+  </div>
+
+  <div v-if="isModalVisible" class="modal-overlay" @click="hideModal">
+    <div class="modal-content" @click.stop>
+      <span class="close-button" @click="hideModal">×</span>
+      <iframe v-if="pdfPreview" :src="pdfPreview" width="100%" height="100%"></iframe>
     </div>
   </div>
 </template>
@@ -65,37 +145,32 @@ const selectedDevice = ref('standart');
 
 .select-wrapper {
   width: 100%;
-  max-width: 300px;
+  max-width: 600px;
   margin-bottom: 20px;
 }
 
-.device-select {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+.device-option {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
-.device-select:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-  outline: none;
+.device-option input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.device-option input[type="number"] {
+  margin-left: 10px;
+  width: 60px;
 }
 
 .device-display {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
   width: 100%;
-  max-width: 600px;
   padding: 20px;
   background-color: #fff;
-  border: 1px solid #ddd;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 </style>

@@ -1,8 +1,8 @@
 <script setup>
-import { ref, computed } from "vue";
+import {ref, computed} from "vue";
 import html2canvas from "html2canvas";
 import JSZip from "jszip";
-import { jsPDF } from "jspdf";
+import {jsPDF} from "jspdf";
 import Switch from "../utils/SwitchCountry.vue";
 import NavBtn from "../utils/NavBtn.vue";
 
@@ -15,11 +15,11 @@ const updateCountry = (value) => {
   country.value = value;
 };
 
-const shields = ref([{ id: 1, serial: '' }]);
+const shields = ref([{id: 1, serial: ''}]);
 const newShieldId = ref(2);
 
 const addShield = () => {
-  shields.value.push({ id: newShieldId.value++, serial: '' });
+  shields.value.push({id: newShieldId.value++, serial: ''});
 };
 
 const removeShield = (id) => {
@@ -42,7 +42,7 @@ const exportToZIP = async () => {
   for (let i = 0; i < shields.value.length; i++) {
     const element = document.querySelectorAll('.M15-info')[i];
     if (element) {
-      const canvas = await html2canvas(element, { scale: 2 });
+      const canvas = await html2canvas(element, {scale: 2});
       const image = canvas.toDataURL("image/png");
 
 
@@ -73,7 +73,7 @@ const exportToZIP = async () => {
   const cdrBlob = pdf.output('blob');
   zip.file(`ADL-M15_${serial.value}.cdr`, cdrBlob);
 
-  const content = await zip.generateAsync({ type: 'blob' });
+  const content = await zip.generateAsync({type: 'blob'});
   const link = document.createElement('a');
   link.href = URL.createObjectURL(content);
   link.download = `ADL-M15_${serial.value}.zip`;
@@ -95,7 +95,7 @@ const showSample = async () => {
   for (let i = 0; i < shields.value.length; i++) {
     const element = document.querySelectorAll('.M15-info')[i];
     if (element) {
-      const canvas = await html2canvas(element, { scale: 2 });
+      const canvas = await html2canvas(element, {scale: 2});
 
       const image = canvas.toDataURL("image/png");
 
@@ -132,7 +132,7 @@ let country = ref(false);
 <template>
   <h1 class="device-header">Портативный виброметр ADL-M15</h1>
 
-  <Switch :country="country" @update:country="updateCountry" />
+  <Switch :country="country" @update:country="updateCountry"/>
 
   <div class="device-nav">
     <div class="shields-container">
@@ -152,7 +152,7 @@ let country = ref(false);
     <div class="M15-container" v-for="(shield, index) in shields" :key="shield.id">
       <div class="M15-info">
         <div class="M15-header"
-          style="padding: 8px 15px 4px; display: flex; align-items: center; justify-content: space-between; gap: 5px;">
+             style="padding: 8px 15px 4px; display: flex; align-items: center; justify-content: space-between; gap: 5px;">
           <img v-if="!country" style="width: 75px;" src="/logo.png" alt="logo">
           <img v-else style="width: 70px;" src="/logo.png" alt="logo">
 
@@ -163,10 +163,10 @@ let country = ref(false);
 
           <p v-else style="color: #eee; margin: 0; padding: 0; font-weight: 700; ">
             <span style="font-size: 10px;">ПОРТАТИВНИЙ ВІБРОМЕТР</span> <br>
-          <div class="" style="display: flex; justify-content: space-between;">
-            <p style="padding-bottom: 5px;font-size: 15px; color: rgb(43, 149, 238)">ADELIX</p>
-            <p style="padding-bottom: 5px;font-size: 15px; color: #FFED00;">UKRAINE</p>
-          </div>
+            <div class="" style="display: flex; justify-content: space-between;">
+              <p style="padding-bottom: 5px;font-size: 15px; color: rgb(43, 149, 238)">ADELIX</p>
+              <p style="padding-bottom: 5px;font-size: 15px; color: #FFED00;">UKRAINE</p>
+            </div>
           </p>
 
 
@@ -175,11 +175,11 @@ let country = ref(false);
 
         <div class="M15-footer" style="padding: 5px 10px 10px;">
           <div class="M15-footer_content"
-            style="background: rgb(114, 114, 113); padding: 5px 10px; border-radius: 10px; display: flex; justify-content: space-between;">
+               style="background: rgb(114, 114, 113); padding: 5px 10px; border-radius: 10px; display: flex; justify-content: space-between;">
             <p style="font-weight: 700; font-size: 20px; color: #2b95ee;">ADL-M15</p>
 
             <div class="M15-footer-serial"
-              style="background: #eee; border-radius: 15px; padding: 2px 10px; text-align: center; display: flex; align-items: center;">
+                 style="background: #eee; border-radius: 15px; padding: 2px 10px; text-align: center; display: flex; align-items: center;">
               <p v-if="!country" style="font-weight: 500; font-size: 12px; color: #111;">S/N</p>
               <p v-else style="font-weight: 700; font-size: 12px; color: #111;">№</p>
               &nbsp;
@@ -187,7 +187,7 @@ let country = ref(false);
             </div>
 
             <div class="M15-footer-year"
-              style="background: #eee; font-weight: 700; border-radius: 15px; font-size: 12px; padding: 2px 10px; text-align: center; display: flex; align-items: center;">
+                 style="background: #eee; font-weight: 700; border-radius: 15px; font-size: 12px; padding: 2px 10px; text-align: center; display: flex; align-items: center;">
               2024
             </div>
           </div>
@@ -196,7 +196,7 @@ let country = ref(false);
     </div>
   </div>
 
-  <NavBtn :exportToZIP="exportToZIP" :showSample="showSample" />
+  <NavBtn :exportToZIP="exportToZIP" :showSample="showSample"/>
 
   <div v-if="isModalVisible" class="modal-overlay" @click="hideModal">
     <div class="modal-content" @click.stop>
