@@ -23,7 +23,7 @@ const handleQuantityChange = (deviceId, quantity) => {
   const device = devices.value.find(d => d.id === deviceId);
   if (device) {
     device.quantity = parseInt(quantity, 10) || 0;
-    isCheck.value = devices.value.some(d => d.quantity > 0);
+    isCheck.value = devices.value.some(d => d.quantity > 0 && device);
 
     if (device.serialNumbers.length < device.quantity) {
       for (let i = device.serialNumbers.length; i < device.quantity; i++) {
