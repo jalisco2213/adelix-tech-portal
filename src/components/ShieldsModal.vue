@@ -1,5 +1,5 @@
 <script setup>
-import SwitchCountry from "@/components/utils/SwitchCountry.vue";
+import SwitchCountry from "@/components/SwitchCountry.vue";
 
 const props = defineProps({
   device: Object,
@@ -15,13 +15,24 @@ const close = () => {
 const updateQuantity = () => {
   emit('changeQuantity', props.device.id, props.device.quantity);
 };
+
+const continueSerialNumbers = () => {
+  const firstSerial = parseInt(props.device.serialNumbers[0]);
+
+  if (!isNaN(firstSerial)) {
+    props.device.serialNumbers = props.device.serialNumbers.map((serial, index) => {
+      return (firstSerial + index).toString();
+    });
+  }
+};
 </script>
 
 <template>
   <div class="modal-overlay">
     <div class="modal-content" @click.stop :class="{ closing: isClosing }">
       <div style="overflow-y: auto; max-height: 100%; padding: 5px">
-        <span style="position: absolute; cursor: pointer; top: 0; font-size: 40px; right: 40px" class="close-button" @click="close">×</span>
+        <span style="position: absolute; cursor: pointer; top: 0; font-size: 40px; right: 40px" class="close-button"
+              @click="close">×</span>
         <div>
           <div style="display: flex; align-items: center; margin-bottom: 10px;">
             <p>Количество шильдов для <b>{{ device.id }}</b>:</p>
@@ -33,17 +44,28 @@ const updateQuantity = () => {
               @input="updateQuantity"
             />
           </div>
+
+          <img
+            v-if="device.quantity > 1"
+            style="width: 30px; cursor: pointer; position: absolute; right: 70px; top: 10px"
+            src="/svg/repeat.svg"
+            alt="repeat"
+            @click="continueSerialNumbers"
+          />
         </div>
 
-        <div v-for="(serial, index) in device.quantity" :key="index" class="serial-input">
-          <label>S/N {{ index + 1 }}:</label>
-          <input
-            type="text"
-            v-model="device.serialNumbers[index]"
-            placeholder="Введите серийный номер"
-          />
+        <div class="shields-input">
+          <div v-for="(serial, index) in device.quantity" :key="index" class="serial-input">
+            <label>S/N №{{ index + 1 }}:</label>
+            <input
+              class="shields-serial"
+              type="text"
+              v-model="device.serialNumbers[index]"
+              placeholder="Серийный номер"
+            />
 
-          <SwitchCountry v-model:country="device.isUkrainian[index]"/>
+            <SwitchCountry v-model:country="device.isUkrainian[index]"/>
+          </div>
         </div>
       </div>
     </div>
@@ -60,7 +82,6 @@ const updateQuantity = () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -100,6 +121,39 @@ const updateQuantity = () => {
   }
 }
 
+.shields-input {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+
+  .serial-input {
+    background: #eee;
+    padding: 15px;
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    label {
+      margin-right: 10px;
+    }
+
+    .shields-serial {
+      border: 1px solid #ccc;
+      border-radius: 15px;
+      padding: 5px 3px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      width: 170px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      &:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        outline: none;
+      }
+    }
+  }
+}
+
 .pointerShields {
   width: 50px;
   background: inherit;
@@ -107,19 +161,5 @@ const updateQuantity = () => {
   padding: 0;
   margin-left: 0 !important;
   font-size: 20px;
-}
-
-.shields-serial {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 8px;
-  font-size: 16px;
-  transition: border-color 0.3s, box-shadow 0.3s;
-
-  &:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    outline: none;
-  }
 }
 </style>

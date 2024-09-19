@@ -3,7 +3,7 @@ import { ref, computed } from "vue";
 import html2canvas from "html2canvas";
 import JSZip from "jszip";
 import { jsPDF } from "jspdf";
-import Switch from "../utils/SwitchCountry.vue";
+import Switch from "../SwitchCountry.vue";
 import NavBtn from "../utils/NavBtn.vue";
 
 let country = ref(false);

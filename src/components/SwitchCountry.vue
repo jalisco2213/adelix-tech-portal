@@ -34,7 +34,7 @@ const emit = defineEmits(['update:country']);
   border-radius: 8px;
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .labels {
