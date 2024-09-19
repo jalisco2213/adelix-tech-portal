@@ -1,12 +1,3 @@
-<template>
-  <div v-if="isVisible" class="modal-overlay" @click="hideModal">
-    <div class="modal-content" @click.stop>
-      <span class="close-button" @click="hideModal">×</span>
-      <iframe v-if="pdfPreview" :src="pdfPreview" width="100%" height="100%"></iframe>
-    </div>
-  </div>
-</template>
-
 <script setup>
 import { defineProps, defineEmits } from 'vue';
 
@@ -21,6 +12,15 @@ const hideModal = () => {
   emit('closeModal');
 };
 </script>
+
+<template>
+  <div v-if="isVisible" class="modal-overlay" @click="hideModal">
+    <div class="modal-content" @click.stop>
+      <span class="close-button" @click="hideModal">×</span>
+      <iframe v-if="pdfPreview" :src="pdfPreview" width="100%" height="100%"></iframe>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .modal-overlay {

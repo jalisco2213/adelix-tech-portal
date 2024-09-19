@@ -28,8 +28,9 @@ emit('updateData', {imgWidth, imgHeight});
         <div class="du-info">
           <div class="du-content">
             <div class="du-header">
-              <p v-if="!isUkrainian" style="padding-top: 10px; font-size: 13px; font-weight: bold;"> {{ label }}</p>
-              <p v-else style="padding-top: 10px; font-size: 13px; font-weight: bold;"> {{ labelUkrainian }}</p>
+              <p v-if="!isUkrainian" style="padding-top: 10px; font-size: 13px; font-weight: bold;" v-html="label.replace(/\n/g, '<br>')"></p>
+              <p v-else style="padding-top: 10px; font-size: 13px; font-weight: bold;" v-html="labelUkrainian.replace(/\n/g, '<br>')"></p>
+
 
               <h1 v-if="!isUkrainian" style="padding: 7px 0 10px; line-height: 1;">
                 <p style="font-weight: 900; margin-top: 10px; letter-spacing: 1px; color: rgb(43, 149, 238);">ADELIX</p>
@@ -38,7 +39,7 @@ emit('updateData', {imgWidth, imgHeight});
 
               <h1 v-else style="padding: 7px 0 10px; line-height: 1;">
                 <p style="font-weight: 700; letter-spacing: 1px; color: rgb(43, 149, 238);">ADELIX</p>
-                <p style="font-weight: 300; font-size: 25px; letter-spacing: 1px; color: #FFED00">УКРАЇНА</p>
+                <p style="font-weight: 500; font-size: 25px; letter-spacing: 1px; color: #FFED00">УКРАЇНА</p>
                 <p style="font-size: 25px; letter-spacing: 1px; font-weight: 800;">{{ id }}</p>
               </h1>
             </div>

@@ -2,7 +2,7 @@
   {
     "id": "ADL-D100",
     "label": "PORTABLE DYNAMIC \n HARDNESS TESTER",
-    "labelUkrainian": "ПОРТАТИВНИЙ ДИНАМІЧНИЙ ТВЕРДОМІР",
+    "labelUkrainian": "ПОРТАТИВНИЙ \n ДИНАМІЧНИЙ ТВЕРДОМІР",
     "serialType": "D100.",
     "quantity": 0,
     "selected": false,
@@ -14,7 +14,7 @@
   {
     "id": "ADL-DU110",
     "label": "PORTABLE UNIVERSAL \n HARDNESS TESTER",
-    "labelUkrainian": "Універсальний твердомір",
+    "labelUkrainian": "Універсальний \n твердомір",
     "serialType": "DU110.",
     "quantity": 0,
     "selected": false,
@@ -26,7 +26,7 @@
   {
     "id": "ADL-DU120 mini",
     "label": "PORTABLE UNIVERSAL \n HARDNESS TESTER",
-    "labelUkrainian": "Універсальний твердомір міні",
+    "labelUkrainian": "Універсальний \n твердомір",
     "serialType": "DU120.",
     "quantity": 0,
     "selected": false,
