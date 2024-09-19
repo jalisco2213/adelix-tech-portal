@@ -39,8 +39,7 @@ const hideModal = () => {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
-  width: 80%;
-  max-width: 600px;
+  width: 90%;
 }
 
 .close-button {

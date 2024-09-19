@@ -7,6 +7,9 @@ const props = defineProps({
   id: String,
   label: String,
   serial: String,
+  isUkrainian: Boolean,
+  labelUkrainian: String,
+  serialType: String,
 });
 
 let date = new Date().getFullYear();
@@ -25,28 +28,36 @@ emit('updateData', {imgWidth, imgHeight});
         <div class="du-info">
           <div class="du-content">
             <div class="du-header">
-              <p style="padding-top: 10px; font-size: 13px; font-weight: bold;"> {{ label }}</p>
-              <h1 style="padding: 7px 0 10px; line-height: 1;">
-                <span style="font-weight: 900; letter-spacing: 1px; color: rgb(43, 149, 238);">ADELIX</span> <br>
-                <span style="font-size: 25px; letter-spacing: 1px; font-weight: 800;">{{ id }}</span>
+              <p v-if="!isUkrainian" style="padding-top: 10px; font-size: 13px; font-weight: bold;"> {{ label }}</p>
+              <p v-else style="padding-top: 10px; font-size: 13px; font-weight: bold;"> {{ labelUkrainian }}</p>
+
+              <h1 v-if="!isUkrainian" style="padding: 7px 0 10px; line-height: 1;">
+                <p style="font-weight: 900; margin-top: 10px; letter-spacing: 1px; color: rgb(43, 149, 238);">ADELIX</p>
+                <p style="font-size: 25px; letter-spacing: 1px; margin: 7.5px; font-weight: 800;">{{ id }}</p>
+              </h1>
+
+              <h1 v-else style="padding: 7px 0 10px; line-height: 1;">
+                <p style="font-weight: 700; letter-spacing: 1px; color: rgb(43, 149, 238);">ADELIX</p>
+                <p style="font-weight: 300; font-size: 25px; letter-spacing: 1px; color: #FFED00">УКРАЇНА</p>
+                <p style="font-size: 25px; letter-spacing: 1px; font-weight: 800;">{{ id }}</p>
               </h1>
             </div>
 
             <div class="du-center">
               <div class="du-main">
                 <div>
-                  <label for="serial">S/N:</label>
-                  <input style="width: 120px; font-size: 17px;" type="text" :value="serial" readonly>
+                  <label for="serial">{{isUkrainian ? 'Сер. №' : 'S/N'}}</label>
+                  <input style="width: 120px; font-size: 17px;" type="text" :value="`${serialType}${serial}`" readonly>
                 </div>
 
                 <div>
-                  <label for="age">Date:</label>
+                  <label for="age">{{ isUkrainian ? 'Виг' : 'Date' }}:</label>
                   <input v-model="date" type="text" style="font-size: 17px; width: 100%" id="age">
                 </div>
               </div>
 
               <div style="margin-top: 5px;" class="du-part">
-                <label for="age">Art/N:</label>
+                <label for="part">{{ isUkrainian ? 'Парт №:' : 'Art/N:' }}</label>
                 <input v-model="artNumber" type="text" style="font-size: 17px; width: 100%; margin-bottom: 8px;" id="part">
               </div>
             </div>

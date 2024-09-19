@@ -5,6 +5,7 @@ import html2canvas from 'html2canvas';
 import {ref, computed, markRaw} from 'vue';
 import AdlDu from "@/components/device/AdlDu.vue";
 import ModalReview from "@/components/ModalReview.vue";
+import SwitchCountry from "@/components/utils/SwitchCountry.vue";
 
 const imgData = ref({});
 const shields = ref([{id: 1, serial: '', part: ''}]);
@@ -12,37 +13,46 @@ let pdfPreview = ref(null);
 let isModalVisible = ref(false);
 let isCheck = ref(false);
 let isShieldsModalVisible = ref(false);
+const isClosing = ref(false);
 
 const devices = ref([
   {
     id: 'ADL-D100',
     label: 'PORTABLE DYNAMIC \n HARDNESS TESTER',
+    labelUkrainian: 'ПОРТАТИВНИЙ ДИНАМІЧНИЙ ТВЕРДОМІР',
+    serialType: 'D100.',
     quantity: 0,
     selected: false,
     className: 'adl-du100',
     showShieldsModal: false,
-    serialNumbers: []
+    serialNumbers: [],
+    isUkrainian: []
   },
   {
     id: 'ADL-DU110',
     label: 'PORTABLE UNIVERSAL \n HARDNESS TESTER',
+    labelUkrainian: 'Універсальний твердомір',
+    serialType: 'DU110.',
     quantity: 0,
     selected: false,
     className: 'adl-du110',
     showShieldsModal: false,
-    serialNumbers: []
+    serialNumbers: [],
+    isUkrainian: []
   },
   {
     id: 'ADL-DU120 mini',
     label: 'PORTABLE UNIVERSAL \n HARDNESS TESTER',
+    labelUkrainian: 'Універсальний твердомір міні',
+    serialType: 'DU120.',
     quantity: 0,
     selected: false,
     className: 'adl-du120',
     showShieldsModal: false,
-    serialNumbers: []
+    serialNumbers: [],
+    isUkrainian: []
   },
 ]);
-
 
 const handleUpdateData = (data) => {
   imgData.value = data;
@@ -62,8 +72,16 @@ const handleQuantityChange = (deviceId, quantity) => {
       device.serialNumbers = device.serialNumbers.slice(0, device.quantity);
     }
   }
-};
 
+  if (device.isUkrainian.length < device.quantity) {
+    for (let i = device.isUkrainian.length; i < device.quantity; i++) {
+      device.isUkrainian.push(false);
+    }
+  } else {
+    device.isUkrainian = device.isUkrainian.slice(0, device.quantity);
+  }
+
+};
 
 const selectedDevices = computed(() => {
   return devices.value.filter(device => device.selected && device.quantity > 0);
@@ -71,8 +89,8 @@ const selectedDevices = computed(() => {
 
 const showSample = async () => {
   const pdf = new jsPDF('l', 'mm', 'a3');
-  const topMargin = 3;
-  const rightMargin = 3;
+  const topMargin = 1;
+  const rightMargin = 1;
   const bottomMargin = 0;
   const leftMargin = 1;
 
@@ -123,12 +141,15 @@ const showShieldsModal = (deviceId) => {
 };
 
 const hideShieldsModal = (deviceId) => {
-  const device = devices.value.find(d => d.id === deviceId);
-  if (device) {
-    device.showShieldsModal = false;
-  }
+  isClosing.value = true;
+  setTimeout(() => {
+    const device = devices.value.find(d => d.id === deviceId);
+    if (device) {
+      device.showShieldsModal = false;
+      isClosing.value = false;
+    }
+  }, 200);
 };
-
 </script>
 
 <template>
@@ -143,29 +164,46 @@ const hideShieldsModal = (deviceId) => {
         />
         <label :for="device.id">{{ device.id }}</label>
 
-        <button v-if="device.selected" @click="showShieldsModal(device.id)" class="nav-btn shields-btn">Настроить
+        <button v-if="device.selected" @click="showShieldsModal(device.id)" class="nav-btn shields-btn">
+          Настроить
         </button>
 
         <div v-if="device.showShieldsModal" class="modal-overlay" @click="hideShieldsModal(device.id)">
-          <div class="modal-content" @click.stop>
-            <span class="close-button" @click="hideShieldsModal(device.id)">×</span>
-            <div>
-              <input
-                type="number"
-                min="0"
-                :placeholder="'Количество ' + device.label"
-                v-model.number="device.quantity"
-                @input="handleQuantityChange(device.id, device.quantity)"
-              />
-            </div>
-            <div v-for="(serial, index) in device.quantity" :key="index">
-              <label :for="`serial-${device.id}-${index}`">S/N {{ index + 1 }}:</label>
-              <input
-                type="text"
-                :id="`serial-${device.id}-${index}`"
-                v-model="device.serialNumbers[index]"
-                placeholder="Enter serial number"
-              />
+          <div class="modal-content" @click.stop :class="{ closing: isClosing }">
+            <div style="overflow-y: auto; max-height: 100%">
+            <span style="position: absolute; cursor: pointer; top: 0; right: 40px" class="close-button"
+                  @click="hideShieldsModal(device.id)">×</span>
+              <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <p>Количество шильдов для <b>{{ device.id }}</b>:</p>
+                <input
+                  class="pointerShields"
+                  type="number"
+                  min="0"
+                  :placeholder="'Количество ' + device.label"
+                  v-model.number="device.quantity"
+                  @input="handleQuantityChange(device.id, device.quantity)"
+                />
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 10px">
+                <div v-for="(serial, index) in device.quantity" :key="index">
+
+                  <div style="display: flex; align-items: center; gap: 5px">
+                    <label :for="`serial-${device.id}-${index}`">S/N {{ index + 1 }}:</label>
+
+                    <input
+                      class="shields-serial"
+                      type="text"
+                      :id="`serial-${device.id}-${index}`"
+                      v-model="device.serialNumbers[index]"
+                      placeholder="Enter serial number"
+                    />
+
+                    <SwitchCountry v-model:country="device.isUkrainian[index]"/>
+
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -180,9 +218,12 @@ const hideShieldsModal = (deviceId) => {
           :is="AdlDu"
           :id="device.id"
           :label="device.label"
+          :labelUkrainian="device.labelUkrainian"
           :serial="serial"
-        :class="device.className"
-        @updateData="handleUpdateData"
+          :serialType="device.serialType"
+          :isUkrainian="device.isUkrainian[index]"
+          :class="device.className"
+          @updateData="handleUpdateData"
         />
       </template>
 
@@ -241,8 +282,19 @@ const hideShieldsModal = (deviceId) => {
   border-radius: 8px;
 }
 
+.pointerShields {
+  background: inherit;
+  border: none !important;
+  padding: 0;
+  margin-left: 0 !important;
+  font-size: 20px;
+}
+
 .modal-overlay {
   position: fixed;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  transition: opacity 0.3s ease-in-out;
   top: 0;
   left: 0;
   width: 100%;
@@ -255,15 +307,51 @@ const hideShieldsModal = (deviceId) => {
 
 .modal-content {
   background-color: white;
+  max-height: 50%;
   padding: 20px;
   border-radius: 10px;
   width: 80%;
   max-width: 600px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  animation: slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+
+  &.closing {
+    animation: slide-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  }
+
+  @keyframes slide-top {
+    0% {
+      transform: translateY(50px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slide-bottom {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(200px);
+    }
+  }
+
+  .shields-serial {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+
+    &:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      outline: none;
+    }
+  }
 }
 
-.close-button {
-  float: right;
-  cursor: pointer;
-}
 
 </style>
