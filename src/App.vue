@@ -2,57 +2,18 @@
 import JSZip from "jszip";
 import {jsPDF} from "jspdf";
 import html2canvas from 'html2canvas';
-import {ref, computed, markRaw} from 'vue';
+import {ref, computed} from 'vue';
 import AdlDu from "@/components/device/AdlDu.vue";
 import ModalReview from "@/components/ModalReview.vue";
 import SwitchCountry from "@/components/utils/SwitchCountry.vue";
+import devicesData from './data/devices.json'
 
+const devices = ref(devicesData);
 const imgData = ref({});
-const shields = ref([{id: 1, serial: '', part: ''}]);
 let pdfPreview = ref(null);
 let isModalVisible = ref(false);
 let isCheck = ref(false);
-let isShieldsModalVisible = ref(false);
 const isClosing = ref(false);
-
-const devices = ref([
-  {
-    id: 'ADL-D100',
-    label: 'PORTABLE DYNAMIC \n HARDNESS TESTER',
-    labelUkrainian: 'ПОРТАТИВНИЙ ДИНАМІЧНИЙ ТВЕРДОМІР',
-    serialType: 'D100.',
-    quantity: 0,
-    selected: false,
-    className: 'adl-du100',
-    showShieldsModal: false,
-    serialNumbers: [],
-    isUkrainian: []
-  },
-  {
-    id: 'ADL-DU110',
-    label: 'PORTABLE UNIVERSAL \n HARDNESS TESTER',
-    labelUkrainian: 'Універсальний твердомір',
-    serialType: 'DU110.',
-    quantity: 0,
-    selected: false,
-    className: 'adl-du110',
-    showShieldsModal: false,
-    serialNumbers: [],
-    isUkrainian: []
-  },
-  {
-    id: 'ADL-DU120 mini',
-    label: 'PORTABLE UNIVERSAL \n HARDNESS TESTER',
-    labelUkrainian: 'Універсальний твердомір міні',
-    serialType: 'DU120.',
-    quantity: 0,
-    selected: false,
-    className: 'adl-du120',
-    showShieldsModal: false,
-    serialNumbers: [],
-    isUkrainian: []
-  },
-]);
 
 const handleUpdateData = (data) => {
   imgData.value = data;
@@ -170,7 +131,7 @@ const hideShieldsModal = (deviceId) => {
 
         <div v-if="device.showShieldsModal" class="modal-overlay" @click="hideShieldsModal(device.id)">
           <div class="modal-content" @click.stop :class="{ closing: isClosing }">
-            <div style="overflow-y: auto; max-height: 100%">
+            <div style="overflow-y: auto; max-height: 100%; padding: 5px">
             <span style="position: absolute; cursor: pointer; top: 0; right: 40px" class="close-button"
                   @click="hideShieldsModal(device.id)">×</span>
               <div style="display: flex; align-items: center; margin-bottom: 10px;">
