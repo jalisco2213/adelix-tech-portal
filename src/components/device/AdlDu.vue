@@ -6,7 +6,11 @@ const emit = defineEmits(['updateData']);
 const props = defineProps({
   id: String,
   label: String,
+  serial: String,
 });
+
+let date = new Date().getFullYear();
+let artNumber = 'ADL-DU110.01';
 
 const imgWidth = 39.5;
 const imgHeight = 55;
@@ -32,18 +36,18 @@ emit('updateData', {imgWidth, imgHeight});
               <div class="du-main">
                 <div>
                   <label for="serial">S/N:</label>
-                  <input style="width: 120px; font-size: 17px;" type="text" id="serial">
+                  <input style="width: 120px; font-size: 17px;" type="text" :value="serial" readonly>
                 </div>
 
                 <div>
                   <label for="age">Date:</label>
-                  <input type="text" style="font-size: 17px; width: 100%" id="age">
+                  <input v-model="date" type="text" style="font-size: 17px; width: 100%" id="age">
                 </div>
               </div>
 
               <div style="margin-top: 5px;" class="du-part">
                 <label for="age">Art/N:</label>
-                <input type="text" style="font-size: 17px; width: 100%; margin-bottom: 8px;" id="part">
+                <input v-model="artNumber" type="text" style="font-size: 17px; width: 100%; margin-bottom: 8px;" id="part">
               </div>
             </div>
 
