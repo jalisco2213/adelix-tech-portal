@@ -1,5 +1,6 @@
 <script setup>
 import SwitchCountry from "@/components/SwitchCountry.vue";
+import ModalLoader from "@/components/Utils/ModalLoader.vue";
 
 const props = defineProps({
   device: Object,
@@ -30,7 +31,7 @@ const continueSerialNumbers = () => {
 <template>
   <div class="modal-overlay">
     <div class="modal-content" @click.stop :class="{ closing: isClosing }">
-      <div style="overflow-y: auto; max-height: 100%; padding: 5px">
+      <div style="overflow-y: auto; max-height: 100%; height: 100%; padding: 5px">
         <span style="position: absolute; cursor: pointer; top: 0; font-size: 40px; right: 40px" class="close-button"
               @click="close">×</span>
         <div>
@@ -44,6 +45,8 @@ const continueSerialNumbers = () => {
               @input="updateQuantity"
             />
           </div>
+
+          <ModalLoader v-if="device.quantity === 0" style="display: flex; justify-content:center; align-items: center; margin: auto; height: 41vh"/>
 
           <img
             v-if="device.quantity > 1"
