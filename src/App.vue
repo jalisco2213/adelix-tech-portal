@@ -62,7 +62,7 @@ const showSample = async () => {
     }
   });
 
-  const pdf = new jsPDF('l', 'mm', 'a3');
+  const pdf = new jsPDF('l', 'mm', 'a4');
   const margin = 1;
   const padding = 1;
   const pageWidth = pdf.internal.pageSize.getWidth();
@@ -79,22 +79,23 @@ const showSample = async () => {
         const canvas = await html2canvas(element, {scale: 2});
         const image = canvas.toDataURL("image/png");
 
+        if (y + device.imgHeight > pageHeight - margin) {
+          pdf.addPage();
+          y = margin;
+        }
+
         if (x + device.imgWidth > pageWidth - margin) {
           x = margin;
           y += device.imgHeight + padding;
         }
 
-        if (y + device.imgHeight > pageHeight - margin) {
-          pdf.addPage();
-          x = margin;
-          y = margin;
-        }
-
         pdf.addImage(image, 'PNG', x, y, device.imgWidth, device.imgHeight);
-
         x += device.imgWidth + padding;
       }
     }
+
+    x = margin;
+    y += device.imgHeight + padding;
   }
 
   Swal.close();
@@ -103,6 +104,7 @@ const showSample = async () => {
   isModalVisible.value = true;
   isLoading.value = false;
 };
+
 
 const hideModal = () => {
   isModalVisible.value = false;

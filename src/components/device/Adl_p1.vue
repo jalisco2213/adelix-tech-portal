@@ -67,8 +67,6 @@ let artNumber = 'ADL-DU110.01';
 .p1-container {
   width: 427px;
   user-select: none;
-  position: absolute;
-  left: -500px;
 }
 
 .p1-content {
