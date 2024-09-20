@@ -6,6 +6,7 @@ import DeviceOption from "@/components/DeviceOption.vue";
 import DeviceDisplay from "@/components/DeviceDisplay.vue";
 import ModalReview from "@/components/ModalReview.vue";
 import devicesData from './data/devices.json';
+import ModalLoader from "@/components/Utils/ModalLoader.vue";
 
 const devices = ref(devicesData);
 const imgData = ref({});
@@ -51,17 +52,6 @@ const selectedDevices = computed(() => {
 const showSample = async () => {
   isLoading.value = true;
 
-  const loadingSwal = Swal.fire({
-    title: 'Генерация PDF...',
-    icon: 'warning',
-    text: 'Пожалуйста, подождите...',
-    allowEscapeKey: false,
-    allowOutsideClick: false,
-    didOpen: () => {
-      Swal.showLoading();
-    }
-  });
-
   const pdf = new jsPDF('l', 'mm', 'a3');
   const margin = 1;
   const padding = 1;
@@ -98,7 +88,6 @@ const showSample = async () => {
     y += device.imgHeight + padding;
   }
 
-  Swal.close();
   const pdfBlob = pdf.output('blob');
   pdfPreview.value = URL.createObjectURL(pdfBlob);
   isModalVisible.value = true;
@@ -131,6 +120,15 @@ const hideShieldsModal = (deviceId) => {
 </script>
 
 <template>
+  <div class="modal-loader" v-if="isLoading">
+    <div class="modal-info">
+      <ModalLoader style="margin: auto; display: flex; justify-content:center;"/>
+      <h2>Генерация PDF...</h2>
+      <span class="modal-loader-btn"></span>
+    </div>
+  </div>
+
+
   <div class="container">
     <div class="select-wrapper">
       <DeviceOption
@@ -155,7 +153,7 @@ const hideShieldsModal = (deviceId) => {
             @click="showSample"
             class="nav-btn sample-btn"
             :disabled="isLoading">
-      <span v-if="isLoading" class="loader"></span>
+      <span v-if="isLoading" class="loader-btn"></span>
       <span v-else>Образец + печать</span>
     </button>
 
@@ -177,13 +175,62 @@ const hideShieldsModal = (deviceId) => {
   min-height: 100vh;
 }
 
+.modal-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+
+  .modal-info {
+    padding: 50px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    animation: slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+
+    .modal-loader-btn {
+      border: 2px solid transparent;
+      border-top: 2px solid #111;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      margin-right: 5px;
+    }
+  }
+}
+
+@keyframes slide-top {
+  0% {
+    transform: translateY(50px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
 .select-wrapper {
   width: 100%;
   max-width: 600px;
   margin-bottom: 20px;
 }
 
-.loader {
+.loader-btn {
   border: 2px solid transparent;
   border-top: 2px solid #eeeeee;
   border-radius: 50%;
