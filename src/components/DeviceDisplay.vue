@@ -1,14 +1,8 @@
 <script setup>
-import {computed} from "vue";
 import AdlDu from "@/components/device/AdlDu.vue";
-import Adl_p1 from "@/components/device/Adl_p1.vue";
 
 const props = defineProps({
   device: Object
-});
-
-const componentToRender = computed(() => {
-  return props.device.serialType === 'P1' ? Adl_p1 : AdlDu;
 });
 
 const emit = defineEmits(['updateData']);
@@ -23,7 +17,7 @@ const handleUpdateData = (data) => {
     <component
       v-for="(serial, index) in device.serialNumbers"
       :key="index"
-      :is="componentToRender"
+      :is="AdlDu"
       :id="device.id"
       :label="device.label"
       :labelUkrainian="device.labelUkrainian"

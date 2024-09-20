@@ -14,6 +14,11 @@ const props = defineProps({
 
 let date = new Date().getFullYear();
 let artNumber = 'ADL-DU110.01';
+
+const imgWidth = 39.5;
+const imgHeight = 55;
+
+emit('updateData', {imgWidth, imgHeight});
 </script>
 
 <template>
