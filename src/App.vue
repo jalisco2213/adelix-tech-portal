@@ -14,10 +14,13 @@ let pdfPreview = ref(null);
 let isModalVisible = ref(false);
 let isCheck = ref(false);
 const isClosing = ref(false);
+let isLoading = ref(false);
 
 const handleUpdateData = (data) => {
   imgData.value = data;
 };
+
+console.log(devices.imgWidth)
 
 const handleQuantityChange = (deviceId, quantity) => {
   const device = devices.value.find(d => d.id === deviceId);
@@ -48,37 +51,43 @@ const selectedDevices = computed(() => {
 });
 
 const showSample = async () => {
+  isLoading.value = true;
   const pdf = new jsPDF('l', 'mm', 'a3');
   const topMargin = 1;
   const rightMargin = 1;
   const bottomMargin = 0;
   const leftMargin = 1;
 
-  let x = pdf.internal.pageSize.getWidth() - imgData.value.imgWidth - rightMargin;
-  let y = topMargin;
+  let x, y;
 
   for (let device of selectedDevices.value) {
+    const imgWidth = device.imgWidth;
+    const imgHeight = device.imgHeight;
+
+    x = pdf.internal.pageSize.getWidth() - imgWidth - rightMargin;
+    y = topMargin;
+
     for (let i = 0; i < device.quantity; i++) {
       const className = device.className;
       const element = document.querySelectorAll(`.${className}`)[i];
 
       if (element) {
-        const canvas = await html2canvas(element, {scale: 2});
+        const canvas = await html2canvas(element, { scale: 2 });
         const image = canvas.toDataURL("image/png");
 
         if (x < leftMargin) {
-          x = pdf.internal.pageSize.getWidth() - imgData.value.imgWidth - rightMargin;
-          y += imgData.value.imgHeight + topMargin;
+          x = pdf.internal.pageSize.getWidth() - imgWidth - rightMargin;
+          y += imgHeight + topMargin;
         }
 
-        if (y + imgData.value.imgHeight > pdf.internal.pageSize.getHeight() - bottomMargin) {
+        if (y + imgHeight > pdf.internal.pageSize.getHeight() - bottomMargin) {
           pdf.addPage();
-          x = pdf.internal.pageSize.getWidth() - imgData.value.imgWidth - rightMargin;
+          x = pdf.internal.pageSize.getWidth() - imgWidth - rightMargin;
           y = topMargin;
         }
 
-        pdf.addImage(image, 'PNG', x, y, imgData.value.imgWidth, imgData.value.imgHeight);
-        x -= imgData.value.imgWidth + leftMargin;
+        pdf.addImage(image, 'PNG', x, y, imgWidth, imgHeight);
+        x -= imgWidth + leftMargin;
       }
     }
   }
@@ -86,6 +95,7 @@ const showSample = async () => {
   const pdfBlob = pdf.output('blob');
   pdfPreview.value = URL.createObjectURL(pdfBlob);
   isModalVisible.value = true;
+  isLoading.value = false;
 };
 
 const hideModal = () => {
@@ -133,8 +143,12 @@ const hideShieldsModal = (deviceId) => {
       @updateData="handleUpdateData"
     />
 
-    <button v-if="isCheck" @click="showSample" class="nav-btn sample-btn">
-      Образец + печать
+    <button v-if="isCheck"
+            @click="showSample"
+            class="nav-btn sample-btn"
+            :disabled="isLoading">
+      <span v-if="isLoading" class="loader"></span>
+      <span v-else>Образец + печать</span>
     </button>
 
     <ModalReview
@@ -153,6 +167,26 @@ const hideShieldsModal = (deviceId) => {
   align-items: center;
   background-color: #f5f5f5;
   min-height: 100vh;
+}
+
+.loader {
+  border: 2px solid transparent;
+  border-top: 2px solid #eeeeee;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .select-wrapper {

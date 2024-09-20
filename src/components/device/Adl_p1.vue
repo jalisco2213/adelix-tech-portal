@@ -1,150 +1,28 @@
 <script setup>
-import { ref, computed } from "vue";
-import html2canvas from "html2canvas";
-import JSZip from "jszip";
-import { jsPDF } from "jspdf";
-import Switch from "../SwitchCountry.vue";
-import NavBtn from "../utils/NavBtn.vue";
+import {defineEmits} from 'vue';
 
-let country = ref(false);
-let serial = ref('');
-let pdfPreview = ref(null);
-let isModalVisible = ref(false);
+const emit = defineEmits(['updateData']);
 
-const updateCountry = (value) => {
-  country.value = value;
-};
+const props = defineProps({
+  id: String,
+  label: String,
+  serial: String,
+  isUkrainian: Boolean,
+  labelUkrainian: String,
+  serialType: String,
+});
 
-const hideModal = () => {
-  isModalVisible.value = false;
-  pdfPreview.value = null;
-};
+let date = new Date().getFullYear();
+let artNumber = 'ADL-DU110.01';
 
-const shields = ref([{ id: 1, serial: '' }]);
-const newShieldId = ref(2);
+let imgWidth = 113;
+let imgHeight = 19;
 
-const addShield = () => {
-  shields.value.push({ id: newShieldId.value++, serial: '' });
-};
-
-const removeShield = (id) => {
-  shields.value = shields.value.filter(shield => shield.id !== id);
-};
-
-const exportToZIP = async () => {
-  const zip = new JSZip();
-  const pdf = new jsPDF('p', 'mm', 'a4');
-  const imgWidth = 113;
-  const imgHeight = 19;
-  const topMargin = 4;
-  const rightMargin = 5;
-  const bottomMargin = 0;
-  const leftMargin = 3;
-
-  let x = pdf.internal.pageSize.getWidth() - imgWidth - rightMargin;
-  let y = topMargin;
-
-  for (let i = 0; i < shields.value.length; i++) {
-    const element = document.querySelectorAll('.p1-container')[i];
-    if (element) {
-      const canvas = await html2canvas(element, { scale: 2 });
-      const image = canvas.toDataURL("image/png");
-
-
-      if (x < leftMargin) {
-        x = pdf.internal.pageSize.getWidth() - imgWidth - rightMargin;
-        y += imgHeight + topMargin;
-      }
-
-
-      if (y + imgHeight > pdf.internal.pageSize.getHeight() - bottomMargin) {
-        pdf.addPage();
-        x = pdf.internal.pageSize.getWidth() - imgWidth - rightMargin;
-        y = topMargin;
-      }
-
-      pdf.addImage(image, 'PNG', x, y, imgWidth, imgHeight);
-      x -= imgWidth + leftMargin;
-
-
-      const imageBlob = await new Promise(resolve => canvas.toBlob(resolve));
-      zip.file(`ADL-DU100_${shields.value[i].serial}.png`, imageBlob);
-    }
-  };
-
-  const pdfBlob = pdf.output('blob');
-  zip.file(`ADL-DU100_${serial.value}.pdf`, pdfBlob);
-
-  const cdrBlob = pdf.output('blob');
-  zip.file(`ADL-DU100_${serial.value}.cdr`, cdrBlob);
-
-  const content = await zip.generateAsync({ type: 'blob' });
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(content);
-  link.download = `ADL-DU100_${serial.value}.zip`;
-  link.click();
-};
-
-const showSample = async () => {
-  const pdf = new jsPDF('p', 'mm', 'a4');
-  const imgWidth = 113;
-  const imgHeight = 19;
-  const topMargin = 4;
-  const rightMargin = 5;
-  const bottomMargin = 0;
-  const leftMargin = 2.5;
-
-  let x = pdf.internal.pageSize.getWidth() - imgWidth - rightMargin;
-  let y = topMargin;
-
-  for (let i = 0; i < shields.value.length; i++) {
-    const element = document.querySelectorAll('.p1-container')[i];
-    if (element) {
-      const canvas = await html2canvas(element, { scale: 2 });
-      const image = canvas.toDataURL("image/png");
-
-      if (x < leftMargin) {
-        x = pdf.internal.pageSize.getWidth() - imgWidth - rightMargin;
-        y += imgHeight + topMargin;
-      };
-
-      if (y + imgHeight > pdf.internal.pageSize.getHeight() - bottomMargin) {
-        pdf.addPage();
-        x = pdf.internal.pageSize.getWidth() - imgWidth - rightMargin;
-        y = topMargin;
-      };
-
-      pdf.addImage(image, 'PNG', x, y, imgWidth, imgHeight);
-      x -= imgWidth + leftMargin;
-    };
-  };
-
-  const pdfBlob = pdf.output('blob');
-  pdfPreview.value = URL.createObjectURL(pdfBlob);
-  isModalVisible.value = true;
-};
+emit('updateData', {imgWidth, imgHeight});
 </script>
 
 <template>
-  <h1 class="device-header">Портативный виброметр ADL-P1</h1>
-
-  <Switch :country="country" @update:country="updateCountry" />
-
-  <div class="device-nav">
-    <div class="shields-container">
-      <div v-for="(shield, index) in shields" :key="shield.id" class="shield-item">
-        <div class="shield-details">
-          <input type="text" v-model="shield.serial" placeholder="Серийный номер" class="input-field">
-        </div>
-        <button @click="removeShield(shield.id)" class="remove-btn">
-          <img src="/svg/delete.svg" alt="delete" class="remove-icon">
-        </button>
-      </div>
-      <button @click="addShield" class="add-shield-btn">+</button>
-    </div>
-  </div>
-
-  <div class="p1-container" v-for="(shield, index) in shields" :key="shield.id">
+  <div class="p1-container">
     <div class="p1-content">
       <div class="p1-left">
         <img src="/logo.png" alt="logo">
@@ -154,10 +32,7 @@ const showSample = async () => {
         <div class="p1-mark">
           <h1 style="font-size: 17px; margin: 0; padding: 0; color: #eee; text-align: center;">ADL-P1
           </h1>
-          <p v-if="!country" style="font-size: 10px; text-align: center; color: #eee; margin: 0 0 0 5px; padding: 0;">
-            S/N {{ shield.serial }} &nbsp; 2024</p>
-          <p v-else style="font-size: 10px; text-align: center; color: #eee; margin: 0 0 0 5px; padding: 0;">№ {{
-            shield.serial }} &nbsp; 2024</p>
+          <p style="font-size: 10px; text-align: center; color: #eee; margin: 0 0 0 5px; padding: 0;"> 2024</p>
         </div>
 
         <div class="p1-info">
@@ -171,12 +46,7 @@ const showSample = async () => {
             <div class="p1-power_img" style="display: flex; align-items: center;">
               <img src="/power.png" style="width: 20px; height: 20px;" alt="">
             </div>
-            <div v-if="!country" class="p1-power-subtitle"
-              style="font-size: 10px; line-height: 1; color: #eee; font-weight: 500;">
-              Power on / <br>
-              Measuring
-            </div>
-            <div v-else class="p1-power-subtitle"
+            <div class="p1-power-subtitle"
               style="font-size: 10px; line-height: 1; color: #eee; font-weight: 500; padding-right: 3px;">
               Живлення / <br>
               Вимірювання
@@ -186,22 +56,10 @@ const showSample = async () => {
       </div>
 
       <div class="p1-arrow">
-        <span v-if="!country">
-          ADELIX COMPANY &nbsp; PORTABLE VIBRATION METER
-        </span>
-        <span v-else>
+        <span>
           ADELIX COMPANY &nbsp; ПОРТАТИВНИЙ ВІБРОМЕТР
         </span>
       </div>
-    </div>
-  </div>
-
-  <NavBtn :exportToZIP="exportToZIP" :showSample="showSample" />
-
-  <div v-if="isModalVisible" class="modal-overlay" @click="hideModal">
-    <div class="modal-content" @click.stop>
-      <span class="close-button" @click="hideModal">×</span>
-      <iframe v-if="pdfPreview" :src="pdfPreview" width="100%" height="100%"></iframe>
     </div>
   </div>
 </template>
@@ -210,8 +68,7 @@ const showSample = async () => {
 .p1-container {
   width: 427px;
   user-select: none;
-  position: absolute;
-  left: -500px;
+
 }
 
 .p1-content {

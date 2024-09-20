@@ -9,7 +9,9 @@
     "className": "adl-du100",
     "showShieldsModal": false,
     "serialNumbers": [],
-    "isUkrainian": []
+    "isUkrainian": [],
+    "imgWidth": 39.5,
+    "imgHeight": 55
   },
   {
     "id": "ADL-DU110",
@@ -21,7 +23,9 @@
     "className": "adl-du110",
     "showShieldsModal": false,
     "serialNumbers": [],
-    "isUkrainian": []
+    "isUkrainian": [],
+    "imgWidth": 39.5,
+    "imgHeight": 55
   },
   {
     "id": "ADL-DU120 mini",
@@ -33,6 +37,8 @@
     "className": "adl-du120",
     "showShieldsModal": false,
     "serialNumbers": [],
-    "isUkrainian": []
+    "isUkrainian": [],
+    "imgWidth": 39.5,
+    "imgHeight": 55
   }
 ]
