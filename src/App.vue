@@ -62,7 +62,7 @@ const showSample = async () => {
     }
   });
 
-  const pdf = new jsPDF('l', 'mm', 'a4');
+  const pdf = new jsPDF('l', 'mm', 'a3');
   const margin = 1;
   const padding = 1;
   const pageWidth = pdf.internal.pageSize.getWidth();
