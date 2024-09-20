@@ -29,7 +29,7 @@ const emit = defineEmits(['update:country']);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 230px;
+  width: 215px;
   background: #f8f8f8;
   border-radius: 8px;
   padding: 10px;

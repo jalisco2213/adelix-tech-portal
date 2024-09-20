@@ -1,6 +1,5 @@
-
 <script setup>
-import { ref, computed } from 'vue';
+import {ref, computed} from 'vue';
 import {jsPDF} from "jspdf";
 import html2canvas from 'html2canvas';
 import DeviceOption from "@/components/DeviceOption.vue";
@@ -64,13 +63,12 @@ const showSample = async () => {
   });
 
   const pdf = new jsPDF('l', 'mm', 'a3');
-  const topMargin = 1;
-  const rightMargin = 1;
-  const bottomMargin = 0;
-  const leftMargin = 1;
-
-  let x = pdf.internal.pageSize.getWidth() - imgData.value.imgWidth - rightMargin;
-  let y = topMargin;
+  const margin = 1;
+  const padding = 1;
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  let x = margin;
+  let y = margin;
 
   for (let device of selectedDevices.value) {
     for (let i = 0; i < device.quantity; i++) {
@@ -78,33 +76,33 @@ const showSample = async () => {
       const element = document.querySelectorAll(`.${className}`)[i];
 
       if (element) {
-        const canvas = await html2canvas(element, { scale: 2 });
+        const canvas = await html2canvas(element, {scale: 2});
         const image = canvas.toDataURL("image/png");
 
-        if (x < leftMargin) {
-          x = pdf.internal.pageSize.getWidth() - imgData.value.imgWidth - rightMargin;
-          y += imgData.value.imgHeight + topMargin;
+        if (x + device.imgWidth > pageWidth - margin) {
+          x = margin;
+          y += device.imgHeight + padding;
         }
 
-        if (y + imgData.value.imgHeight > pdf.internal.pageSize.getHeight() - bottomMargin) {
+        if (y + device.imgHeight > pageHeight - margin) {
           pdf.addPage();
-          x = pdf.internal.pageSize.getWidth() - imgData.value.imgWidth - rightMargin;
-          y = topMargin;
+          x = margin;
+          y = margin;
         }
 
-        pdf.addImage(image, 'PNG', x, y, imgData.value.imgWidth, imgData.value.imgHeight);
-        x -= imgData.value.imgWidth + leftMargin;
+        pdf.addImage(image, 'PNG', x, y, device.imgWidth, device.imgHeight);
+
+        x += device.imgWidth + padding;
       }
     }
   }
 
+  Swal.close();
   const pdfBlob = pdf.output('blob');
   pdfPreview.value = URL.createObjectURL(pdfBlob);
   isModalVisible.value = true;
   isLoading.value = false;
-  Swal.close();
 };
-
 
 const hideModal = () => {
   isModalVisible.value = false;
@@ -181,6 +179,26 @@ const hideShieldsModal = (deviceId) => {
   width: 100%;
   max-width: 600px;
   margin-bottom: 20px;
+}
+
+.loader {
+  border: 2px solid transparent;
+  border-top: 2px solid #eeeeee;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .nav-btn {

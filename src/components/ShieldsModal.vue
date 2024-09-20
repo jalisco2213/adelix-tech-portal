@@ -127,7 +127,7 @@ const continueSerialNumbers = () => {
 .shields-input {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 15px;
   justify-content: space-between;
 
   .serial-input {
@@ -142,10 +142,10 @@ const continueSerialNumbers = () => {
 
     .shields-serial {
       border: 1px solid #ccc;
-      border-radius: 15px;
+      border-radius: 10px;
       padding: 5px 3px;
       transition: border-color 0.3s, box-shadow 0.3s;
-      width: 170px;
+      width: 150px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
       &:focus {
