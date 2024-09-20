@@ -14,6 +14,8 @@ let pdfPreview = ref(null);
 let isModalVisible = ref(false);
 let isCheck = ref(false);
 const isClosing = ref(false);
+let isLoading = ref(false);
+const remainingTime = ref(0);
 
 const handleUpdateData = (data) => {
   imgData.value = data;
@@ -48,6 +50,19 @@ const selectedDevices = computed(() => {
 });
 
 const showSample = async () => {
+  isLoading.value = true;
+
+  const loadingSwal = Swal.fire({
+    title: 'Генерация PDF...',
+    icon: 'warning',
+    text: 'Пожалуйста, подождите...',
+    allowEscapeKey: false,
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    }
+  });
+
   const pdf = new jsPDF('l', 'mm', 'a3');
   const topMargin = 1;
   const rightMargin = 1;
@@ -63,7 +78,7 @@ const showSample = async () => {
       const element = document.querySelectorAll(`.${className}`)[i];
 
       if (element) {
-        const canvas = await html2canvas(element, {scale: 2});
+        const canvas = await html2canvas(element, { scale: 2 });
         const image = canvas.toDataURL("image/png");
 
         if (x < leftMargin) {
@@ -86,7 +101,10 @@ const showSample = async () => {
   const pdfBlob = pdf.output('blob');
   pdfPreview.value = URL.createObjectURL(pdfBlob);
   isModalVisible.value = true;
+  isLoading.value = false;
+  Swal.close();
 };
+
 
 const hideModal = () => {
   isModalVisible.value = false;
@@ -133,8 +151,12 @@ const hideShieldsModal = (deviceId) => {
       @updateData="handleUpdateData"
     />
 
-    <button v-if="isCheck" @click="showSample" class="nav-btn sample-btn">
-      Образец + печать
+    <button v-if="isCheck"
+            @click="showSample"
+            class="nav-btn sample-btn"
+            :disabled="isLoading">
+      <span v-if="isLoading" class="loader"></span>
+      <span v-else>Образец + печать</span>
     </button>
 
     <ModalReview
