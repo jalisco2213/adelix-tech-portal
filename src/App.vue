@@ -57,8 +57,8 @@ const showSample = async () => {
   const padding = 1;
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
-  let x = margin;
-  let y = margin;
+
+  let positions = [];
 
   for (let device of selectedDevices.value) {
     for (let i = 0; i < device.quantity; i++) {
@@ -66,26 +66,27 @@ const showSample = async () => {
       const element = document.querySelectorAll(`.${className}`)[i];
 
       if (element) {
-        const canvas = await html2canvas(element, {scale: 2});
+        const canvas = await html2canvas(element, { scale: 2 });
         const image = canvas.toDataURL("image/png");
 
-        if (y + device.imgHeight > pageHeight - margin) {
+        let position = findFreeSpace(device.imgWidth, device.imgHeight, pageWidth, pageHeight, margin, padding, positions);
+
+        if (!position) {
           pdf.addPage();
-          y = margin;
+          positions = [];
+          position = { x: margin, y: margin };
         }
 
-        if (x + device.imgWidth > pageWidth - margin) {
-          x = margin;
-          y += device.imgHeight + padding;
-        }
+        pdf.addImage(image, 'PNG', position.x, position.y, device.imgWidth, device.imgHeight);
 
-        pdf.addImage(image, 'PNG', x, y, device.imgWidth, device.imgHeight);
-        x += device.imgWidth + padding;
+        positions.push({
+          x: position.x,
+          y: position.y,
+          width: device.imgWidth,
+          height: device.imgHeight
+        });
       }
     }
-
-    x = margin;
-    y += device.imgHeight + padding;
   }
 
   const pdfBlob = pdf.output('blob');
@@ -93,6 +94,22 @@ const showSample = async () => {
   isModalVisible.value = true;
   isLoading.value = false;
 };
+
+const findFreeSpace = (imgWidth, imgHeight, pageWidth, pageHeight, margin, padding, positions) => {
+  for (let y = margin; y <= pageHeight - imgHeight - margin; y += padding) {
+    for (let x = margin; x <= pageWidth - imgWidth - margin; x += padding) {
+      const overlapping = positions.some(pos =>
+        !(x + imgWidth + padding <= pos.x || x >= pos.x + pos.width + padding ||
+          y + imgHeight + padding <= pos.y || y >= pos.y + pos.height + padding)
+      );
+      if (!overlapping) {
+        return { x, y };
+      }
+    }
+  }
+  return null;
+};
+
 
 
 const hideModal = () => {
