@@ -66,7 +66,7 @@ const showSample = async () => {
       const element = document.querySelectorAll(`.${className}`)[i];
 
       if (element) {
-        const canvas = await html2canvas(element, { scale: 2 });
+        const canvas = await html2canvas(element, {scale: 2});
         const image = canvas.toDataURL("image/png");
 
         let position = findFreeSpace(device.imgWidth, device.imgHeight, pageWidth, pageHeight, margin, padding, positions);
@@ -74,7 +74,7 @@ const showSample = async () => {
         if (!position) {
           pdf.addPage();
           positions = [];
-          position = { x: margin, y: margin };
+          position = {x: margin, y: margin};
         }
 
         pdf.addImage(image, 'PNG', position.x, position.y, device.imgWidth, device.imgHeight);
@@ -103,14 +103,22 @@ const findFreeSpace = (imgWidth, imgHeight, pageWidth, pageHeight, margin, paddi
           y + imgHeight + padding <= pos.y || y >= pos.y + pos.height + padding)
       );
       if (!overlapping) {
-        return { x, y };
+        return {x, y};
       }
     }
   }
   return null;
 };
 
-
+const groupedDevices = computed(() => {
+  return devices.value.reduce((acc, device) => {
+    if (!acc[device.type]) {
+      acc[device.type] = [];
+    }
+    acc[device.type].push(device);
+    return acc;
+  }, {});
+});
 
 const hideModal = () => {
   isModalVisible.value = false;
@@ -148,15 +156,29 @@ const hideShieldsModal = (deviceId) => {
 
   <div class="container">
     <div class="select-wrapper">
-      <DeviceOption
-        v-for="device in devices"
-        :key="device.id"
-        :device="device"
-        @showModal="showShieldsModal"
-        @hideModal="hideShieldsModal"
-        @changeQuantity="handleQuantityChange"
-        :isClosing="isClosing"
-      />
+      <template v-for="(group, type) in groupedDevices">
+        <div class="select-item">
+          <h3>{{ type === 'hardness' ? 'Твердомеры' : 'Виброметры' }}:</h3>
+          <DeviceOption
+            v-for="device in group"
+            :key="device.id"
+            :device="device"
+            @showModal="showShieldsModal"
+            @hideModal="hideShieldsModal"
+            @changeQuantity="handleQuantityChange"
+            :isClosing="isClosing"
+          />
+        </div>
+      </template>
+
+      <button v-if="isCheck"
+              @click="showSample"
+              class="nav-btn sample-btn"
+              :disabled="isLoading">
+        <span v-if="isLoading" class="loader-btn"></span>
+        <span v-else>Образец + печать</span>
+      </button>
+
     </div>
 
     <DeviceDisplay
@@ -166,14 +188,6 @@ const hideShieldsModal = (deviceId) => {
       @updateData="handleUpdateData"
     />
 
-    <button v-if="isCheck"
-            @click="showSample"
-            class="nav-btn sample-btn"
-            :disabled="isLoading">
-      <span v-if="isLoading" class="loader-btn"></span>
-      <span v-else>Образец + печать</span>
-    </button>
-
     <ModalReview
       :isVisible="isModalVisible"
       :pdfPreview="pdfPreview"
@@ -182,14 +196,115 @@ const hideShieldsModal = (deviceId) => {
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+$primary-color: #3b82f6;
+$secondary-color: #f3f4f6;
+$accent-color: #10b981;
+$text-color: #374151;
+$border-radius: 10px;
+$box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
+
 .container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
   min-height: 100vh;
+  padding: 20px;
+
+  .select-wrapper {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+    background-color: $secondary-color;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
+    margin-bottom: 20px;
+
+    h3 {
+      font-size: 1.75em;
+      margin-bottom: 15px;
+      color: $text-color;
+      border-bottom: 3px solid $primary-color;
+      padding-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .select-item {
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: $border-radius;
+      background: #eeeeee;
+      box-shadow: $box-shadow;
+      border: 1px solid #cccccc;
+
+      .device-option {
+        border: 1px solid #cccccc;
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        background-color: #fff;
+        border-radius: $border-radius;
+        margin-bottom: 12px;
+        transition: background-color 0.3s, box-shadow 0.3s;
+
+        &:hover {
+          background-color: lighten($primary-color, 50%);
+          box-shadow: $box-shadow;
+        }
+
+        button {
+          background-color: $primary-color;
+          color: #fff;
+          border: none;
+          border-radius: $border-radius;
+          padding: 10px 20px;
+          cursor: pointer;
+          transition: background-color 0.3s, transform 0.2s;
+
+          &:hover {
+            background-color: darken($primary-color, 10%);
+            transform: translateY(-2px);
+          }
+        }
+      }
+    }
+  }
+
+  .nav-btn {
+    margin-top: 20px;
+    padding: 12px 20px;
+    background-color: $accent-color;
+    color: #fff;
+    border: none;
+    border-radius: $border-radius;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+
+    &:hover {
+      background-color: darken($accent-color, 10%);
+      transform: translateY(-2px);
+    }
+  }
+
+
+  @media (max-width: 768px) {
+    .select-wrapper {
+      padding: 15px;
+
+      h3 {
+        font-size: 1.5em;
+      }
+
+      .device-option {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  }
 }
 
 .modal-loader {
@@ -199,17 +314,17 @@ const hideShieldsModal = (deviceId) => {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999;
 
   .modal-info {
-    padding: 50px;
+    padding: 40px;
     background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: $border-radius;
+    box-shadow: $box-shadow;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -219,15 +334,18 @@ const hideShieldsModal = (deviceId) => {
     transition: transform 0.3s ease-out, opacity 0.3s ease-out;
     animation: slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 
+    h2 {
+      font-size: 1.5em;
+      color: $text-color;
+    }
+
     .modal-loader-btn {
       border: 2px solid transparent;
-      border-top: 2px solid #111;
+      border-top: 2px solid $primary-color;
       border-radius: 50%;
-      width: 30px;
-      height: 30px;
+      width: 40px;
+      height: 40px;
       animation: spin 1s linear infinite;
-      display: inline-block;
-      margin-right: 5px;
     }
   }
 }
@@ -239,12 +357,6 @@ const hideShieldsModal = (deviceId) => {
   100% {
     transform: translateY(0);
   }
-}
-
-.select-wrapper {
-  width: 100%;
-  max-width: 600px;
-  margin-bottom: 20px;
 }
 
 .loader-btn {
@@ -265,9 +377,5 @@ const hideShieldsModal = (deviceId) => {
   100% {
     transform: rotate(360deg);
   }
-}
-
-.nav-btn {
-  margin-top: 20px;
 }
 </style>

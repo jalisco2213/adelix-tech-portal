@@ -6,6 +6,8 @@ const props = defineProps({
   isClosing: Boolean
 });
 
+console.log(props.device.type)
+
 const emit = defineEmits(['showModal', 'hideModal', 'changeQuantity']);
 
 const showShieldsModal = (deviceId) => {
@@ -23,14 +25,12 @@ const handleQuantityChange = (deviceId, quantity) => {
 
 <template>
   <div class="device-option">
-    <div>
-      <input
-        type="checkbox"
-        :id="device.id"
-        v-model="device.selected"
-      />
-      <label :for="device.id">{{ device.id }}</label>
-    </div>
+    <input
+      type="checkbox"
+      :id="device.id"
+      v-model="device.selected"
+    />
+    <label :for="device.id">{{ device.id }}</label>
 
     <span v-if="device.selected" @click="showShieldsModal(device.id)" class="edit-settings">
       <img src="/svg/edit.svg" alt="">
@@ -45,6 +45,8 @@ const handleQuantityChange = (deviceId, quantity) => {
     />
   </div>
 </template>
+
+
 
 <style scoped>
 .device-option {

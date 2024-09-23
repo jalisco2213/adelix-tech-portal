@@ -1,6 +1,7 @@
 [
   {
     "id": "ADL-D100",
+    "type": "hardness",
     "label": "PORTABLE DYNAMIC \n HARDNESS TESTER",
     "labelUkrainian": "ПОРТАТИВНИЙ \n ДИНАМІЧНИЙ ТВЕРДОМІР",
     "serialType": "D100.",
@@ -15,6 +16,7 @@
   },
   {
     "id": "ADL-DU110",
+    "type": "hardness",
     "label": "PORTABLE UNIVERSAL \n HARDNESS TESTER",
     "labelUkrainian": "Універсальний \n твердомір",
     "serialType": "DU110.",
@@ -29,6 +31,7 @@
   },
   {
     "id": "ADL-DU120 mini",
+    "type": "hardness",
     "label": "PORTABLE UNIVERSAL \n HARDNESS TESTER",
     "labelUkrainian": "Універсальний \n твердомір",
     "serialType": "DU120.",
@@ -44,6 +47,7 @@
 
   {
     "id": "ADL-P1",
+    "type": "vibrometr",
     "label": "PORTABLE UNIVERSAL \n HARDNESS TESTER",
     "labelUkrainian": "Універсальний \n твердомір",
     "serialType": "P1",
