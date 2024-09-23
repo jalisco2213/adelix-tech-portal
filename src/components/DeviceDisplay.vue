@@ -1,7 +1,7 @@
 <script setup>
 import {computed} from "vue";
-import AdlDu from "@/components/device/AdlDu.vue";
-import Adl_p1 from "@/components/device/Adl_p1.vue";
+import adlStandard from "@/components/device/adlStandart.vue";
+import adlVibrometrP from "@/components/device/adlVibrometrP.vue";
 
 const props = defineProps({
   device: Object
@@ -9,9 +9,9 @@ const props = defineProps({
 
 const componentToRender = computed(() => {
   if (props.device.type === 'hardness') {
-    return AdlDu;
+    return adlStandard;
   } else if (props.device.type === 'vibrometr') {
-    return Adl_p1;
+    return adlVibrometrP;
   }
 });
 

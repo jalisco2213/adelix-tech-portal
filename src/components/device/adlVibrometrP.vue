@@ -1,5 +1,5 @@
 <script setup>
-import { defineEmits } from 'vue';
+import {defineEmits} from 'vue';
 
 const emit = defineEmits(['updateData']);
 
@@ -17,52 +17,68 @@ let date = new Date().getFullYear();
 
 <template>
   <div :class="`${id}-container`">
-    <div class="p1-content">
-      <div class="p1-left">
+    <div class="vibrometr-content">
+      <div class="vibrometr-left">
         <img src="/logo.png" alt="logo">
       </div>
 
-      <div class="p1-right">
-        <div class="p1-mark">
+      <div class="vibrometr-right">
+        <div class="vibrometr-mark">
           <h1 style="font-size: 25.5px; margin: 0; padding: 0; color: #eee; text-align: center;">{{ id }}</h1>
 
-          <p v-if="!isUkrainian" style="font-size: 15px; text-align: center; color: #eee; margin: 0 0 0 7.5px; padding: 0;">
-            S/N P3.{{ serial }} &nbsp; {{ date }}</p>
+          <p v-if="!isUkrainian"
+             style="font-size: 15px; text-align: center; color: #eee; margin: 0 0 0 7.5px; padding: 0;">
+            S/N {{ serialType }}.{{ serial }} &nbsp; {{ date }}</p>
 
           <p v-else style="font-size: 15px; text-align: center; color: #eee; margin: 0 0 0 7.5px; padding: 0;">
-            № P3.{{ serial }} &nbsp; {{ date }}</p>
+            № {{ serialType }}.{{ serial }} &nbsp; {{ date }}</p>
         </div>
 
-        <div class="p1-info">
-          <div class="p1-count">
+        <div v-if="serialType === 'P1'" class="vibrometr-info">
+          <div class="vibrometr-count">
             <p>0,00</p>
           </div>
 
-          <div class="p1-power" style="display: flex; align-items: center; gap: 4.5px;">
-            <div class="p1-power_img" style="display: flex; align-items: center;">
+          <div class="vibrometr-power" style="display: flex; align-items: center; gap: 4.5px;">
+            <div class="vibrometr-power_img" style="display: flex; align-items: center;">
               <img src="/power.png" style="width: 30px; height: 30px;" alt="">
             </div>
 
-            <div v-if="!isUkrainian" class="p1-power-subtitle"
+            <div v-if="!isUkrainian" class="vibrometr-power-subtitle"
                  style="font-size: 15px; line-height: 1; color: #eee; font-weight: 500;">
               Power on / <br> Measuring
             </div>
 
-            <div v-else class="p1-power-subtitle"
+            <div v-else class="vibrometr-power-subtitle"
                  style="font-size: 15px; line-height: 1; color: #eee; font-weight: 500;">
               Живлення / <br> Вимірювання
             </div>
           </div>
         </div>
+
+        <div v-else class="p3-right">
+          <div class="p3-info" style="position: relative;">
+            <div class="p3-count" style="position: absolute; top: 0; left: 0; padding: 0 !important;">
+              <p>
+                00,0
+              </p>
+            </div>
+
+            <div class="p3-power" style="display: flex; align-items: center; gap: 4.5px;">
+              <img v-if="!isUkrainian" style="width: 220.5px; height: 50px;" src="/p1-eng.png" alt="">
+              <img v-else style="width: 220.5px; height: 50px;" src="/p1-ua.png" alt="">
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div class="p1-arrow">
+      <div class="vibrometr-arrow">
         <span v-if="!isUkrainian">
-          ADELIX COMPANY &nbsp; PORTABLE VIBRATION METER
+        ADELIX &nbsp; &nbsp; {{ label }}
         </span>
 
         <span v-else>
-          ADELIX &nbsp; ПОРТАТИВНИЙ ВІБРОМЕТР
+        ADELIX &nbsp; &nbsp; {{ labelUkrainian }}
         </span>
       </div>
     </div>
@@ -70,12 +86,12 @@ let date = new Date().getFullYear();
 </template>
 
 <style lang="scss" scoped>
-.p1-container {
+.vibrometr-container {
   width: 900px;
   user-select: none;
 }
 
-.p1-content {
+.vibrometr-content {
   position: relative;
   width: 640.5px;
   height: 112.5px;
@@ -85,7 +101,7 @@ let date = new Date().getFullYear();
   align-items: center;
 }
 
-.p1-left {
+.vibrometr-left {
   img {
     display: flex;
     align-items: center;
@@ -96,7 +112,7 @@ let date = new Date().getFullYear();
   }
 }
 
-.p1-arrow {
+.vibrometr-arrow {
   position: absolute;
   bottom: 16.5px;
   left: 180px;
@@ -119,11 +135,11 @@ let date = new Date().getFullYear();
   }
 }
 
-.p1-right {
+.vibrometr-right {
   display: flex;
 }
 
-.p1-mark {
+.vibrometr-mark {
   background: rgb(114, 114, 113);
   width: 172.5px;
   height: 52.5px;
@@ -131,7 +147,7 @@ let date = new Date().getFullYear();
   border-radius: 3px;
 }
 
-.p1-info {
+.vibrometr-info {
   background: rgb(114, 114, 113);
   width: 219px;
   height: 52.5px;
@@ -139,13 +155,13 @@ let date = new Date().getFullYear();
   display: flex;
   align-items: center;
 
-  .p1-count {
+  .vibrometr-count {
     border: 1px solid #eee;
     font-weight: 800;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 75px;
+    width: 55px;
     text-align: center;
     margin: 9px 7.5px;
     font-size: 22.5px;
@@ -159,4 +175,42 @@ let date = new Date().getFullYear();
     }
   }
 }
+
+.p3-mark {
+  background: rgb(114, 114, 113);
+  width: 172.5px;
+  height: 52.5px;
+  margin: 0 6px 21px 22.5px;
+  border-radius: 3px;
+}
+
+.p3-info {
+  background: rgb(114, 114, 113);
+  width: 219px;
+  height: 52.5px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+}
+
+.p3-count {
+  border: 1px solid #eee;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 75px;
+  text-align: center;
+  margin: 2.25px;
+  font-size: 22.5px;
+  color: #eee;
+  border-radius: 4.5px;
+
+  p {
+    padding: 3px;
+    margin: 0;
+    font-size: 15px;
+  }
+}
+
 </style>

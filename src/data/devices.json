@@ -44,16 +44,30 @@
     "imgWidth": 39.5,
     "imgHeight": 55
   },
-
   {
     "id": "ADL-P1",
     "type": "vibrometr",
-    "label": "PORTABLE UNIVERSAL \n HARDNESS TESTER",
-    "labelUkrainian": "Універсальний \n твердомір",
+    "label": "PORTABLE VIBRATION METER",
+    "labelUkrainian": "ПОРТАТИВНИЙ ВІБРОМЕТР",
     "serialType": "P1",
     "quantity": 0,
     "selected": false,
     "className": "p1",
+    "showShieldsModal": false,
+    "serialNumbers": [],
+    "isUkrainian": [],
+    "imgWidth": 113,
+    "imgHeight": 19
+  },
+  {
+    "id": "ADL-P3",
+    "type": "vibrometr",
+    "label": "PORTABLE VIBRATION METER",
+    "labelUkrainian": "ПОРТАТИВНИЙ ВІБРОМЕТР",
+    "serialType": "P3",
+    "quantity": 0,
+    "selected": false,
+    "className": "p3",
     "showShieldsModal": false,
     "serialNumbers": [],
     "isUkrainian": [],
