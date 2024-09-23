@@ -155,21 +155,23 @@ const hideShieldsModal = (deviceId) => {
 
 
   <div class="container">
-    <div class="select-wrapper">
-      <template v-for="(group, type) in groupedDevices">
-        <div class="select-item">
-          <h3>{{ type === 'hardness' ? 'Твердомеры' : 'Виброметры' }}:</h3>
-          <DeviceOption
-            v-for="device in group"
-            :key="device.id"
-            :device="device"
-            @showModal="showShieldsModal"
-            @hideModal="hideShieldsModal"
-            @changeQuantity="handleQuantityChange"
-            :isClosing="isClosing"
-          />
-        </div>
-      </template>
+    <div>
+      <div class="select-wrapper">
+        <template v-for="(group, type) in groupedDevices">
+          <div class="select-item">
+            <h3>{{ type === 'hardness' ? 'Твердомеры' : 'Виброметры' }}:</h3>
+            <DeviceOption
+              v-for="device in group"
+              :key="device.id"
+              :device="device"
+              @showModal="showShieldsModal"
+              @hideModal="hideShieldsModal"
+              @changeQuantity="handleQuantityChange"
+              :isClosing="isClosing"
+            />
+          </div>
+        </template>
+      </div>
 
       <button v-if="isCheck"
               @click="showSample"
@@ -216,7 +218,6 @@ $box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
   .select-wrapper {
     display: flex;
     gap: 10px;
-    width: 100%;
     max-width: 800px;
     padding: 20px;
     background-color: $secondary-color;

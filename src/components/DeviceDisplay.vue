@@ -8,9 +8,12 @@ const props = defineProps({
 });
 
 const componentToRender = computed(() => {
-  return props.device.serialType === 'P1' ? Adl_p1 : AdlDu;
+  if (props.device.type === 'hardness') {
+    return AdlDu;
+  } else if (props.device.type === 'vibrometr') {
+    return Adl_p1;
+  }
 });
-
 
 const emit = defineEmits(['updateData']);
 

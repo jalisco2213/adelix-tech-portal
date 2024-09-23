@@ -1,5 +1,5 @@
 <script setup>
-import {defineEmits} from 'vue';
+import { defineEmits } from 'vue';
 
 const emit = defineEmits(['updateData']);
 
@@ -13,11 +13,10 @@ const props = defineProps({
 });
 
 let date = new Date().getFullYear();
-let artNumber = 'ADL-DU110.01';
 </script>
 
 <template>
-  <div class="p1-container">
+  <div :class="`${id}-container`">
     <div class="p1-content">
       <div class="p1-left">
         <img src="/logo.png" alt="logo">
@@ -25,39 +24,46 @@ let artNumber = 'ADL-DU110.01';
 
       <div class="p1-right">
         <div class="p1-mark">
-          <h1 style="font-size: 17px; margin: 0; padding: 0; color: #eee; text-align: center;">ADL-P1
-          </h1>
+          <h1 style="font-size: 25.5px; margin: 0; padding: 0; color: #eee; text-align: center;">{{ id }}</h1>
 
-          <p style="font-size: 10px; text-align: center; color: #eee; margin: 0 0 0 5px; padding: 0;">№
-           &nbsp; 2024</p>
+          <p v-if="!isUkrainian" style="font-size: 15px; text-align: center; color: #eee; margin: 0 0 0 7.5px; padding: 0;">
+            S/N P3.{{ serial }} &nbsp; {{ date }}</p>
+
+          <p v-else style="font-size: 15px; text-align: center; color: #eee; margin: 0 0 0 7.5px; padding: 0;">
+            № P3.{{ serial }} &nbsp; {{ date }}</p>
         </div>
 
         <div class="p1-info">
           <div class="p1-count">
-            <p>
-              0,00
-            </p>
+            <p>0,00</p>
           </div>
 
-          <div class="p1-power" style="display: flex; align-items: center; gap: 3px;">
+          <div class="p1-power" style="display: flex; align-items: center; gap: 4.5px;">
             <div class="p1-power_img" style="display: flex; align-items: center;">
-              <img src="/power.png" style="width: 20px; height: 20px;" alt="">
-            </div>
-            <div class="p1-power-subtitle"
-              style="font-size: 10px; line-height: 1; color: #eee; font-weight: 500;">
-              Power on / <br>
-              Measuring
+              <img src="/power.png" style="width: 30px; height: 30px;" alt="">
             </div>
 
+            <div v-if="!isUkrainian" class="p1-power-subtitle"
+                 style="font-size: 15px; line-height: 1; color: #eee; font-weight: 500;">
+              Power on / <br> Measuring
+            </div>
+
+            <div v-else class="p1-power-subtitle"
+                 style="font-size: 15px; line-height: 1; color: #eee; font-weight: 500;">
+              Живлення / <br> Вимірювання
+            </div>
           </div>
         </div>
       </div>
 
       <div class="p1-arrow">
-        <span>
+        <span v-if="!isUkrainian">
           ADELIX COMPANY &nbsp; PORTABLE VIBRATION METER
         </span>
 
+        <span v-else>
+          ADELIX &nbsp; ПОРТАТИВНИЙ ВІБРОМЕТР
+        </span>
       </div>
     </div>
   </div>
@@ -65,15 +71,15 @@ let artNumber = 'ADL-DU110.01';
 
 <style lang="scss" scoped>
 .p1-container {
-  width: 427px;
+  width: 900px;
   user-select: none;
 }
 
 .p1-content {
   position: relative;
-  width: 427px;
-  height: 75px;
-  border-radius: 15px;
+  width: 640.5px;
+  height: 112.5px;
+  border-radius: 22.5px;
   background: #111;
   display: flex;
   align-items: center;
@@ -84,20 +90,20 @@ let artNumber = 'ADL-DU110.01';
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 3px auto auto 15px;
-    width: 115px;
-    height: 50px;
+    margin: 4.5px auto auto 22.5px;
+    width: 172.5px;
+    height: 75px;
   }
 }
 
 .p1-arrow {
   position: absolute;
-  bottom: 11px;
-  left: 120px;
-  width: 290px;
-  height: 13px;
+  bottom: 16.5px;
+  left: 180px;
+  width: 435px;
+  height: 19.5px;
   background: rgb(43, 149, 238);
-  border-radius: 2px;
+  border-radius: 3px;
 
   span {
     z-index: 100;
@@ -107,7 +113,7 @@ let artNumber = 'ADL-DU110.01';
     text-align: center;
     padding: 0;
     margin: 0;
-    font-size: 9px;
+    font-size: 13.5px;
     font-weight: 700;
     color: #fff;
   }
@@ -119,17 +125,17 @@ let artNumber = 'ADL-DU110.01';
 
 .p1-mark {
   background: rgb(114, 114, 113);
-  width: 115px;
-  height: 35px;
-  margin: 0 4px 14px 15px;
-  border-radius: 2px;
+  width: 172.5px;
+  height: 52.5px;
+  margin: 0 6px 21px 22.5px;
+  border-radius: 3px;
 }
 
 .p1-info {
   background: rgb(114, 114, 113);
-  width: 146px;
-  height: 35px;
-  border-radius: 2px;
+  width: 219px;
+  height: 52.5px;
+  border-radius: 3px;
   display: flex;
   align-items: center;
 
@@ -139,17 +145,17 @@ let artNumber = 'ADL-DU110.01';
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 50px;
+    width: 75px;
     text-align: center;
-    margin: 6px 5px;
-    font-size: 15px;
+    margin: 9px 7.5px;
+    font-size: 22.5px;
     color: #eee;
-    border-radius: 3px;
+    border-radius: 4.5px;
 
     p {
-      padding: 2px;
+      padding: 3px;
       margin: 0;
-      font-size: 13px;
+      font-size: 19.5px;
     }
   }
 }
