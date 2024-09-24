@@ -48,8 +48,8 @@ const handleUpdateData = (data) => {
 
 <style scoped>
 .device-display {
-  //position: absolute;
-  //left: -5000px;
+  position: absolute;
+  left: -5000px;
   display: flex;
   flex-wrap: wrap;
   gap: 20px;

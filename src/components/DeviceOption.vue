@@ -1,12 +1,11 @@
 <script setup>
+import {computed} from 'vue';
 import ShieldsModal from "@/components/ShieldsModal.vue";
 
 const props = defineProps({
   device: Object,
   isClosing: Boolean
 });
-
-console.log(props.device.type)
 
 const emit = defineEmits(['showModal', 'hideModal', 'changeQuantity']);
 
@@ -21,6 +20,10 @@ const hideShieldsModal = (deviceId) => {
 const handleQuantityChange = (deviceId, quantity) => {
   emit('changeQuantity', deviceId, quantity);
 };
+
+const isSuccessVisible = computed(() => {
+  return props.device.quantity > 0 && props.device.serialNumbers.every(num => num.trim() !== '');
+});
 </script>
 
 <template>
@@ -32,9 +35,13 @@ const handleQuantityChange = (deviceId, quantity) => {
     />
     <label :for="device.id">{{ device.id }}</label>
 
-    <span v-if="device.selected" @click="showShieldsModal(device.id)" class="edit-settings">
+    <div v-if="device.selected" @click="showShieldsModal(device.id)" class="edit-settings">
       <img src="/svg/edit.svg" alt="">
-    </span>
+    </div>
+
+    <div v-if="isSuccessVisible" class="success">
+      &#10003;
+    </div>
 
     <ShieldsModal
       v-if="device.showShieldsModal"
@@ -46,14 +53,13 @@ const handleQuantityChange = (deviceId, quantity) => {
   </div>
 </template>
 
-
-
 <style scoped>
 .device-option {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
   gap: 10px;
+  width: 220px;
 
   div {
     display: flex;
@@ -64,16 +70,15 @@ const handleQuantityChange = (deviceId, quantity) => {
     margin-left: 10px;
     width: 60px;
   }
+}
 
-  input[type="checkbox"] {
-    margin-right: 10px;
-  }
+.success {
+  cursor: default;
 }
 
 .edit-settings {
-  width: 20px;
-  height: 20px;
+  width: 19px;
+  height: 19px;
   cursor: pointer;
 }
-
 </style>
