@@ -11,7 +11,7 @@ const props = defineProps({
 });
 
 const componentToRender = computed(() => {
-  if (['D100.', 'DU110.', 'DU120.',].includes(props.device.serialType)) {
+  if (['D100', 'DU110', 'DU120', 'UT20', 'UT25', 'GT10'].includes(props.device.serialType)) {
     return adlStandard;
   } else if (['P1', 'P3'].includes(props.device.serialType)) {
     return adlVibrometrP;
@@ -43,6 +43,7 @@ const handleUpdateData = (data) => {
       :serial="serial"
       :serialType="device.serialType"
       :isUkrainian="device.isUkrainian[index]"
+      :artN="device.artN"
       :class="device.className"
       @updateData="handleUpdateData"
     />

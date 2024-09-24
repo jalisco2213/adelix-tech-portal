@@ -10,10 +10,10 @@ const props = defineProps({
   isUkrainian: Boolean,
   labelUkrainian: String,
   serialType: String,
+  artN: String
 });
 
 let date = new Date().getFullYear();
-let artNumber = 'ADL-DU110.01';
 </script>
 
 <template>
@@ -43,7 +43,7 @@ let artNumber = 'ADL-DU110.01';
               <div class="du-main">
                 <div>
                   <label for="serial">{{isUkrainian ? 'Сер. №' : 'S/N'}}</label>
-                  <input style="width: 120px; font-size: 17px;" type="text" :value="`${serialType}${serial}`" readonly>
+                  <input style="width: 120px; font-size: 17px;" type="text" :value="`${serialType}.${serial}`" readonly>
                 </div>
 
                 <div>
@@ -54,7 +54,7 @@ let artNumber = 'ADL-DU110.01';
 
               <div style="margin-top: 5px;" class="du-part">
                 <label for="part">{{ isUkrainian ? 'Парт №:' : 'Art/N:' }}</label>
-                <input v-model="artNumber" type="text" style="font-size: 17px; width: 100%; margin-bottom: 8px;" id="part">
+                <input v-model="props.artN" type="text" style="font-size: 17px; width: 100%; margin-bottom: 8px;" id="part">
               </div>
             </div>
 

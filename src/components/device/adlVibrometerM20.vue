@@ -10,6 +10,7 @@ const props = defineProps({
   isUkrainian: Boolean,
   labelUkrainian: String,
   serialType: String,
+  artN: String
 });
 
 let date = new Date().getFullYear();
@@ -55,9 +56,9 @@ let date = new Date().getFullYear();
               </div>
 
               <div class="M20-left_footer" style="display: flex; align-items: center; padding-right: 10px;">
-                <p v-if="!isUkrainian" style="font-size: 11px; color: #eee">Art/N &nbsp; ADL.M20.001 &nbsp; Date:
+                <p v-if="!isUkrainian" style="font-size: 11px; color: #eee">Art/N &nbsp; {{ artN }} &nbsp; Date:
                   2024</p>
-                <p v-else style="font-size: 11px; color: #eee">Парт № ADL.M20.001 &nbsp; 2024</p>
+                <p v-else style="font-size: 11px; color: #eee">Парт № {{ artN }} &nbsp; 2024</p>
               </div>
             </div>
 

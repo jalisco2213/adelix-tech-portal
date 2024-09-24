@@ -59,7 +59,7 @@ const isSuccessVisible = computed(() => {
   align-items: center;
   margin-bottom: 10px;
   gap: 10px;
-  width: 220px;
+  width: 230px;
 
   div {
     display: flex;

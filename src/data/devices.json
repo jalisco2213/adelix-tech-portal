@@ -2,9 +2,10 @@
   {
     "id": "ADL-D100",
     "type": "hardness",
+    "artN": "ADL-D100.01",
     "label": "PORTABLE DYNAMIC \n HARDNESS TESTER",
     "labelUkrainian": "ПОРТАТИВНИЙ \n ДИНАМІЧНИЙ ТВЕРДОМІР",
-    "serialType": "D100.",
+    "serialType": "D100",
     "quantity": 0,
     "selected": false,
     "className": "adl-du100",
@@ -17,9 +18,10 @@
   {
     "id": "ADL-DU110",
     "type": "hardness",
+    "artN": "ADL-DU110.01",
     "label": "PORTABLE UNIVERSAL \n HARDNESS TESTER",
     "labelUkrainian": "Універсальний \n твердомір",
-    "serialType": "DU110.",
+    "serialType": "DU110",
     "quantity": 0,
     "selected": false,
     "className": "adl-du110",
@@ -32,9 +34,10 @@
   {
     "id": "ADL-DU120 mini",
     "type": "hardness",
+    "artN": "ADL-DU120.01",
     "label": "PORTABLE UNIVERSAL \n HARDNESS TESTER",
     "labelUkrainian": "Універсальний \n твердомір",
-    "serialType": "DU120.",
+    "serialType": "DU120",
     "quantity": 0,
     "selected": false,
     "className": "adl-du120",
@@ -47,6 +50,7 @@
   {
     "id": "Датчик: ADL UCI",
     "type": "hardness",
+    "artN": "",
     "label": "",
     "labelUkrainian": "",
     "serialType": "ADL UCI",
@@ -62,6 +66,7 @@
   {
     "id": "Датчик: ADL UCI-S",
     "type": "hardness",
+    "artN": "",
     "label": "",
     "labelUkrainian": "",
     "serialType": "ADL UCI-S",
@@ -77,6 +82,7 @@
   {
     "id": "Датчик: ADL UCI-R",
     "type": "hardness",
+    "artN": "",
     "label": "",
     "labelUkrainian": "",
     "serialType": "ADL UCI-R",
@@ -92,6 +98,7 @@
   {
     "id": "ADL-P1",
     "type": "vibrometr",
+    "artN": "",
     "label": "PORTABLE VIBRATION METER",
     "labelUkrainian": "ПОРТАТИВНИЙ ВІБРОМЕТР",
     "serialType": "P1",
@@ -107,6 +114,7 @@
   {
     "id": "ADL-P3",
     "type": "vibrometr",
+    "artN": "",
     "label": "PORTABLE VIBRATION METER",
     "labelUkrainian": "ПОРТАТИВНИЙ ВІБРОМЕТР",
     "serialType": "P3",
@@ -122,6 +130,7 @@
   {
     "id": "ADL M12",
     "type": "vibrometr",
+    "artN": "",
     "label": "",
     "labelUkrainian": "",
     "serialType": "M12",
@@ -137,6 +146,7 @@
   {
     "id": "ADL M15",
     "type": "vibrometr",
+    "artN": "",
     "label": "",
     "labelUkrainian": "",
     "serialType": "M15",
@@ -152,6 +162,7 @@
   {
     "id": "ADL M20",
     "type": "vibrometr",
+    "artN": "ADL-M20.001",
     "label": "",
     "labelUkrainian": "",
     "serialType": "M20",
@@ -163,5 +174,53 @@
     "isUkrainian": [],
     "imgWidth": 66,
     "imgHeight": 25
+  },
+  {
+    "id": "ADL UT20",
+    "type": "thickness",
+    "artN": "ADL-UT20.001",
+    "label": "ULTRASONIC \n THICKNESS GAUGE",
+    "labelUkrainian": "УЛЬТРАЗВУКОВИЙ \n ТОВЩИНОМЕР",
+    "serialType": "UT20",
+    "quantity": 0,
+    "selected": false,
+    "className": "UT20",
+    "showShieldsModal": false,
+    "serialNumbers": [],
+    "isUkrainian": [],
+    "imgWidth": 39.5,
+    "imgHeight": 55
+  },
+  {
+    "id": "ADL UT25",
+    "type": "thickness",
+    "artN": "ADL-UT25.001",
+    "label": "ULTRASONIC \n THICKNESS GAUGE",
+    "labelUkrainian": "УЛЬТРАЗВУКОВИЙ \n ТОВЩИНОМЕР",
+    "serialType": "UT25",
+    "quantity": 0,
+    "selected": false,
+    "className": "UT25",
+    "showShieldsModal": false,
+    "serialNumbers": [],
+    "isUkrainian": [],
+    "imgWidth": 39.5,
+    "imgHeight": 55
+  },
+  {
+    "id": "ADL GT10",
+    "type": "thickness",
+    "artN": "ADL-GT10.001",
+    "label": "COATING \n THICKNESS GAUGE",
+    "labelUkrainian": "ТОВЩИНОМЕР \n ПОКРИТТІВ",
+    "serialType": "GT10",
+    "quantity": 0,
+    "selected": false,
+    "className": "GT10",
+    "showShieldsModal": false,
+    "serialNumbers": [],
+    "isUkrainian": [],
+    "imgWidth": 39.5,
+    "imgHeight": 55
   }
 ]
