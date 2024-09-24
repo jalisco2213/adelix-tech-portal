@@ -148,5 +148,20 @@
     "isUkrainian": [],
     "imgWidth": 66,
     "imgHeight": 25
+  },
+  {
+    "id": "ADL M20",
+    "type": "vibrometr",
+    "label": "",
+    "labelUkrainian": "",
+    "serialType": "M20",
+    "quantity": 0,
+    "selected": false,
+    "className": "M20",
+    "showShieldsModal": false,
+    "serialNumbers": [],
+    "isUkrainian": [],
+    "imgWidth": 66,
+    "imgHeight": 25
   }
 ]

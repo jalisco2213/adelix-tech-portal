@@ -45,8 +45,8 @@ let date = new Date().getFullYear();
 
               <div class="vibrometer-footer-serial">
                 <p v-if="!isUkrainian" class="sn">S/N &nbsp; </p>
-                <p v-else class="sn ukraine">№</p>
-                <span class="serial">{{ serial }}</span>
+                <p v-else class="sn ukraine">№ &nbsp; </p>
+                <span class="serial">{{serialType}}.{{ serial }}</span>
               </div>
 
               <div class="vibrometer-footer-year">
