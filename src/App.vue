@@ -15,7 +15,6 @@ let isModalVisible = ref(false);
 let isCheck = ref(false);
 const isClosing = ref(false);
 let isLoading = ref(false);
-const remainingTime = ref(0);
 
 const handleUpdateData = (data) => {
   imgData.value = data;
@@ -159,7 +158,8 @@ const hideShieldsModal = (deviceId) => {
       <div class="select-wrapper">
         <template v-for="(group, type) in groupedDevices">
           <div class="select-item">
-            <h3>{{ type === 'hardness' ? 'Твердомеры' : 'Виброметры' }}:</h3>
+            <h3>{{ type === 'hardness' || type === 'hardnessSensor' ? 'Твердомеры' : 'Виброметры' }}:</h3>
+
             <DeviceOption
               v-for="device in group"
               :key="device.id"

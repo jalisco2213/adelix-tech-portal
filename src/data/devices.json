@@ -73,5 +73,50 @@
     "isUkrainian": [],
     "imgWidth": 113,
     "imgHeight": 19
+  },
+  {
+    "id": "Датчик: UCI",
+    "type": "hardness",
+    "label": "",
+    "labelUkrainian": "",
+    "serialType": "ADL UCI",
+    "quantity": 0,
+    "selected": false,
+    "className": "UCI",
+    "showShieldsModal": false,
+    "serialNumbers": [],
+    "isUkrainian": [],
+    "imgWidth": 23,
+    "imgHeight": 23
+  },
+  {
+    "id": "Датчик: UCI-S",
+    "type": "hardness",
+    "label": "",
+    "labelUkrainian": "",
+    "serialType": "ADL UCI-S",
+    "quantity": 0,
+    "selected": false,
+    "className": "UCI-S",
+    "showShieldsModal": false,
+    "serialNumbers": [],
+    "isUkrainian": [],
+    "imgWidth": 23,
+    "imgHeight": 23
+  },
+  {
+    "id": "Датчик: UCI-R",
+    "type": "hardness",
+    "label": "",
+    "labelUkrainian": "",
+    "serialType": "ADL UCI-R",
+    "quantity": 0,
+    "selected": false,
+    "className": "UCI-R",
+    "showShieldsModal": false,
+    "serialNumbers": [],
+    "isUkrainian": [],
+    "imgWidth": 23,
+    "imgHeight": 23
   }
 ]

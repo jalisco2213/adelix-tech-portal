@@ -2,16 +2,19 @@
 import {computed} from "vue";
 import adlStandard from "@/components/device/adlStandart.vue";
 import adlVibrometrP from "@/components/device/adlVibrometrP.vue";
+import sensorUci from "@/components/device/sensorUci.vue"
 
 const props = defineProps({
   device: Object
 });
 
 const componentToRender = computed(() => {
-  if (props.device.type === 'hardness') {
+  if (['D100.', 'DU110.', 'DU120.',].includes(props.device.serialType)) {
     return adlStandard;
-  } else if (props.device.type === 'vibrometr') {
+  } else if (['P1', 'P3'].includes(props.device.serialType)) {
     return adlVibrometrP;
+  } else if (['ADL UCI', 'ADL UCI-S', 'ADL UCI-R'].includes(props.device.serialType)) {
+    return sensorUci;
   }
 });
 
