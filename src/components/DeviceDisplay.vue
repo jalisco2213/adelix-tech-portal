@@ -2,7 +2,8 @@
 import {computed} from "vue";
 import adlStandard from "@/components/device/adlStandart.vue";
 import adlVibrometrP from "@/components/device/adlVibrometrP.vue";
-import sensorUci from "@/components/device/sensorUci.vue"
+import sensorUci from "@/components/device/sensorUci.vue";
+import adlM12 from "@/components/device/Adl_M12.vue";
 
 const props = defineProps({
   device: Object
@@ -15,6 +16,8 @@ const componentToRender = computed(() => {
     return adlVibrometrP;
   } else if (['ADL UCI', 'ADL UCI-S', 'ADL UCI-R'].includes(props.device.serialType)) {
     return sensorUci;
+  } else if (['M12'].includes(props.device.serialType)) {
+    return adlM12;
   }
 });
 
@@ -45,8 +48,8 @@ const handleUpdateData = (data) => {
 
 <style scoped>
 .device-display {
-  position: absolute;
-  left: -5000px;
+  //position: absolute;
+  //left: -5000px;
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
