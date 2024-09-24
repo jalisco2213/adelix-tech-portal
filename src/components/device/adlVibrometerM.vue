@@ -18,9 +18,9 @@ let date = new Date().getFullYear();
 <template>
   <div :class="`${id}-container`">
     <div class="shields-container">
-      <div class="M12-container">
-        <div class="M12-info">
-          <div class="M12-header">
+      <div class="vibrometer-container">
+        <div class="vibrometer-info">
+          <div class="vibrometer-header">
             <img v-if="!isUkrainian" class="logo" src="/logo.png" alt="logo">
             <img v-else class="logo ukraine" src="/logo.png" alt="logo">
 
@@ -39,17 +39,17 @@ let date = new Date().getFullYear();
             <img class="bluetooth" src="/bluetooth.png" alt="bluetooth">
           </div>
 
-          <div class="M12-footer">
-            <div class="M12-footer_content">
+          <div class="vibrometer-footer">
+            <div class="vibrometer-footer_content">
               <p class="id">{{ id }}</p>
 
-              <div class="M12-footer-serial">
-                <p v-if="!isUkrainian" class="sn">S/N</p>
+              <div class="vibrometer-footer-serial">
+                <p v-if="!isUkrainian" class="sn">S/N &nbsp; </p>
                 <p v-else class="sn ukraine">№</p>
                 <span class="serial">{{ serial }}</span>
               </div>
 
-              <div class="M12-footer-year">
+              <div class="vibrometer-footer-year">
                 {{ date }}
               </div>
             </div>
@@ -61,7 +61,7 @@ let date = new Date().getFullYear();
 </template>
 
 <style lang="scss" scoped>
-.M12-info {
+.vibrometer-info {
   border: 1px solid #111;
   width: 330px;
   height: 103px;
@@ -69,7 +69,7 @@ let date = new Date().getFullYear();
   border-radius: 5px;
 }
 
-.M12-header {
+.vibrometer-header {
   padding: 10px 8px 5px;
   display: flex;
   align-items: center;
@@ -130,10 +130,10 @@ let date = new Date().getFullYear();
   }
 }
 
-.M12-footer {
+.vibrometer-footer {
   padding: 5px 10px 10px;
 
-  .M12-footer_content {
+  .vibrometer-footer_content {
     background: rgb(114, 114, 113);
     padding: 5px 10px;
     border-radius: 10px;
@@ -148,7 +148,7 @@ let date = new Date().getFullYear();
       color: #2b95ee;
     }
 
-    .M12-footer-serial {
+    .vibrometer-footer-serial {
       background: #eee;
       border-radius: 15px;
       padding: 2px 10px;
@@ -172,7 +172,7 @@ let date = new Date().getFullYear();
       }
     }
 
-    .M12-footer-year {
+    .vibrometer-footer-year {
       background: #eee;
       font-weight: 700;
       border-radius: 15px;

@@ -133,5 +133,20 @@
     "isUkrainian": [],
     "imgWidth": 66,
     "imgHeight": 25
+  },
+  {
+    "id": "ADL M15",
+    "type": "vibrometr",
+    "label": "",
+    "labelUkrainian": "",
+    "serialType": "M15",
+    "quantity": 0,
+    "selected": false,
+    "className": "M15",
+    "showShieldsModal": false,
+    "serialNumbers": [],
+    "isUkrainian": [],
+    "imgWidth": 66,
+    "imgHeight": 25
   }
 ]
