@@ -1,13 +1,40 @@
+<script setup>
+import {defineProps, defineEmits} from 'vue';
+
+const props = defineProps({
+  country: Boolean
+});
+
+const emit = defineEmits(['update:country']);
+</script>
+
+<template>
+  <div class="switch-container">
+    <div class="labels">
+      <span :class="{ 'abel-left': true, 'inactive': props.country }">English</span>
+    </div>
+    <label class="switch">
+      <input type="checkbox" :checked="props.country" @change="emit('update:country', $event.target.checked)"
+             class="country-checkbox"/>
+      <span class="slider"></span>
+    </label>
+    <div class="labels">
+      <span :class="{ 'label-right': true, 'inactive': !props.country }">Украина</span>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
 .switch-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 230px;
+  width: 215px;
   background: #f8f8f8;
   border-radius: 8px;
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .labels {
@@ -65,11 +92,11 @@
   }
 }
 
-input:checked+.slider {
+input:checked + .slider {
   background-color: #a8aa1e;
 }
 
-input:checked+.slider:before {
+input:checked + .slider:before {
   transform: translateX(32px);
 }
-
+</style>
