@@ -28,12 +28,12 @@ let date = new Date().getFullYear();
 
 
               <h1 v-if="!isUkrainian" style="padding: 7px 0 10px; line-height: 1;">
-                <p style="font-weight: 900; margin-top: 10px; letter-spacing: 1px; color: rgb(43, 149, 238);">ADELIX</p>
+                <p style="font-weight: 800; margin-top: 10px; letter-spacing: 1px; color: rgb(43, 149, 238);">ADELIX</p>
                 <p style="font-size: 25px; letter-spacing: 1px; margin: 7.5px; font-weight: 800;">{{ id }}</p>
               </h1>
 
               <h1 v-else style="padding: 7px 0 10px; line-height: 1;">
-                <p style="font-weight: 700; letter-spacing: 1px; color: rgb(43, 149, 238);">ADELIX</p>
+                <p style="font-weight: 800; letter-spacing: 1px; color: rgb(43, 149, 238);">ADELIX</p>
                 <p style="font-weight: 500; font-size: 25px; letter-spacing: 1px; color: #FFED00">УКРАЇНА</p>
                 <p style="font-size: 25px; letter-spacing: 1px; font-weight: 800;">{{ id }}</p>
               </h1>

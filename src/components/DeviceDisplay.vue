@@ -12,7 +12,7 @@ const props = defineProps({
 });
 
 const componentToRender = computed(() => {
-  if (['D100', 'DU110', 'DU120', 'UT20', 'UT25', 'GT10'].includes(props.device.serialType)) {
+  if (['D100', 'DU110', 'DU120', 'UT20', 'UT25', 'GT10', 'MS30', 'MS30L', 'MS32', 'MS52PRO'].includes(props.device.serialType) || props.device.className === 'MS52PRO') {
     return adlStandard;
   } else if (['P1', 'P3'].includes(props.device.serialType)) {
     return adlVibrometrP;

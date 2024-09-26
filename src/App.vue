@@ -158,7 +158,7 @@ const hideShieldsModal = (deviceId) => {
       <div class="select-wrapper">
         <template v-for="(group, type) in groupedDevices">
           <div class="select-item">
-            <h3>{{ type === 'hardness' ? 'Твердомеры' : type === 'thickness' ? 'Толщиномеры' : 'Виброметры' }}:</h3>
+            <h3>{{ type === 'hardness' ? 'Твердомеры' : type === 'vibrometr' ? 'Виброметры' : type === 'vibroanalization' ? 'Виброанализаторы' : type === 'thickness' ? 'Толщиномеры' : 'none' }}:</h3>
 
             <div style="display: flex; flex-wrap: wrap; gap: 5px">
               <DeviceOption
