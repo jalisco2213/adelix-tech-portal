@@ -4,7 +4,8 @@ import adlStandard from "@/components/device/adlStandart.vue";
 import adlVibrometrP from "@/components/device/adlVibrometrP.vue";
 import sensorUci from "@/components/device/sensorUci.vue";
 import adlVibrometrM from "@/components/device/adlVibrometerM.vue";
-import adlVibrometerM20 from '@/components/device/adlVibrometerM20.vue'
+import adlVibrometerM20 from '@/components/device/adlVibrometerM20.vue';
+import thicknessSensor from '@/components/device/thicknessSensor.vue'
 
 const props = defineProps({
   device: Object
@@ -21,6 +22,8 @@ const componentToRender = computed(() => {
     return adlVibrometrM;
   } else if (['M20'].includes(props.device.serialType)) {
     return adlVibrometerM20;
+  } else if (['SF0.3', 'SF0.5', 'SF2', 'SF5', 'SN2', 'SM12', 'SM30', 'SM60', 'ST1', 'SH1', 'SR1'].includes(props.device.serialType)) {
+    return thicknessSensor;
   }
 });
 
@@ -33,20 +36,20 @@ const handleUpdateData = (data) => {
 
 <template>
   <div class="device-display">
-    <component
-      v-for="(serial, index) in device.serialNumbers"
-      :key="index"
-      :is="componentToRender"
-      :id="device.id"
-      :label="device.label"
-      :labelUkrainian="device.labelUkrainian"
-      :serial="serial"
-      :serialType="device.serialType"
-      :isUkrainian="device.isUkrainian[index]"
-      :artN="device.artN"
-      :class="device.className"
-      @updateData="handleUpdateData"
-    />
+      <component
+        v-for="(serial, index) in device.serialNumbers"
+        :key="index"
+        :is="componentToRender"
+        :id="device.id"
+        :label="device.label"
+        :labelUkrainian="device.labelUkrainian"
+        :serial="serial"
+        :serialType="device.serialType"
+        :isUkrainian="device.isUkrainian[index]"
+        :artN="device.artN"
+        :class="device.className"
+        @updateData="handleUpdateData"
+      />
   </div>
 </template>
 

@@ -160,15 +160,17 @@ const hideShieldsModal = (deviceId) => {
           <div class="select-item">
             <h3>{{ type === 'hardness' ? 'Твердомеры' : type === 'thickness' ? 'Толщиномеры' : 'Виброметры' }}:</h3>
 
-            <DeviceOption
-              v-for="device in group"
-              :key="device.id"
-              :device="device"
-              @showModal="showShieldsModal"
-              @hideModal="hideShieldsModal"
-              @changeQuantity="handleQuantityChange"
-              :isClosing="isClosing"
-            />
+            <div style="display: flex; flex-wrap: wrap; gap: 5px">
+              <DeviceOption
+                v-for="device in group"
+                :key="device.id"
+                :device="device"
+                @showModal="showShieldsModal"
+                @hideModal="hideShieldsModal"
+                @changeQuantity="handleQuantityChange"
+                :isClosing="isClosing"
+              />
+            </div>
           </div>
         </template>
       </div>
@@ -213,12 +215,13 @@ $box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
   align-items: center;
   background-color: #ffffff;
   min-height: 100vh;
-  padding: 20px;
 
   .select-wrapper {
     display: flex;
+    justify-content: center;
     gap: 10px;
     padding: 20px;
+    flex-wrap: wrap;
     background-color: $secondary-color;
     border-radius: $border-radius;
     box-shadow: $box-shadow;
@@ -234,6 +237,7 @@ $box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
     }
 
     .select-item {
+      max-width: 529px;
       padding: 15px;
       margin: 10px 0;
       border-radius: $border-radius;
