@@ -19,7 +19,7 @@ const props = defineProps({
       <div class="uci-sensor">
 
         <div class="uci-header">
-          <h1>{{ serialType }}</h1>
+          <h1 style="color: #eee">{{ serialType }}</h1>
         </div>
 
         <div class="uci-main">
@@ -27,7 +27,7 @@ const props = defineProps({
         </div>
 
         <div class="uci-footer">
-          <h1>№{{serial}}</h1>
+          <h1 style="color: #eee">№{{serial}}</h1>
         </div>
       </div>
     </div>
@@ -41,6 +41,7 @@ const props = defineProps({
   width: 300px;
   height: 300px;
   border-radius: 50%;
+  background: rgb(114, 115, 118);
   display: flex;
   flex-direction: column;
   justify-content: center;
