@@ -1,11 +1,11 @@
 <script setup>
 import {computed} from "vue";
-import adlStandard from "@/components/device/adlStandart.vue";
-import adlVibrometrP from "@/components/device/adlVibrometrP.vue";
-import sensorUci from "@/components/device/sensorUci.vue";
-import adlVibrometrM from "@/components/device/adlVibrometerM.vue";
-import adlVibrometerM20 from '@/components/device/adlVibrometerM20.vue';
-import thicknessSensor from '@/components/device/thicknessSensor.vue'
+import adlStandard from "@/components/Shields/device/adlStandart.vue";
+import adlVibrometrP from "@/components/Shields/device/adlVibrometrP.vue";
+import sensorUci from "@/components/Shields/device/sensorUci.vue";
+import adlVibrometrM from "@/components/Shields/device/adlVibrometerM.vue";
+import adlVibrometerM20 from '@/components/Shields/device/adlVibrometerM20.vue';
+import thicknessSensor from '@/components/Shields/device/thicknessSensor.vue'
 
 const props = defineProps({
   device: Object

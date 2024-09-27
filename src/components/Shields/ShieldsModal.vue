@@ -1,6 +1,6 @@
 <script setup>
-import SwitchCountry from "@/components/SwitchCountry.vue";
-import ModalLoader from "@/components/Utils/ModalLoader.vue";
+import SwitchCountry from "@/components/Shields/SwitchCountry.vue";
+import ModalLoader from "@/components/Shields/Utils/ModalLoader.vue";
 
 const props = defineProps({
   device: Object,

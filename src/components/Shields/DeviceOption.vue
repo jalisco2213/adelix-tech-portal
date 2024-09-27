@@ -1,6 +1,6 @@
 <script setup>
 import {computed} from 'vue';
-import ShieldsModal from "@/components/ShieldsModal.vue";
+import ShieldsModal from "@/components/Shields/ShieldsModal.vue";
 
 const props = defineProps({
   device: Object,
