@@ -14,7 +14,7 @@ const router = createRouter({
       component: ShieldsView,
     },
     {
-      path: '/protocols',
+      path: '/',
       name: 'protocols',
       component: ProtocolsView,
     },

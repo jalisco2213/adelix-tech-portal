@@ -7,8 +7,8 @@ let isCollapsed = ref(false);
 let logoHide = ref(false);
 
 const navigations = [
+  {id: 3, text: 'Протоколы', img: '/svg/docx.svg', link: '/'},
   {id: 0, text: 'Шильды', img: '/svg/sticker.svg', link: '/shields'},
-  {id: 3, text: 'Протоколы', img: '/svg/docx.svg', link: '/protocols'},
 ];
 
 function hideNavigation() {
