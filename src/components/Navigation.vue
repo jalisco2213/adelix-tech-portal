@@ -7,8 +7,8 @@ let isCollapsed = ref(false);
 let logoHide = ref(false);
 
 const navigations = [
-  {id: 3, text: 'Протоколы', img: '/svg/docx.svg', link: '/'},
-  {id: 0, text: 'Шильды', img: '/svg/sticker.svg', link: '/shields'},
+  {id: 3, text: 'Протоколы', img: '/docx.svg', link: '/'},
+  {id: 0, text: 'Шильды', img: '/sticker.svg', link: '/shields'},
 ];
 
 function hideNavigation() {
@@ -72,11 +72,18 @@ onMounted(async () => {
 
         <nav class="nav">
           <ul>
-            <li v-for="navigation in navigations">
-              <RouterLink class="nav-link" :to="navigation.link" exact
-                          :class="{ 'active-link': $route.path === navigation.link }">
-                <img :src="navigation.img" alt="">
-                <span class="nav-link_text">{{ navigation.text }}</span>
+            <li>
+              <RouterLink class="nav-link" to="/" exact
+                          :class="{ 'active-link': $route.path === '/' }">
+                <img src="/docx.svg" alt="">
+                <span class="nav-link_text">Протоколы</span>
+              </RouterLink>
+            </li>
+            <li>
+              <RouterLink class="nav-link" to="/shields" exact
+                          :class="{ 'active-link': $route.path === '/shields' }">
+                <img src="/sticker.svg" alt="">
+                <span class="nav-link_text">Шильды</span>
               </RouterLink>
             </li>
           </ul>
