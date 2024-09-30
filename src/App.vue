@@ -1,10 +1,11 @@
-<script setup lang="ts">
-import ShieldsView from "./views/ShieldsView.vue";
-import Navigation from "@/components/Navigation.vue";
+<script setup>
+import { RouterView } from 'vue-router';
 </script>
 
 <template>
-  <Navigation/>
-
-  <ShieldsView/>
+  <RouterView />
 </template>
+
+<style scoped>
+
+</style>

@@ -7,6 +7,7 @@ import DeviceDisplay from "@/components/Shields/DeviceDisplay.vue";
 import ModalReview from "@/components/Shields/ModalReview.vue";
 import devicesData from '../data/devices.json';
 import ModalLoader from "@/components/Shields/Utils/ModalLoader.vue";
+import Navigation from "@/components/Navigation.vue";
 
 const devices = ref(devicesData);
 const imgData = ref({});
@@ -144,59 +145,65 @@ const hideShieldsModal = (deviceId) => {
 </script>
 
 <template>
-  <div class="modal-loader" v-if="isLoading">
-    <div class="modal-info">
-      <ModalLoader style="margin: auto; display: flex; justify-content:center;"/>
-      <h2>Генерация PDF...</h2>
-      <span class="modal-loader-btn"></span>
-    </div>
-  </div>
+  <div class="wrapper">
 
+    <Navigation/>
 
-  <div class="container">
-    <div>
-      <div class="select-wrapper">
-        <template v-for="(group, type) in groupedDevices">
-          <div class="select-item">
-            <h3>{{ type === 'hardness' ? 'Твердомеры' : type === 'vibrometr' ? 'Виброметры' : type === 'vibroanalization' ? 'Виброанализаторы' : type === 'thickness' ? 'Толщиномеры' : 'none' }}:</h3>
+    <div class="container">
+      <div>
+        <div class="select-wrapper">
+          <template v-for="(group, type) in groupedDevices">
+            <div class="select-item">
+              <h3>{{
+                  type === 'hardness' ? 'Твердомеры' : type === 'vibrometr' ? 'Виброметры' : type === 'vibroanalization' ? 'Виброанализаторы' : type === 'thickness' ? 'Толщиномеры' : 'none'
+                }}:</h3>
 
-            <div style="display: flex; flex-wrap: wrap; gap: 5px">
-              <DeviceOption
-                v-for="device in group"
-                :key="device.id"
-                :device="device"
-                @showModal="showShieldsModal"
-                @hideModal="hideShieldsModal"
-                @changeQuantity="handleQuantityChange"
-                :isClosing="isClosing"
-              />
+              <div style="display: flex; flex-wrap: wrap; gap: 5px">
+                <DeviceOption
+                  v-for="device in group"
+                  :key="device.id"
+                  :device="device"
+                  @showModal="showShieldsModal"
+                  @hideModal="hideShieldsModal"
+                  @changeQuantity="handleQuantityChange"
+                  :isClosing="isClosing"
+                />
+              </div>
             </div>
-          </div>
-        </template>
+          </template>
+        </div>
+
+        <button v-if="isCheck"
+                @click="showSample"
+                class="nav-btn sample-btn"
+                :disabled="isLoading">
+          <span v-if="isLoading" class="loader-btn"></span>
+          <span v-else>Просмотр</span>
+        </button>
+
       </div>
 
-      <button v-if="isCheck"
-              @click="showSample"
-              class="nav-btn sample-btn"
-              :disabled="isLoading">
-        <span v-if="isLoading" class="loader-btn"></span>
-        <span v-else>Просмотр</span>
-      </button>
+      <DeviceDisplay
+        v-for="device in selectedDevices"
+        :key="device.id"
+        :device="device"
+        @updateData="handleUpdateData"
+      />
 
+      <ModalReview
+        :isVisible="isModalVisible"
+        :pdfPreview="pdfPreview"
+        @closeModal="hideModal"
+      />
     </div>
 
-    <DeviceDisplay
-      v-for="device in selectedDevices"
-      :key="device.id"
-      :device="device"
-      @updateData="handleUpdateData"
-    />
-
-    <ModalReview
-      :isVisible="isModalVisible"
-      :pdfPreview="pdfPreview"
-      @closeModal="hideModal"
-    />
+    <div class="modal-loader" v-if="isLoading">
+      <div class="modal-info">
+        <ModalLoader style="margin: auto; display: flex; justify-content:center;"/>
+        <h2>Генерация PDF...</h2>
+        <span class="modal-loader-btn"></span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -216,7 +223,6 @@ const hideShieldsModal = (deviceId) => {
     padding: 20px;
     flex-wrap: wrap;
     border-radius: 10px;
-    box-shadow: 0 4px 5px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
 
     h3 {

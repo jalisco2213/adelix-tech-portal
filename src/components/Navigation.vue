@@ -7,10 +7,8 @@ let isCollapsed = ref(false);
 let logoHide = ref(false);
 
 const navigations = [
-  {id: 0, text: 'Руководство', img: '/navSVG/users.svg', link: '/'},
-  {id: 3, text: 'Следящие', img: '/navSVG/admins.svg', link: '/'},
-  {id: 2, text: 'Неактив', img: '/navSVG/inactive.svg', link: '/'},
-  {id: 2, text: 'Запрос онлайна', img: '/navSVG/online.svg', link: '/'},
+  {id: 0, text: 'Шильды', img: '/svg/sticker.svg', link: '/shields'},
+  {id: 3, text: 'Протоколы', img: '/svg/docx.svg', link: '/protocols'},
 ];
 
 function hideNavigation() {
@@ -90,7 +88,7 @@ onMounted(async () => {
     <div class="navigation-profile">
       <li @click="hideNavigation">
         <a class="nav-link">
-          <img src="/navSVG/hide1.svg" style="width: 20px;" alt="">
+          <img src="/svg/hide.svg" style="width: 20px;" alt="">
           <span class="nav-link_text">Свернуть</span>
         </a>
       </li>
@@ -107,30 +105,30 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-right: 1px solid #565760;
+  border-right: 1px solid #111;
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
-  background: #24263A;
+  background: #f7f7f7;
   height: 100vh;
-  box-shadow: 0px 0px 60px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
   overflow-x: hidden;
   transition: width 0.3s ease;
   list-style: none;
   font-size: 15px;
-  color: #eee;
+  color: #111;
 
-  @media(max-width: 1000px) {
+  @media (max-width: 1000px) {
     width: 150px;
     font-size: 12px;
   }
 
-  @media(max-width: 768px) {
+  @media (max-width: 768px) {
     display: none;
   }
 }
 
 .navigation-profile {
-  border-top: 1px solid rgb(126, 126, 126);
+  border-top: 1px solid #c0c0c0;
   padding: 10px;
 
   li {
@@ -142,7 +140,7 @@ onMounted(async () => {
   margin: 30px 0 5px;
 
   div {
-    background: rgb(126, 126, 126);
+    background: #111;
     height: 1px;
     width: 100%;
   }
@@ -152,10 +150,11 @@ onMounted(async () => {
     display: flex;
     justify-content: center;
     text-align: center;
-    font-weight: 100;
+    font-weight: 500;
     font-size: 13px;
     cursor: default;
-    background: #24263A;
+    background: #f7f7f7;
+    color: #111;
     width: 80px;
   }
 }
@@ -177,30 +176,28 @@ h1 {
   font-weight: 400;
   line-height: 1;
   padding-bottom: 30px;
-  border-bottom: 2px solid #1D1E2C;
+  border-bottom: 2px solid #444;
   width: 200px;
-  margin-bottom: 20px;
 }
 
 .nav-link {
-  opacity: .7;
+  opacity: 0.8;
   max-width: 100%;
   padding: 8px 13px;
   display: flex;
   align-items: center;
-  transition: .1s ease-in-out;
+  transition: 0.1s ease-in-out;
+  color: #444;
 
   &:hover {
-    background: #1D1E2C;
+    background: #e0e0e0;
     border-radius: 100px;
-    transition: .1s ease-in-out;
+    transition: 0.1s ease-in-out;
   }
 
-  &_admin {
-    &:hover {
-      border-radius: none;
-      opacity: .9;
-    }
+  &.nav-link_admin:hover {
+    border-radius: none;
+    opacity: 0.9;
   }
 }
 
@@ -209,10 +206,10 @@ h1 {
   padding: 10px 10px;
   display: flex;
   align-items: center;
-  transition: .1s ease-in-out;
+  transition: 0.1s ease-in-out;
   font-size: 13px;
 
-  @media(max-width: 1000px) {
+  @media (max-width: 1000px) {
     font-size: 11px;
   }
 }
@@ -234,15 +231,9 @@ nav {
   margin: 25px auto 20px auto;
   justify-content: center;
 
-  @media(max-width: 1000px) {
+  @media (max-width: 1000px) {
     width: 120px;
     height: 30px;
-  }
-
-  &_hide {
-    display: flex;
-    justify-content: center;
-    margin: 20px auto;
   }
 }
 
@@ -250,74 +241,41 @@ nav {
   display: flex;
   align-items: center;
   cursor: pointer;
-  display: flex;
-
   &:hover {
-    background: #1D1E2C;
+    background: #e0e0e0;
     border-radius: 20px;
   }
 }
 
 .dropdown-content {
   cursor: pointer;
-  background: #1D1E2C;
+  background: #f7f7f7;
   border-radius: 10px;
   font-size: 14px;
   text-align: center;
-  -webkit-animation-name: fadeInDownBig;
   animation-name: fadeInDownBig;
-  -webkit-animation-duration: .3s;
-  animation-duration: .3s;
-  -webkit-animation-fill-mode: both;
+  animation-duration: 0.3s;
   animation-fill-mode: both;
-
-  @-webkit-keyframes fadeInDownBig {
-    0% {
-      opacity: 0;
-      -webkit-transform: translate3d(0, -10%, 0);
-      transform: translate3d(0, -10%, 0);
-    }
-
-    100% {
-      opacity: 1;
-      -webkit-transform: none;
-      transform: none;
-    }
-  }
-
-  @keyframes fadeInDownBig {
-    0% {
-      opacity: 0;
-      -webkit-transform: translate3d(0, -10%, 0);
-      transform: translate3d(0, -10%, 0);
-    }
-
-    100% {
-      opacity: 1;
-      -webkit-transform: none;
-      transform: none;
-    }
-  }
 
   li {
     margin-bottom: 10px;
 
     a {
-      color: #a5a5a5;
+      color: #888;
 
       &:hover {
-        color: #eee;
+        color: #444;
       }
 
       &:not(:last-child) {
-        border-bottom: 2px solid #24263A;
+        border-bottom: 2px solid #e0e0e0;
       }
     }
   }
 }
 
 .navigation-hide {
-  border-top: 3px solid #1D1E2C;
+  border-top: 3px solid #444;
   padding-top: 5px;
   display: flex;
   align-items: center;
@@ -328,16 +286,11 @@ nav {
   transform: translateX(8%);
 }
 
-
 .active-link {
   opacity: 1;
-  background-color: #1D1E2C;
+  background-color: #e0e0e0;
   border-radius: 20px;
-  transition: .1s ease;
-
-  &_admin {
-    background-color: #191925;
-  }
+  transition: 0.1s ease;
 }
 
 .hidden-image-style {
@@ -350,5 +303,8 @@ nav {
 .logo-img_hide {
   width: 45px;
   height: 47px;
+  display: flex;
+  justify-content: center;
+  margin: 20px auto;
 }
 </style>
