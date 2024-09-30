@@ -185,3 +185,11 @@ input {
   margin-bottom: 10px;
   font-weight: 500;
 }
+
+.container {
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}

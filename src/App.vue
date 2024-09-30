@@ -1,7 +1,11 @@
-<script setup lang="ts">
-import ShieldsView from "./views/ShieldsView.vue";
+<script setup>
+import { RouterView } from 'vue-router';
 </script>
 
 <template>
-  <ShieldsView/>
+  <RouterView />
 </template>
+
+<style scoped>
+
+</style>

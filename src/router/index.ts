@@ -1,23 +1,24 @@
-// import { createWebHistory, createRouter } from "vue-router";
-// import Home from "../components/Home.vue";
-// import About from "../components/About.vue";
+import {createWebHistory, createRouter} from "vue-router";
+import ShieldsView from "../views/ShieldsView.vue";
+import ProtocolsView from "../views/ProtocolsView.vue";
 
-// const routes = [
-//     {
-//         path: "/home",
-//         name: "Home",
-//         component: Home,
-//     },
-//     {
-//         path: "/about",
-//         name: "About",
-//         component: About,
-//     },
-// ];
 
-// const router = createRouter({
-//     history: createWebHistory(),
-//     routes,
-// });
+const routes = [];
 
-// export default router;
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    {
+      path: '/shields',
+      name: 'shields',
+      component: ShieldsView,
+    },
+    {
+      path: '/',
+      name: 'protocols',
+      component: ProtocolsView,
+    },
+  ]
+});
+
+export default router;
