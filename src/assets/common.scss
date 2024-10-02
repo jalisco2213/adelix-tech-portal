@@ -125,7 +125,6 @@
   display: flex;
   align-items: center;
   gap: 10px;
-
 }
 
 .shield-details {
@@ -192,4 +191,24 @@ input {
   justify-content: center;
   align-items: center;
   margin: 0 auto;
+}
+
+h1 {
+  font-size: 30px;
+  font-weight: 300;
+  background-color: #f7f7f7;
+  padding: 15px;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+  border-top: 1px solid #565760;
+  border-left: 1px solid #565760;
+  border-right: 1px solid #565760;
+
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+}
+
+.w100 {
+  width: 100%;
 }

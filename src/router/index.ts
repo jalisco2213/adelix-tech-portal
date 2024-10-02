@@ -1,6 +1,7 @@
 import {createWebHashHistory, createRouter} from "vue-router";
 import ShieldsView from "@/views/ShieldsView.vue";
 import ProtocolsView from "@/views/ProtocolsView.vue";
+import StorageView from "../views/StorageView.vue";
 
 const routes = [
   {
@@ -12,6 +13,11 @@ const routes = [
     path: '/',
     name: 'protocols',
     component: ProtocolsView,
+  },
+  {
+    path: '/storage',
+    name: 'storage',
+    component: StorageView,
   },
 ];
 

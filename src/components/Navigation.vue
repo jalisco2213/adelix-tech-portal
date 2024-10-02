@@ -60,7 +60,7 @@ onMounted(async () => {
 <template>
   <div class="navigation-container" :style="{ width: isCollapsed ? '70px' : '250px' }">
     <div class="navigation-info">
-      <div class="navigation-link">
+      <div class="navigation-link" >
         <img src="/ADL.png" alt="logo" class="logo-img" :style="{ display: !isCollapsed ? 'flex' : 'none' }">
         <img src="/adlLogo.png" alt="" class="logo-img_hide" v-if="logoHide"
              :style="{ display: isCollapsed ? 'flex' : 'none' }">
@@ -77,6 +77,13 @@ onMounted(async () => {
                           :class="{ 'active-link': $route.path === '/' }">
                 <img src="/docx.svg" alt="">
                 <span class="nav-link_text">Протоколы</span>
+              </RouterLink>
+            </li>
+            <li>
+              <RouterLink class="nav-link" to="/storage" exact
+                          :class="{ 'active-link': $route.path === '/storage' }">
+                <img src="/storage.svg" alt="">
+                <span class="nav-link_text">Склад</span>
               </RouterLink>
             </li>
             <li>
@@ -135,7 +142,7 @@ onMounted(async () => {
 }
 
 .navigation-profile {
-  border-top: 1px solid #c0c0c0;
+  border-top: 1px solid #111;
   padding: 10px;
 
   li {
