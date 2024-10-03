@@ -186,11 +186,12 @@ input {
 }
 
 .container {
-  width: 80%;
+  width: 83%;
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 0 auto;
+  flex-direction: column;
 }
 
 h1 {
@@ -200,9 +201,9 @@ h1 {
   padding: 15px;
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;
-  border-top: 1px solid #565760;
-  border-left: 1px solid #565760;
-  border-right: 1px solid #565760;
+  border-top: 1px solid #111;
+  border-left: 1px solid #111;
+  border-right: 1px solid #111;
 
   @media (max-width: 768px) {
     font-size: 20px;

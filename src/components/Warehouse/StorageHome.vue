@@ -1,6 +1,6 @@
 <script setup>
-import {ref, onMounted} from 'vue'
-import {supabase} from '@/ts/client/supabase'
+import {ref, onMounted} from 'vue';
+import {supabase} from '@/ts/client/supabase';
 
 const storageData = ref([]);
 const selectedComments = ref([]);
@@ -8,10 +8,10 @@ const isModalVisible = ref(false);
 const selectedDevice = ref('');
 
 onMounted(async () => {
-  const {data, error} = await supabase.from('storage').select('*')
-  if (error) console.error(error)
-  storageData.value = data
-})
+  const {data, error} = await supabase.from('storage').select('*');
+  if (error) console.error(error);
+  storageData.value = data;
+});
 
 const openModal = (comments, deviceName) => {
   selectedComments.value = comments;
@@ -22,39 +22,38 @@ const openModal = (comments, deviceName) => {
 const closeModal = () => {
   isModalVisible.value = false;
 };
-
 </script>
 
 <template>
   <div class="storage-container">
     <h1>Склад</h1>
-    <table class="storage-table">
-      <thead>
-      <tr>
-        <th>Название</th>
-        <th>Количество</th>
-        <th>История</th>
-      </tr>
-      </thead>
-      <tbody>
-      <template v-for="(device, index) in storageData" :key="index">
+    <div class="storage">
+      <table class="storage-table">
+        <thead>
         <tr>
-          <td colspan="3" class="table-header">
-            {{ device.type }}
-          </td>
+          <th>Название</th>
+          <th>Количество</th>
+          <th>История</th>
         </tr>
-        <template v-for="(typeItems, typeKey) in device.devices" :key="typeKey">
+        </thead>
+        <tbody>
+        <template v-for="(device, index) in storageData" :key="index">
           <tr>
-            <td>{{ typeKey }}</td>
-            <td>{{ typeItems[0].count }}</td>
-            <td>
-              <button @click="openModal(typeItems[0].comment, typeKey)">Просмотр комментариев</button>
-            </td>
+            <td colspan="3" class="table-header">{{ device.type }}</td>
           </tr>
+          <template v-for="(typeItems, typeKey) in device.devices" :key="typeKey">
+            <tr>
+              <td>{{ typeKey }}</td>
+              <td>{{ typeItems[0].count }}</td>
+              <td>
+                <img src="/info.svg" @click="openModal(typeItems[0].comment, typeKey)">
+              </td>
+            </tr>
+          </template>
         </template>
-      </template>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
 
     <div v-if="isModalVisible" class="modal-overlay">
       <div class="modal-content">
@@ -66,9 +65,10 @@ const closeModal = () => {
               <span>{{ comment.text.username }}</span>
               <span class="operation"
                     :class="{ take: comment.text.operation === 'take', put: comment.text.operation === 'put' }">
-             {{ comment.text.operation === 'take' ? ' взял' : 'put' ? ' положил' : 'не обнаружено' }}
-            <strong>{{ comment.text.quantity }} шт. {{ selectedDevice }}</strong>.
-          </span>
+                {{ comment.text.operation === 'take' ? ' взял' : ' положил' }} <strong>{{ comment.text.quantity }} шт. {{
+                  selectedDevice
+                }}</strong>.
+              </span>
               Общее количество: <strong>{{ comment.text.historyCount }}</strong>
             </p>
           </li>
@@ -82,48 +82,58 @@ const closeModal = () => {
 <style scoped lang="scss">
 .storage-container {
   width: 100%;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.storage {
+  border: 1px solid #111;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  overflow: auto;
+  background-color: #ffffff;
 }
 
 .storage-table {
   width: 100%;
   border-collapse: collapse;
+  border-radius: 20px;
 
   th, td {
-    border: 1px solid #ddd;
+    border: 1px solid #e0e0e0;
     padding: 8px;
     text-align: center;
+    font-size: 16px;
+    color: #333;
   }
 
   th {
-    background-color: #f2f2f2;
+    background-color: #f1f1f1;
+    color: #333;
+    padding: 15px;
+    font-weight: bold;
   }
 
   .table-header {
     padding: 10px 0;
-    text-align: center;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 18px;
     text-transform: uppercase;
+    background-color: #e8e8e8;
   }
 
-  button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 5px 10px;
-    border: none;
+  img {
+    width: 20px;
     cursor: pointer;
-
-    &:hover {
-      background-color: #45a049;
-    }
+    margin: auto;
+    display: flex;
   }
 }
 
 .modal-overlay {
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
-  transition: opacity 0.3s ease-in-out;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
   top: 0;
   left: 0;
   width: 100%;
@@ -131,32 +141,32 @@ const closeModal = () => {
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: opacity 0.3s ease-in-out;
 }
 
 .modal-content {
-  background-color: white;
-  max-height: 50%;
-  padding: 20px;
-  border-radius: 10px;
-  width: 80%;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 15px;
+  width: 90%;
   max-width: 600px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-  animation: slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.3s ease-in;
 
-
-  @keyframes slide-top {
-    0% {
-      transform: translateY(50px);
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
     }
-    100% {
+    to {
+      opacity: 1;
       transform: translateY(0);
     }
   }
 
   h2 {
     margin-bottom: 15px;
-    font-size: 26px;
+    font-size: 24px;
     color: #333;
     text-align: center;
   }
@@ -176,19 +186,20 @@ const closeModal = () => {
   }
 
   p {
-    font-size: 16px;
+    font-size: 14px;
     color: #555;
-    line-height: 1.5;
+    line-height: 1.6;
   }
 
   .operation {
-    font-weight: normal;
+    font-weight: bold;
+
     &.take {
-      color: green;
+      color: #4CAF50;
     }
 
     &.put {
-      color: red;
+      color: #F44336;
     }
   }
 
@@ -199,9 +210,9 @@ const closeModal = () => {
   .close-button {
     position: absolute;
     cursor: pointer;
-    top: 10px;
-    right: 15px;
-    font-size: 30px;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
     color: #999;
     transition: color 0.3s;
 
@@ -211,3 +222,4 @@ const closeModal = () => {
   }
 }
 </style>
+
