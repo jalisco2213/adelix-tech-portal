@@ -1,6 +1,7 @@
 <script setup>
 import {ref, onMounted} from 'vue';
 import {supabase} from '@/ts/client/supabase';
+import StorageEditCount from "@/components/Warehouse/StorageEditCount.vue";
 
 const storageData = ref([]);
 const selectedComments = ref([]);
@@ -8,7 +9,7 @@ const isModalVisible = ref(false);
 const selectedDevice = ref('');
 
 onMounted(async () => {
-  const {data, error} = await supabase.from('storage').select('*');
+  const {data, error} = await supabase.from('storage').select('*').order('id', { ascending: true });
   if (error) console.error(error);
   storageData.value = data;
 });
@@ -47,7 +48,9 @@ const closeModal = () => {
           <template v-for="(typeItems, typeKey) in device.devices" :key="typeKey">
             <tr>
               <td>{{ typeKey }}</td>
-              <td>{{ typeItems[0].count }}</td>
+              <td>
+                <StorageEditCount :device="device" :count="typeItems[0].count" :typeKey="typeKey" :type="device.type" />
+              </td>
               <td>
                 <img src="/info.svg" @click="openModal(typeItems[0].comment, typeKey)">
               </td>

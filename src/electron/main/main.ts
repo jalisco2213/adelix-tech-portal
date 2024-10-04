@@ -31,7 +31,7 @@ function createWindow() {
     },
   });
 
-  Menu.setApplicationMenu(null);
+  // Menu.setApplicationMenu(null);
 
   mainWindow.maximize();
 
@@ -51,8 +51,7 @@ function createWindow() {
       }
     });
   }
-
-}
+};
 
 app.whenReady().then(() => {
   ipcMain.handle('dialog:openFile', handleFileOpen)

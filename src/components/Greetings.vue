@@ -58,7 +58,7 @@ onMounted(async () => {
   <GreetingsModal/>
   <div class="greetings" :class="{ 'hidden': !isNavVisible }">
     <div class="greetings-title">
-      <p id="account">👋 Здравствуй, </p>
+      <p id="account">👋 Здравствуй, {{editorSession.value.username}}</p>
     </div>
     <div class="dropdown" style="margin: 0 40px;">
       <div class="greetings-profile" @click="toggleDropdown" style="display: flex; align-items: center; gap: 10px;">
