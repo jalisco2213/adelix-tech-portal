@@ -31,7 +31,7 @@ function createWindow() {
     },
   });
 
-  // Menu.setApplicationMenu(null);
+  Menu.setApplicationMenu(null);
 
   mainWindow.maximize();
 

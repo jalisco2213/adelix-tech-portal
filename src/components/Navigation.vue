@@ -6,11 +6,6 @@ import ArrowUp from "@/components/ArrowUp.vue";
 let isCollapsed = ref(false);
 let logoHide = ref(false);
 
-const navigations = [
-  {id: 3, text: 'Протоколы', img: '/docx.svg', link: '/'},
-  {id: 0, text: 'Шильды', img: '/sticker.svg', link: '/shields'},
-];
-
 function hideNavigation() {
   const navigationHide = document.querySelector('.navigation-container');
   const textHide = document.querySelectorAll('.nav-link_text');
@@ -60,7 +55,7 @@ onMounted(async () => {
 <template>
   <div class="navigation-container" :style="{ width: isCollapsed ? '70px' : '250px' }">
     <div class="navigation-info">
-      <div class="navigation-link" >
+      <div class="navigation-link">
         <img src="/ADL.png" alt="logo" class="logo-img" :style="{ display: !isCollapsed ? 'flex' : 'none' }">
         <img src="/adlLogo.png" alt="" class="logo-img_hide" v-if="logoHide"
              :style="{ display: isCollapsed ? 'flex' : 'none' }">
@@ -73,8 +68,8 @@ onMounted(async () => {
         <nav class="nav">
           <ul>
             <li>
-              <RouterLink class="nav-link" to="/" exact
-                          :class="{ 'active-link': $route.path === '/' }">
+              <RouterLink class="nav-link" to="/protocols" exact
+                          :class="{ 'active-link': $route.path === '/protocols' }">
                 <img src="/docx.svg" alt="">
                 <span class="nav-link_text">Протоколы</span>
               </RouterLink>
@@ -255,6 +250,7 @@ nav {
   display: flex;
   align-items: center;
   cursor: pointer;
+
   &:hover {
     background: #e0e0e0;
     border-radius: 20px;

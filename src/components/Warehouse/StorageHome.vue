@@ -26,7 +26,10 @@ const closeModal = () => {
 
 <template>
   <div class="storage-container">
-    <h1>Склад</h1>
+    <h1>
+      <img src="/storage.svg" alt="">
+      Склад
+    </h1>
     <div class="storage">
       <table class="storage-table">
         <thead>

@@ -1,6 +1,18 @@
 <script setup>
 import {ref, onMounted} from 'vue';
 import {useRouter} from 'vue-router';
+import {editorSession} from "@/ts/client/state";
+import {supabase} from "@/ts/client/supabase";
+
+const router = useRouter();
+
+async function logout() {
+  const {} = await supabase.auth.signOut()
+
+  alert("Вы успешно вышли с аккаунта");
+  editorSession.value = null;
+  await router.push('/');
+}
 
 const isOpen = ref(false);
 
@@ -35,8 +47,6 @@ function handleScroll() {
   lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
 }
 
-const router = useRouter();
-
 onMounted(async () => {
   window.addEventListener('click', closeDropdownOnClickOutside);
   window.addEventListener('scroll', handleScroll);
@@ -53,7 +63,7 @@ onMounted(async () => {
     <div class="dropdown" style="margin: 0 40px;">
       <div class="greetings-profile" @click="toggleDropdown" style="display: flex; align-items: center; gap: 10px;">
         <div style="text-align: end;">
-          <span>  </span> <br>
+          <span></span> <br>
           <span style="color: #919191; font-weight: 200; font-size: 14px;">
 
           </span>
@@ -62,19 +72,18 @@ onMounted(async () => {
           <img class="greetings-profile-img"  alt="">
         </div>
         <div class="">
-          <img src="/navSVG/Vector.svg" class="vector" alt="">
+          <img src="" class="vector" alt="">
         </div>
       </div>
       <ul v-if="isOpen" class="dropdown-menu">
         <div class="dropdown-menu_title">
           <img alt="" class="greetings-profile-img">
-          <div class="dropdown-menu_title_name" style="font-weight: 100; font-size: 14px;">
-
+          <div style="font-weight: 100; font-size: 14px;">
           </div>
         </div>
         <div class="dropdown-menu_router">
-          <a href="/support"> <img src="/navSVG/support.svg" alt="">Баг?</a>
-          <button ><img src="/navSVG/logout.svg" alt=""> Выйти</button>
+          <a href=""> <img src="" alt="">Настройки</a>
+          <button @click="logout" ><img src="" alt=""> Выйти</button>
         </div>
       </ul>
     </div>
