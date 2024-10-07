@@ -44,10 +44,10 @@ const addDevice = async () => {
       await Swal.fire('Ошибка', error.message, 'error');
     } else {
       await Swal.fire('Успех', 'Прибор добавлен!', 'success');
+      window.location.reload();
     }
   }
 };
-
 
 const removeDevice = async () => {
   const {value: quantity} = await Swal.fire({
@@ -87,6 +87,7 @@ const removeDevice = async () => {
       await Swal.fire('Ошибка', error.message, 'error');
     } else {
       await Swal.fire('Успех', 'Прибор удалён!', 'success');
+      window.location.reload();
     }
   }
 };

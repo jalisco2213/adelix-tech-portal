@@ -31,3 +31,8 @@ li {
     justify-content: space-between;
     align-items: start;
 }
+
+button {
+    background: inherit;
+    border: none;
+}

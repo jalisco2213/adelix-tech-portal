@@ -1,12 +1,14 @@
 <script setup>
-import {ref, onMounted} from 'vue';
+import {ref, computed, onMounted} from 'vue';
 import {supabase} from '@/ts/client/supabase';
 import StorageEditCount from "@/components/Warehouse/StorageEditCount.vue";
+import StorageAddSection from "@/components/Warehouse/StorageAddSection.vue";
 
 const storageData = ref([]);
 const selectedComments = ref([]);
 const isModalVisible = ref(false);
 const selectedDevice = ref('');
+const searchQuery = ref('');
 
 onMounted(async () => {
   const {data, error} = await supabase.from('storage').select('*').order('id', {ascending: true});
@@ -23,13 +25,31 @@ const openModal = (comments, deviceName) => {
 const closeModal = () => {
   isModalVisible.value = false;
 };
+
+// Computed property to filter storageData based on searchQuery
+const filteredStorageData = computed(() => {
+  if (!searchQuery.value) return storageData.value;
+  return storageData.value.filter(device => {
+    const deviceMatches = device.type.toLowerCase().includes(searchQuery.value.toLowerCase());
+    const typeMatches = Object.keys(device.devices).some(typeKey =>
+      typeKey.toLowerCase().includes(searchQuery.value.toLowerCase())
+    );
+    return deviceMatches || typeMatches;
+  });
+});
 </script>
 
 <template>
   <div class="storage-container">
-    <h1 style="width: 100%">
-      <img src="/storage.svg" alt="">
-      Склад
+    <h1 class="header">
+      <div class="header-title">
+        <img src="/storage.svg" alt="Storage Icon"/>
+        Склад
+      </div>
+      <div class="header-controls">
+        <input type="text" v-model="searchQuery" placeholder="Поиск" class="search-input"/>
+        <StorageAddSection/>
+      </div>
     </h1>
     <div class="storage">
       <table class="storage-table">
@@ -41,7 +61,7 @@ const closeModal = () => {
         </tr>
         </thead>
         <tbody>
-        <template v-for="(device, index) in storageData" :key="index">
+        <template v-for="(device, index) in filteredStorageData" :key="index">
           <tr>
             <td colspan="3" class="table-header">{{ device.type }}</td>
           </tr>
@@ -52,7 +72,7 @@ const closeModal = () => {
                 <StorageEditCount :device="device" :count="typeItems[0].count" :typeKey="typeKey" :type="device.type"/>
               </td>
               <td>
-                <img src="/info.svg" @click="openModal(typeItems[0].comment, typeKey)">
+                <img src="/info.svg" @click="openModal(typeItems[0].comment, typeKey)"/>
               </td>
             </tr>
           </template>
@@ -89,16 +109,52 @@ const closeModal = () => {
 .storage-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   width: 100%;
   padding: 20px;
   border-radius: 12px;
 }
 
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 24px;
+  color: #343a40;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-input {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  width: 250px;
+  outline: none;
+  transition: border-color 0.3s;
+
+  &:focus {
+    border-color: #007bff;
+  }
+}
+
 .storage {
   width: 100%;
-  background: #FFFFFF;
+  background: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid #111;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
@@ -108,42 +164,38 @@ const closeModal = () => {
 .storage-table {
   width: 100%;
   border-collapse: collapse;
-  overflow: hidden;
 
   th, td {
-    padding: 8px 10px;
+    padding: 12px 10px;
     text-align: center;
     font-size: 16px;
-    color: #4A4A4A;
+    color: #495057;
     border-bottom: 1px solid #E0E0E0;
   }
 
   th {
-    background-color: #F1F1F1;
+    background-color: #f1f3f5;
     font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
   }
 
   td {
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     transition: background-color 0.3s;
   }
 
   .table-header {
-    background-color: #E8E8E8;
+    background-color: #e9ecef;
     font-weight: bold;
     font-size: 18px;
     padding: 16px;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #333;
   }
 
   img {
     width: 24px;
     cursor: pointer;
-    transition: transform 0.3s ease-in-out;
+    transition: transform 0.3s;
 
     &:hover {
       transform: scale(1.1);
@@ -153,7 +205,7 @@ const closeModal = () => {
 
 .modal-overlay {
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.7);
   top: 0;
   left: 0;
   width: 100%;
@@ -161,22 +213,21 @@ const closeModal = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: opacity 0.3s ease-in-out;
   backdrop-filter: blur(8px);
 }
 
 .modal-content {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   padding: 40px;
-  border-radius: 16px;
+  border-radius: 12px;
   width: 90%;
   max-width: 600px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   animation: fadeIn 0.3s ease-in;
 
   h2 {
     text-align: center;
-    color: #4A4A4A;
+    color: #343a40;
     font-weight: 700;
     margin-bottom: 20px;
     font-size: 24px;
@@ -190,27 +241,27 @@ const closeModal = () => {
 
   .log-entry {
     font-size: 14px;
-    color: #555;
+    color: #495057;
     padding: 10px 0;
-    border-bottom: 1px solid #E0E0E0;
+    border-bottom: 1px solid #e9ecef;
 
     &:last-child {
       border-bottom: none;
     }
 
     strong {
-      color: #333;
+      color: #212529;
     }
 
     .operation {
       font-weight: bold;
 
       &.take {
-        color: #28A745;
+        color: #28a745;
       }
 
       &.put {
-        color: #DC3545;
+        color: #dc3545;
       }
     }
   }
@@ -221,23 +272,11 @@ const closeModal = () => {
     right: 20px;
     font-size: 24px;
     cursor: pointer;
-    color: #999;
+    color: #868e96;
 
     &:hover {
-      color: #333;
+      color: #343a40;
     }
   }
 }
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 </style>
-
