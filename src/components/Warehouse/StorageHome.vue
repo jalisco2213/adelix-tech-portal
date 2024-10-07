@@ -9,7 +9,7 @@ const isModalVisible = ref(false);
 const selectedDevice = ref('');
 
 onMounted(async () => {
-  const {data, error} = await supabase.from('storage').select('*').order('id', { ascending: true });
+  const {data, error} = await supabase.from('storage').select('*').order('id', {ascending: true});
   if (error) console.error(error);
   storageData.value = data;
 });
@@ -27,7 +27,7 @@ const closeModal = () => {
 
 <template>
   <div class="storage-container">
-    <h1>
+    <h1 style="width: 100%">
       <img src="/storage.svg" alt="">
       Склад
     </h1>
@@ -49,7 +49,7 @@ const closeModal = () => {
             <tr>
               <td>{{ typeKey }}</td>
               <td>
-                <StorageEditCount :device="device" :count="typeItems[0].count" :typeKey="typeKey" :type="device.type" />
+                <StorageEditCount :device="device" :count="typeItems[0].count" :typeKey="typeKey" :type="device.type"/>
               </td>
               <td>
                 <img src="/info.svg" @click="openModal(typeItems[0].comment, typeKey)">
@@ -87,59 +87,73 @@ const closeModal = () => {
 
 <style scoped lang="scss">
 .storage-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   padding: 20px;
   border-radius: 12px;
 }
 
 .storage {
+  width: 100%;
+  background: #FFFFFF;
   border: 1px solid #111;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   overflow: auto;
-  background-color: #ffffff;
 }
 
 .storage-table {
   width: 100%;
   border-collapse: collapse;
-  border-radius: 20px;
+  overflow: hidden;
 
   th, td {
-    border: 1px solid #e0e0e0;
-    padding: 8px;
+    padding: 8px 10px;
     text-align: center;
     font-size: 16px;
-    color: #333;
+    color: #4A4A4A;
+    border-bottom: 1px solid #E0E0E0;
   }
 
   th {
-    background-color: #f1f1f1;
-    color: #333;
-    padding: 15px;
+    background-color: #F1F1F1;
     font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  td {
+    background-color: #FFFFFF;
+    transition: background-color 0.3s;
   }
 
   .table-header {
-    padding: 10px 0;
+    background-color: #E8E8E8;
     font-weight: bold;
     font-size: 18px;
+    padding: 16px;
     text-transform: uppercase;
-    background-color: #e8e8e8;
+    letter-spacing: 0.05em;
+    color: #333;
   }
 
   img {
-    width: 20px;
+    width: 24px;
     cursor: pointer;
-    margin: auto;
-    display: flex;
+    transition: transform 0.3s ease-in-out;
+
+    &:hover {
+      transform: scale(1.1);
+    }
   }
 }
 
 .modal-overlay {
   position: fixed;
   background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
   top: 0;
   left: 0;
   width: 100%;
@@ -148,83 +162,81 @@ const closeModal = () => {
   justify-content: center;
   align-items: center;
   transition: opacity 0.3s ease-in-out;
+  backdrop-filter: blur(8px);
 }
 
 .modal-content {
-  background-color: #ffffff;
-  padding: 30px;
-  border-radius: 15px;
+  background-color: #FFFFFF;
+  padding: 40px;
+  border-radius: 16px;
   width: 90%;
   max-width: 600px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   animation: fadeIn 0.3s ease-in;
 
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
   h2 {
-    margin-bottom: 15px;
-    font-size: 24px;
-    color: #333;
     text-align: center;
+    color: #4A4A4A;
+    font-weight: 700;
+    margin-bottom: 20px;
+    font-size: 24px;
   }
 
   ul {
     list-style-type: none;
     padding: 0;
+    margin: 0;
   }
 
   .log-entry {
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-
-    &:not(:last-child) {
-      border-bottom: 1px solid #e0e0e0;
-    }
-  }
-
-  p {
     font-size: 14px;
     color: #555;
-    line-height: 1.6;
-  }
+    padding: 10px 0;
+    border-bottom: 1px solid #E0E0E0;
 
-  .operation {
-    font-weight: bold;
-
-    &.take {
-      color: #4CAF50;
+    &:last-child {
+      border-bottom: none;
     }
 
-    &.put {
-      color: #F44336;
+    strong {
+      color: #333;
     }
-  }
 
-  strong {
-    color: #000;
+    .operation {
+      font-weight: bold;
+
+      &.take {
+        color: #28A745;
+      }
+
+      &.put {
+        color: #DC3545;
+      }
+    }
   }
 
   .close-button {
     position: absolute;
-    cursor: pointer;
-    top: 15px;
+    top: 20px;
     right: 20px;
     font-size: 24px;
+    cursor: pointer;
     color: #999;
-    transition: color 0.3s;
 
     &:hover {
       color: #333;
     }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 </style>

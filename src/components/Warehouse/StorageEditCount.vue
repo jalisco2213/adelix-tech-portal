@@ -12,7 +12,7 @@ const props = defineProps({
 });
 
 const addDevice = async () => {
-  const { value: quantity } = await Swal.fire({
+  const {value: quantity} = await Swal.fire({
     title: 'Введите количество для добавления',
     input: 'number',
     icon: "warning",
@@ -30,12 +30,12 @@ const addDevice = async () => {
   if (quantity) {
     const newCount = parseInt(props.count) + parseInt(quantity);
 
-    const { data, error } = await supabase
+    const {data, error} = await supabase
       .from('storage')
       .update({
         devices: {
           ...props.device.devices,
-          [props.typeKey]: [{ count: newCount.toString() }]
+          [props.typeKey]: [{count: newCount.toString()}]
         }
       })
       .eq('type', props.type);
@@ -50,7 +50,7 @@ const addDevice = async () => {
 
 
 const removeDevice = async () => {
-  const { value: quantity } = await Swal.fire({
+  const {value: quantity} = await Swal.fire({
     title: 'Введите количество для удаления',
     icon: "warning",
     input: 'number',
@@ -73,12 +73,12 @@ const removeDevice = async () => {
       return;
     }
 
-    const { data, error } = await supabase
+    const {data, error} = await supabase
       .from('storage')
       .update({
         devices: {
           ...props.device.devices,
-          [props.typeKey]: [{ count: newCount.toString() }]
+          [props.typeKey]: [{count: newCount.toString()}]
         }
       })
       .eq('type', props.type);
@@ -90,15 +90,13 @@ const removeDevice = async () => {
     }
   }
 };
-
-
 </script>
 
 <template>
   <div class="storage-count">
-    <button @click="addDevice">+</button>
-    <span>{{ count }}</span>
     <button @click="removeDevice">-</button>
+    <span>{{ count }}</span>
+    <button @click="addDevice">+</button>
   </div>
 </template>
 
@@ -108,5 +106,14 @@ const removeDevice = async () => {
   justify-content: center;
   gap: 10px;
   align-items: center;
+}
+
+button {
+  background: inherit;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 400;
+  font-family: "Montserrat", sans-serif;
 }
 </style>
