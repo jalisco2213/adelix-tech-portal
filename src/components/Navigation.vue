@@ -1,6 +1,6 @@
 <script setup>
-import {RouterLink, RouterView} from 'vue-router'
-import {ref, onMounted} from 'vue';
+import { RouterLink, RouterView } from 'vue-router'
+import { ref, onMounted } from 'vue';
 import ArrowUp from "@/components/ArrowUp.vue";
 
 let isCollapsed = ref(false);
@@ -58,7 +58,7 @@ onMounted(async () => {
       <div class="navigation-link">
         <img src="/ADL.png" alt="logo" class="logo-img" :style="{ display: !isCollapsed ? 'flex' : 'none' }">
         <img src="/adlLogo.png" alt="" class="logo-img_hide" v-if="logoHide"
-             :style="{ display: isCollapsed ? 'flex' : 'none' }">
+          :style="{ display: isCollapsed ? 'flex' : 'none' }">
 
         <div class="line-nav">
           <div></div>
@@ -68,29 +68,27 @@ onMounted(async () => {
         <nav class="nav">
           <ul>
             <li>
-              <RouterLink class="nav-link" to="/protocols" exact
-                          :class="{ 'active-link': $route.path === '/protocols' }">
-                <img src="/docx.svg" alt="">
-                <span class="nav-link_text">Протоколы</span>
-              </RouterLink>
-            </li>
-            <li>
-              <RouterLink class="nav-link" to="/storage" exact
-                          :class="{ 'active-link': $route.path === '/storage' }">
+              <RouterLink class="nav-link" to="/storage" exact :class="{ 'active-link': $route.path === '/storage' }">
                 <img src="/storage.svg" alt="">
                 <span class="nav-link_text">Склад</span>
               </RouterLink>
             </li>
+            <!-- <li>
+              <RouterLink class="nav-link" to="/protocols" exact
+                :class="{ 'active-link': $route.path === '/protocols' }">
+                <img src="/docx.svg" alt="">
+                <span class="nav-link_text">Протоколы</span>
+              </RouterLink>
+            </li> -->
             <li>
-              <RouterLink class="nav-link" to="/shields" exact
-                          :class="{ 'active-link': $route.path === '/shields' }">
+              <RouterLink class="nav-link" to="/shields" exact :class="{ 'active-link': $route.path === '/shields' }">
                 <img src="/sticker.svg" alt="">
                 <span class="nav-link_text">Шильды</span>
               </RouterLink>
             </li>
           </ul>
         </nav>
-        <RouterView/>
+        <RouterView />
       </div>
     </div>
 
@@ -104,7 +102,7 @@ onMounted(async () => {
     </div>
   </div>
 
-  <ArrowUp/>
+  <ArrowUp />
 </template>
 
 <style lang="scss" scoped>

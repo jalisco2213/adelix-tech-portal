@@ -99,7 +99,7 @@ const exportToExcel = () => {
 
 <template>
   <div class="storage-container">
-    <h1 class="header">
+    <div class="header">
       <div class="header-title">
         <img src="/storage.svg" alt="Storage Icon"/>
         Склад
@@ -114,7 +114,7 @@ const exportToExcel = () => {
         <img @click="exportToExcel" class="export-button" src="/excel.svg" alt="">
         <StorageAddSection/>
       </div>
-    </h1>
+    </div>
     <div class="storage">
       <table class="storage-table">
         <thead>
@@ -179,7 +179,6 @@ const exportToExcel = () => {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 20px;
   border-radius: 12px;
 }
 
@@ -202,68 +201,6 @@ const exportToExcel = () => {
       cursor: not-allowed;
     }
   }
-}
-
-.header-controls {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-
-  .sort-select,
-  .filter-select,
-  .search-input,
-  .items-per-page-input {
-    padding: 10px;
-    border: 1px solid #ced4da;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: border-color 0.3s;
-    width: 200px;
-
-    &:focus {
-      border-color: #007bff;
-      outline: none;
-    }
-  }
-
-  .search-input {
-    flex-grow: 1;
-  }
-
-  .items-per-page-input {
-    width: 60px;
-  }
-
-  .export-button {
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-}
-
-
-.header {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.header-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 700;
-  font-size: 24px;
-  color: #343a40;
-}
-
-.header-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
 }
 
 .sort-select {

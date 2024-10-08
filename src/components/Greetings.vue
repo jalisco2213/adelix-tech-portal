@@ -55,7 +55,6 @@ onMounted(async () => {
 </script>
 
 <template>
-  <GreetingsModal/>
   <div class="greetings" :class="{ 'hidden': !isNavVisible }">
     <div class="greetings-title">
       <p id="account">👋 Здравствуй, {{editorSession.value.username}}</p>

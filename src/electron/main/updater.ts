@@ -16,7 +16,7 @@ export const checkAndApplyUpdates = (): void => {
       .showMessageBox({
         type: 'info',
         title: 'Доступно обновление',
-        message: 'Доступно новое обновление приложения. Хотите обновить сейчас?',
+        message: 'Доступно новое обновление. Хотите обновить сейчас?',
         buttons: ['Обновить', 'Нет'],
       })
       .then((res) => {
