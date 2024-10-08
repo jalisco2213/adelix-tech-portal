@@ -96,7 +96,7 @@ const removeDevice = async () => {
 <template>
   <div class="storage-count">
     <button @click="removeDevice">-</button>
-    <span>{{ count }}</span>
+    <span :class="{'low-stock': props.count < 2}">{{ props.count }}</span>
     <button @click="addDevice">+</button>
   </div>
 </template>
@@ -107,6 +107,11 @@ const removeDevice = async () => {
   justify-content: center;
   gap: 10px;
   align-items: center;
+}
+
+.low-stock {
+  color: red;
+  font-weight: 600;
 }
 
 button {

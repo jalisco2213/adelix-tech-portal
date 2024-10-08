@@ -1,6 +1,7 @@
 <script setup>
-import {ref, computed, onMounted} from 'vue';
-import {supabase} from '@/ts/client/supabase';
+import { ref, computed, onMounted } from 'vue';
+import { supabase } from '@/ts/client/supabase';
+import * as XLSX from 'xlsx';
 import StorageEditCount from "@/components/Warehouse/StorageEditCount.vue";
 import StorageAddSection from "@/components/Warehouse/StorageAddSection.vue";
 
@@ -9,9 +10,12 @@ const selectedComments = ref([]);
 const isModalVisible = ref(false);
 const selectedDevice = ref('');
 const searchQuery = ref('');
+const currentPage = ref(1);
+const itemsPerPage = ref(5);
+const deviceTypeFilter = ref('');
 
 onMounted(async () => {
-  const {data, error} = await supabase.from('storage').select('*').order('id', {ascending: true});
+  const { data, error } = await supabase.from('storage').select('*').order('id', { ascending: true });
   if (error) console.error(error);
   storageData.value = data;
 });
@@ -26,28 +30,71 @@ const closeModal = () => {
   isModalVisible.value = false;
 };
 
-const filteredStorageData = computed(() => {
-  if (!searchQuery.value) return storageData.value;
+const sortedStorageData = computed(() => {
+  const data = filteredStorageData.value.slice();
 
-  return storageData.value.map(device => {
-    const filteredDevices = Object.keys(device.devices).reduce((acc, typeKey) => {
-      const typeItems = device.devices[typeKey].filter(item => {
-        const commentMatches = item.comment && Array.isArray(item.comment) && item.comment.some(comment =>
-          comment.text.username.toLowerCase().includes(searchQuery.value.toLowerCase())
-        );
-        return typeKey.toLowerCase().includes(searchQuery.value.toLowerCase()) || commentMatches;
-      });
-
-      if (typeItems.length) {
-        acc[typeKey] = typeItems;
-      }
-      return acc;
-    }, {});
-
-    return Object.keys(filteredDevices).length > 0 ? { type: device.type, devices: filteredDevices } : null;
-  }).filter(device => device !== null);
+  return data;
 });
 
+const filteredStorageData = computed(() => {
+  let data = storageData.value;
+
+  if (searchQuery.value) {
+    data = data.map(device => {
+      const filteredDevices = Object.keys(device.devices).reduce((acc, typeKey) => {
+        const typeItems = device.devices[typeKey].filter(item => {
+          const commentMatches = item.comment && Array.isArray(item.comment) && item.comment.some(comment =>
+            comment.text.username.toLowerCase().includes(searchQuery.value.toLowerCase())
+          );
+          return typeKey.toLowerCase().includes(searchQuery.value.toLowerCase()) || commentMatches;
+        });
+
+        if (typeItems.length) {
+          acc[typeKey] = typeItems;
+        }
+        return acc;
+      }, {});
+
+      return Object.keys(filteredDevices).length > 0 ? { type: device.type, devices: filteredDevices } : null;
+    }).filter(device => device !== null);
+  }
+
+  if (deviceTypeFilter.value) {
+    data = data.filter(device => device.type === deviceTypeFilter.value);
+  }
+
+  return data;
+});
+
+const paginatedData = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return sortedStorageData.value.slice(start, end);
+});
+
+const totalPages = computed(() => {
+  return Math.ceil(sortedStorageData.value.length / itemsPerPage.value);
+});
+
+const exportToExcel = () => {
+  const csvData = [
+    ["Тип", "Название", "Количество", "Комментарии"],
+    ...paginatedData.value.flatMap(device => {
+      if (!device.devices) return [];
+      return Object.entries(device.devices).map(([typeKey, typeItems]) => {
+        const count = typeItems[0]?.count || 0;
+        const comments = typeItems[0]?.comment ? typeItems[0].comment.map(c => c.text.username).join(", ") : '';
+        return [device.type, typeKey, count, comments];
+      });
+    })
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet(csvData);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Storage Data');
+
+  XLSX.writeFile(wb, 'storage_data.xlsx');
+};
 </script>
 
 <template>
@@ -58,7 +105,13 @@ const filteredStorageData = computed(() => {
         Склад
       </div>
       <div class="header-controls">
+        <select v-model="deviceTypeFilter" class="filter-select sort-select">
+          <option value="">Все Типы</option>
+          <option v-for="device in storageData" :key="device.type" :value="device.type">{{ device.type }}</option>
+        </select>
+        <input type="number" v-model="itemsPerPage" min="1" class="items-per-page-input" />
         <input type="text" v-model="searchQuery" placeholder="Поиск" class="search-input"/>
+        <img @click="exportToExcel" class="export-button" src="/excel.svg" alt="">
         <StorageAddSection/>
       </div>
     </h1>
@@ -72,7 +125,7 @@ const filteredStorageData = computed(() => {
         </tr>
         </thead>
         <tbody>
-        <template v-for="(device, index) in filteredStorageData" :key="index">
+        <template v-for="(device, index) in paginatedData" :key="index">
           <tr>
             <td colspan="3" class="table-header">{{ device.type }}</td>
           </tr>
@@ -90,6 +143,12 @@ const filteredStorageData = computed(() => {
         </template>
         </tbody>
       </table>
+    </div>
+
+    <div class="pagination-controls">
+      <button :disabled="currentPage === 1" @click="currentPage--">Назад</button>
+      <span>Страница {{ currentPage }} из {{ totalPages }}</span>
+      <button :disabled="currentPage === totalPages" @click="currentPage++">Вперед</button>
     </div>
 
     <div v-if="isModalVisible" class="modal-overlay">
@@ -124,6 +183,67 @@ const filteredStorageData = computed(() => {
   border-radius: 12px;
 }
 
+.pagination-controls {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+
+  button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  .sort-select,
+  .filter-select,
+  .search-input,
+  .items-per-page-input {
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+    width: 200px;
+
+    &:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+  }
+
+  .search-input {
+    flex-grow: 1;
+  }
+
+  .items-per-page-input {
+    width: 60px;
+  }
+
+  .export-button {
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+}
+
+
 .header {
   width: 100%;
   display: flex;
@@ -144,6 +264,20 @@ const filteredStorageData = computed(() => {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.sort-select {
+  font-family: "Montserrat", sans-serif;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s;
+
+  &:focus {
+    border-color: #007bff;
+  }
 }
 
 .search-input {

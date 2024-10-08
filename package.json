@@ -62,7 +62,8 @@
     "jszip": "^3.10.1",
     "scss": "^0.2.4",
     "sweetalert2": "^11.14.0",
-    "vue": "^3.2.25"
+    "vue": "^3.2.25",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
