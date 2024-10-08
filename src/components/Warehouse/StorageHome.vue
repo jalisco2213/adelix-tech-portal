@@ -26,17 +26,28 @@ const closeModal = () => {
   isModalVisible.value = false;
 };
 
-// Computed property to filter storageData based on searchQuery
 const filteredStorageData = computed(() => {
   if (!searchQuery.value) return storageData.value;
-  return storageData.value.filter(device => {
-    const deviceMatches = device.type.toLowerCase().includes(searchQuery.value.toLowerCase());
-    const typeMatches = Object.keys(device.devices).some(typeKey =>
-      typeKey.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
-    return deviceMatches || typeMatches;
-  });
+
+  return storageData.value.map(device => {
+    const filteredDevices = Object.keys(device.devices).reduce((acc, typeKey) => {
+      const typeItems = device.devices[typeKey].filter(item => {
+        const commentMatches = item.comment && Array.isArray(item.comment) && item.comment.some(comment =>
+          comment.text.username.toLowerCase().includes(searchQuery.value.toLowerCase())
+        );
+        return typeKey.toLowerCase().includes(searchQuery.value.toLowerCase()) || commentMatches;
+      });
+
+      if (typeItems.length) {
+        acc[typeKey] = typeItems;
+      }
+      return acc;
+    }, {});
+
+    return Object.keys(filteredDevices).length > 0 ? { type: device.type, devices: filteredDevices } : null;
+  }).filter(device => device !== null);
 });
+
 </script>
 
 <template>
@@ -91,9 +102,7 @@ const filteredStorageData = computed(() => {
               <span>{{ comment.text.username }}</span>
               <span class="operation"
                     :class="{ take: comment.text.operation === 'take', put: comment.text.operation === 'put' }">
-                {{ comment.text.operation === 'take' ? ' взял' : ' положил' }} <strong>{{ comment.text.quantity }} шт. {{
-                  selectedDevice
-                }}</strong>.
+                {{ comment.text.operation === 'take' ? ' взял' : ' положил' }} <strong>{{ comment.text.quantity }} шт. {{ selectedDevice }}</strong>.
               </span>
               Общее количество: <strong>{{ comment.text.historyCount }}</strong>
             </p>
