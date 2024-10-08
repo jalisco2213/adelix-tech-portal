@@ -106,7 +106,7 @@ const exportToExcel = () => {
       </div>
       <div class="header-controls">
         <select v-model="deviceTypeFilter" class="filter-select sort-select">
-          <option value="">Все Типы</option>
+          <option value="">Все типы</option>
           <option v-for="device in storageData" :key="device.type" :value="device.type">{{ device.type }}</option>
         </select>
         <input type="number" v-model="itemsPerPage" min="1" class="items-per-page-input" />
