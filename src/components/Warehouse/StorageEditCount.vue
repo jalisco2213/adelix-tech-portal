@@ -1,8 +1,8 @@
 <script setup>
 import {defineProps} from 'vue';
 import {supabase} from '@/ts/client/supabase';
-import Swal from 'sweetalert2';
 import {editorSession} from "@/ts/client/state";
+import Swal from "sweetalert2";
 
 const props = defineProps({
   device: Object,
@@ -10,6 +10,22 @@ const props = defineProps({
   type: String,
   typeKey: String,
 });
+
+const logOperation = async (operation, info, historyCount) => {
+  const {error} = await supabase
+    .from('logs')
+    .insert([{
+      username: editorSession.value.username,
+      operations: operation,
+      device: props.typeKey,
+      timestamp: new Date().toISOString(),
+      historyCount: historyCount
+    }]);
+
+  if (error) {
+    console.error('Ошибка логирования:', error.message);
+  }
+};
 
 const addDevice = async () => {
   const {value: quantity} = await Swal.fire({
@@ -43,6 +59,7 @@ const addDevice = async () => {
     if (error) {
       await Swal.fire('Ошибка', error.message, 'error');
     } else {
+      await logOperation('add', props.typeKey, newCount);
       await Swal.fire('Успех', 'Прибор добавлен!', 'success');
       window.location.reload();
     }
@@ -86,6 +103,7 @@ const removeDevice = async () => {
     if (error) {
       await Swal.fire('Ошибка', error.message, 'error');
     } else {
+      await logOperation('remove', props.typeKey, newCount);
       await Swal.fire('Успех', 'Прибор удалён!', 'success');
       window.location.reload();
     }
@@ -107,11 +125,6 @@ const removeDevice = async () => {
   justify-content: center;
   gap: 10px;
   align-items: center;
-}
-
-.low-stock {
-  color: red;
-  font-weight: 600;
 }
 
 button {

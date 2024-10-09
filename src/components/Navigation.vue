@@ -30,9 +30,7 @@ function hideNavigation() {
     logoHide.value = false;
     document.querySelectorAll('.nav-link_text').forEach(text => text.style.display = 'inline-block');
   }
-  ;
 };
-
 
 onMounted(async () => {
   const savedIsCollapsed = JSON.parse(localStorage.getItem('isCollapsed'));
@@ -309,10 +307,10 @@ nav {
 }
 
 .logo-img_hide {
-  width: 45px;
-  height: 47px;
+  width: 62px;
+  height: 60px;
   display: flex;
   justify-content: center;
-  margin: 20px auto;
+  margin: 25px auto;
 }
 </style>

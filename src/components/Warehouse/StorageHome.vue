@@ -1,21 +1,24 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { supabase } from '@/ts/client/supabase';
+import {ref, computed, onMounted} from 'vue';
+import {supabase} from '@/ts/client/supabase';
 import * as XLSX from 'xlsx';
 import StorageEditCount from "@/components/Warehouse/StorageEditCount.vue";
 import StorageAddSection from "@/components/Warehouse/StorageAddSection.vue";
+import EditModal from '@/components/Warehouse/EditModal.vue';
 
 const storageData = ref([]);
 const selectedComments = ref([]);
 const isModalVisible = ref(false);
+const isEditModalVisible = ref(false);
 const selectedDevice = ref('');
 const searchQuery = ref('');
 const currentPage = ref(1);
 const itemsPerPage = ref(5);
 const deviceTypeFilter = ref('');
+const currentEditData = ref(null);
 
 onMounted(async () => {
-  const { data, error } = await supabase.from('storage').select('*').order('id', { ascending: true });
+  const {data, error} = await supabase.from('storage').select('*').order('id', {ascending: true});
   if (error) console.error(error);
   storageData.value = data;
 });
@@ -30,9 +33,17 @@ const closeModal = () => {
   isModalVisible.value = false;
 };
 
+const openEditModal = (device) => {
+  currentEditData.value = device;
+  isEditModalVisible.value = true;
+};
+
+const closeEditModal = () => {
+  isEditModalVisible.value = false;
+};
+
 const sortedStorageData = computed(() => {
   const data = filteredStorageData.value.slice();
-
   return data;
 });
 
@@ -55,7 +66,7 @@ const filteredStorageData = computed(() => {
         return acc;
       }, {});
 
-      return Object.keys(filteredDevices).length > 0 ? { type: device.type, devices: filteredDevices } : null;
+      return Object.keys(filteredDevices).length > 0 ? {type: device.type, devices: filteredDevices} : null;
     }).filter(device => device !== null);
   }
 
@@ -95,6 +106,24 @@ const exportToExcel = () => {
 
   XLSX.writeFile(wb, 'storage_data.xlsx');
 };
+
+async function editType(device) {
+  openEditModal(device);
+}
+
+const updateDeviceInSupabase = async (updatedDevice) => {
+  const {error} = await supabase
+    .from('storage')
+    .update({type: updatedDevice.type, devices: updatedDevice.devices})
+    .match({type: updatedDevice.type});
+
+  if (error) {
+    return;
+  } else {
+    const {data, error: fetchError} = await supabase.from('storage').select('*').order('id', {ascending: true});
+    storageData.value = data;
+  }
+};
 </script>
 
 <template>
@@ -109,12 +138,13 @@ const exportToExcel = () => {
           <option value="">Все типы</option>
           <option v-for="device in storageData" :key="device.type" :value="device.type">{{ device.type }}</option>
         </select>
-        <input type="number" v-model="itemsPerPage" min="1" class="items-per-page-input" />
+        <input type="number" v-model="itemsPerPage" min="1" class="items-per-page-input"/>
         <input type="text" v-model="searchQuery" placeholder="Поиск" class="search-input"/>
         <img @click="exportToExcel" class="export-button" src="/excel.svg" alt="">
         <StorageAddSection/>
       </div>
     </div>
+
     <div class="storage">
       <table class="storage-table">
         <thead>
@@ -127,7 +157,12 @@ const exportToExcel = () => {
         <tbody>
         <template v-for="(device, index) in paginatedData" :key="index">
           <tr>
-            <td colspan="3" class="table-header">{{ device.type }}</td>
+            <td colspan="3" class="table-header">
+              <div style="display: flex; align-items: center; justify-content:center; gap: 5px; cursor: default">
+                {{ device.type }}
+                <img @click="editType(device)" src="/edit.svg" alt="">
+              </div>
+            </td>
           </tr>
           <template v-for="(typeItems, typeKey) in device.devices" :key="typeKey">
             <tr>
@@ -143,6 +178,11 @@ const exportToExcel = () => {
         </template>
         </tbody>
       </table>
+    </div>
+
+    <div v-if="isEditModalVisible">
+      <EditModal :device="currentEditData" @close="closeEditModal" @save="updateDeviceInSupabase"/>
+
     </div>
 
     <div class="pagination-controls">
@@ -161,7 +201,9 @@ const exportToExcel = () => {
               <span>{{ comment.text.username }}</span>
               <span class="operation"
                     :class="{ take: comment.text.operation === 'take', put: comment.text.operation === 'put' }">
-                {{ comment.text.operation === 'take' ? ' взял' : ' положил' }} <strong>{{ comment.text.quantity }} шт. {{ selectedDevice }}</strong>.
+                {{ comment.text.operation === 'take' ? ' взял' : ' положил' }} <strong>{{ comment.text.quantity }} шт. {{
+                  selectedDevice
+                }}</strong>.
               </span>
               Общее количество: <strong>{{ comment.text.historyCount }}</strong>
             </p>
@@ -174,6 +216,13 @@ const exportToExcel = () => {
 </template>
 
 <style scoped lang="scss">
+
+.low-stock {
+  color: red;
+  font-weight: 600;
+}
+
+
 .storage-container {
   display: flex;
   flex-direction: column;
@@ -281,19 +330,6 @@ const exportToExcel = () => {
       transform: scale(1.1);
     }
   }
-}
-
-.modal-overlay {
-  position: fixed;
-  background-color: rgba(0, 0, 0, 0.7);
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  backdrop-filter: blur(8px);
 }
 
 .modal-content {

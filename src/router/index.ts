@@ -1,9 +1,5 @@
 import {createWebHashHistory, createRouter} from "vue-router";
 import {supabase} from "../ts/client/supabase";
-import ShieldsView from "@/views/ShieldsView.vue";
-import ProtocolsView from "@/views/ProtocolsView.vue";
-import StorageView from "../views/StorageView.vue";
-import LoginView from "../views/LoginView.vue";
 
 let localUser;
 
@@ -11,24 +7,24 @@ const routes = [
   {
     path: '/',
     name: 'login',
-    component: LoginView,
+    component: () => import('../views/LoginView.vue')
   },
   {
     path: '/shields',
     name: 'shields',
-    component: ShieldsView,
+    component: () => import('@/views/ShieldsView.vue'),
     meta: { requiresAuth: true},
   },
   {
     path: '/protocols',
     name: 'protocols',
-    component: ProtocolsView,
+    component: () => import('@/views/ProtocolsView.vue'),
     meta: { requiresAuth: true},
   },
   {
     path: '/storage',
     name: 'storage',
-    component: StorageView,
+    component: () => import('../views/StorageView.vue'),
     meta: { requiresAuth: true},
   },
 ];
@@ -37,7 +33,6 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes,
 });
-
 
 async function getUser(next) {
   localUser = await supabase.auth.getSession();
