@@ -4,7 +4,8 @@ import {supabase} from '@/ts/client/supabase';
 import * as XLSX from 'xlsx';
 import StorageEditCount from "@/components/Warehouse/StorageEditCount.vue";
 import StorageAddSection from "@/components/Warehouse/StorageAddSection.vue";
-import EditModal from '@/components/Warehouse/EditModal.vue';
+import EditModal from '@/components/Warehouse/StorageEditTable.vue';
+import StorageInfoModal from "@/components/Warehouse/StorageInfoModal.vue";
 
 const storageData = ref([]);
 const selectedComments = ref([]);
@@ -89,13 +90,12 @@ const totalPages = computed(() => {
 
 const exportToExcel = () => {
   const csvData = [
-    ["Тип", "Название", "Количество", "Комментарии"],
+    ["Тип", "Название", "Количество",],
     ...paginatedData.value.flatMap(device => {
       if (!device.devices) return [];
       return Object.entries(device.devices).map(([typeKey, typeItems]) => {
         const count = typeItems[0]?.count || 0;
-        const comments = typeItems[0]?.comment ? typeItems[0].comment.map(c => c.text.username).join(", ") : '';
-        return [device.type, typeKey, count, comments];
+        return [device.type, typeKey, count];
       });
     })
   ];
@@ -111,7 +111,7 @@ async function editType(device) {
   openEditModal(device);
 }
 
-const updateDeviceInSupabase = async (updatedDevice) => {
+const updateData = async (updatedDevice) => {
   const {error} = await supabase
     .from('storage')
     .update({type: updatedDevice.type, devices: updatedDevice.devices})
@@ -181,7 +181,7 @@ const updateDeviceInSupabase = async (updatedDevice) => {
     </div>
 
     <div v-if="isEditModalVisible">
-      <EditModal :device="currentEditData" @close="closeEditModal" @save="updateDeviceInSupabase"/>
+      <EditModal :device="currentEditData" @close="closeEditModal" @save="updateData"/>
 
     </div>
 
@@ -191,37 +191,15 @@ const updateDeviceInSupabase = async (updatedDevice) => {
       <button :disabled="currentPage === totalPages" @click="currentPage++">Вперед</button>
     </div>
 
-    <div v-if="isModalVisible" class="modal-overlay">
-      <div class="modal-content">
-        <h2>Информация о {{ selectedDevice }}</h2>
-        <ul>
-          <li v-for="(comment, index) in selectedComments" :key="index" class="log-entry">
-            <p>
-              <strong>{{ comment.time }}</strong>:
-              <span>{{ comment.text.username }}</span>
-              <span class="operation"
-                    :class="{ take: comment.text.operation === 'take', put: comment.text.operation === 'put' }">
-                {{ comment.text.operation === 'take' ? ' взял' : ' положил' }} <strong>{{ comment.text.quantity }} шт. {{
-                  selectedDevice
-                }}</strong>.
-              </span>
-              Общее количество: <strong>{{ comment.text.historyCount }}</strong>
-            </p>
-          </li>
-        </ul>
-        <span class="close-button" @click="closeModal">×</span>
-      </div>
-    </div>
+    <StorageInfoModal v-if="isModalVisible" :device="selectedDevice" @close="closeModal"/>
   </div>
 </template>
 
 <style scoped lang="scss">
-
 .low-stock {
   color: red;
   font-weight: 600;
 }
-
 
 .storage-container {
   display: flex;
@@ -328,70 +306,6 @@ const updateDeviceInSupabase = async (updatedDevice) => {
 
     &:hover {
       transform: scale(1.1);
-    }
-  }
-}
-
-.modal-content {
-  background-color: #ffffff;
-  padding: 40px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 600px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  animation: fadeIn 0.3s ease-in;
-
-  h2 {
-    text-align: center;
-    color: #343a40;
-    font-weight: 700;
-    margin-bottom: 20px;
-    font-size: 24px;
-  }
-
-  ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .log-entry {
-    font-size: 14px;
-    color: #495057;
-    padding: 10px 0;
-    border-bottom: 1px solid #e9ecef;
-
-    &:last-child {
-      border-bottom: none;
-    }
-
-    strong {
-      color: #212529;
-    }
-
-    .operation {
-      font-weight: bold;
-
-      &.take {
-        color: #28a745;
-      }
-
-      &.put {
-        color: #dc3545;
-      }
-    }
-  }
-
-  .close-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 24px;
-    cursor: pointer;
-    color: #868e96;
-
-    &:hover {
-      color: #343a40;
     }
   }
 }

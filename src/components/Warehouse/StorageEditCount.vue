@@ -11,7 +11,7 @@ const props = defineProps({
   typeKey: String,
 });
 
-const logOperation = async (operation, info, historyCount) => {
+const logOperation = async (operation, info, historyCount, count) => {
   const {error} = await supabase
     .from('logs')
     .insert([{
@@ -19,7 +19,8 @@ const logOperation = async (operation, info, historyCount) => {
       operations: operation,
       device: props.typeKey,
       timestamp: new Date().toISOString(),
-      historyCount: historyCount
+      historyCount: historyCount,
+      count: count.toString(),
     }]);
 
   if (error) {
@@ -59,7 +60,7 @@ const addDevice = async () => {
     if (error) {
       await Swal.fire('Ошибка', error.message, 'error');
     } else {
-      await logOperation('add', props.typeKey, newCount);
+      await logOperation('add', props.typeKey, newCount, quantity);
       await Swal.fire('Успех', 'Прибор добавлен!', 'success');
       window.location.reload();
     }
@@ -103,7 +104,7 @@ const removeDevice = async () => {
     if (error) {
       await Swal.fire('Ошибка', error.message, 'error');
     } else {
-      await logOperation('remove', props.typeKey, newCount);
+      await logOperation('remove', props.typeKey, newCount, quantity);
       await Swal.fire('Успех', 'Прибор удалён!', 'success');
       window.location.reload();
     }
