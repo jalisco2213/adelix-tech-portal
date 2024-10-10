@@ -8,7 +8,7 @@ import ModalReview from "@/components/Shields/ModalReview.vue";
 import devicesData from '../data/devices.json';
 import ModalLoader from "@/components/Shields/Utils/ModalLoader.vue";
 import Navigation from "@/components/Navigation.vue";
-import Greetings from "@/components/Greetings.vue";
+import Greetings from "@/components/Greetings/Greetings.vue";
 
 const devices = ref(devicesData);
 const imgData = ref({});

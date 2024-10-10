@@ -1,13 +1,14 @@
 <script setup>
-import {ref, onMounted} from 'vue';
-import {useRouter} from 'vue-router';
-import {editorSession} from "@/ts/client/state";
-import {supabase} from "@/ts/client/supabase";
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { editorSession } from "@/ts/client/state";
+import { supabase } from "@/ts/client/supabase";
+import SettingsModal from './SettingsModal.vue';
 
 const router = useRouter();
 
 async function logout() {
-  const {} = await supabase.auth.signOut()
+  const { } = await supabase.auth.signOut()
 
   alert("Вы успешно вышли с аккаунта");
   editorSession.value = null;
@@ -52,41 +53,58 @@ onMounted(async () => {
   window.addEventListener('scroll', handleScroll);
 });
 
+const isSettingsOpen = ref(false);
+
+const openSettings = () => {
+  isSettingsOpen.value = true;
+};
+
+const closeSettings = () => {
+  isSettingsOpen.value = false;
+};
 </script>
 
 <template>
   <div class="greetings" :class="{ 'hidden': !isNavVisible }">
     <div class="greetings-title">
-      <p id="account">👋 Здравствуй, {{editorSession.value.username}}</p>
+      <p id="account">👋 Здравствуй, {{ editorSession.value.username }}</p>
     </div>
+
     <div class="dropdown" style="margin: 0 40px;">
       <div class="greetings-profile" @click="toggleDropdown" style="display: flex; align-items: center; gap: 10px;">
         <div style="text-align: end;">
-          <span></span> <br>
+          <span> {{ editorSession.value.username }} </span> <br>
           <span style="color: #919191; font-weight: 200; font-size: 14px;">
-
+            {{ editorSession.value.role }}
           </span>
         </div>
+
         <div class="">
-          <img class="greetings-profile-img"  alt="">
+          <img class="greetings-profile-img" :src="editorSession.value.avatar" alt="">
         </div>
+
         <div class="">
           <img src="" class="vector" alt="">
         </div>
       </div>
       <ul v-if="isOpen" class="dropdown-menu">
         <div class="dropdown-menu_title">
-          <img alt="" class="greetings-profile-img">
-          <div style="font-weight: 100; font-size: 14px;">
+          <img class="greetings-profile-img" src="" alt="">
+          <div style="font-size: 14px;">
+            <p>{{ editorSession.value.username }}</p>
+            <p style="font-weight: 100;">{{ editorSession.value.role }}</p>
           </div>
         </div>
+
         <div class="dropdown-menu_router">
-          <a href=""> <img src="" alt="">Настройки</a>
-          <button @click="logout" ><img src="" alt=""> Выйти</button>
+          <a @click="openSettings"> <img src="/settings.svg" alt="">Настройки</a>
+          <button @click="logout"><img src="" alt=""> Выйти</button>
         </div>
       </ul>
     </div>
   </div>
+
+  <SettingsModal :isOpen="isSettingsOpen" :close="closeSettings" />
 </template>
 
 <style lang="scss">
