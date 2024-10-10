@@ -10,6 +10,12 @@ export const checkAndApplyUpdates = (): void => {
   });
 
   let progressBar: ProgressBar | undefined;
+  
+  autoUpdater.setFeedURL({
+    provider: 'github',
+    owner: 'jalisco2213',
+    repo: 'adelix-po'
+  });
 
   autoUpdater.on('update-available', () => {
     dialog
