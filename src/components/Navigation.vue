@@ -2,6 +2,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { ref, onMounted } from 'vue';
 import ArrowUp from "@/components/ArrowUp.vue";
+import { editorSession } from '../ts/client/state';
 
 let isCollapsed = ref(false);
 let logoHide = ref(false);
@@ -86,6 +87,22 @@ onMounted(async () => {
             </li>
           </ul>
         </nav>
+
+        <div class="line-nav" v-if="editorSession.value.role === 'Администратор'">
+          <div></div>
+          <p :style="{ display: !isCollapsed ? 'flex' : 'none' }">Админка</p>
+        </div>
+
+        <nav class="nav" v-if="editorSession.value.role === 'Администратор'">
+          <li>
+            <RouterLink class="nav-link" to="/registration" exact
+              :class="{ 'active-link': $route.path === '/registration' }">
+              <img src="/registration.svg" alt="">
+              <span class="nav-link_text">Регистрация</span>
+            </RouterLink>
+          </li>
+        </nav>
+
         <RouterView />
       </div>
     </div>

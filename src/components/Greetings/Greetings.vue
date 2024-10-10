@@ -89,7 +89,7 @@ const closeSettings = () => {
       </div>
       <ul v-if="isOpen" class="dropdown-menu">
         <div class="dropdown-menu_title">
-          <img class="greetings-profile-img" src="" alt="">
+          <img class="greetings-profile-img" :src="editorSession.value.avatar" alt="">
           <div style="font-size: 14px;">
             <p>{{ editorSession.value.username }}</p>
             <p style="font-weight: 100;">{{ editorSession.value.role }}</p>

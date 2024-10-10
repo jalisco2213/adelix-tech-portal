@@ -121,6 +121,7 @@ const closeModal = () => {
 
 .tab-container {
   display: flex;
+  height: 100%;
 }
 
 .tab-list {

@@ -27,6 +27,12 @@ const routes = [
     component: () => import('../views/StorageView.vue'),
     meta: { requiresAuth: true},
   },
+  {
+    path: '/registration',
+    name: 'registration',
+    component: () => import('../views/RegistrationView.vue'),
+    meta: { requiresAuth: true},
+  },
 ];
 
 const router = createRouter({
