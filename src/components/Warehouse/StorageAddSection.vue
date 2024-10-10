@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { supabase } from "@/ts/client/supabase";
+import { editorSession } from '@/ts/client/state';
 
 const isVisible = ref(false);
 const deviceCounts = ref([{ name: '', count: '' }]);
@@ -55,7 +56,7 @@ async function submitData() {
 </script>
 
 <template>
-  <img class="addSection" src="/add.svg" @click="openModal" alt="Добавить устройство" />
+  <img v-if="editorSession.value.role === 'Администратор'" class="addSection" src="/add.svg" @click="openModal" alt="Добавить устройство" />
   <div v-if="isVisible" class="modal-overlay" @click.self="closeModal">
     <div class="modal-content">
       <h2>Добавить категорию</h2>
@@ -73,7 +74,6 @@ async function submitData() {
 
 <style lang="scss" scoped>
 .addSection {
-  margin-right: 20px;
   transition: transform 0.3s ease-in-out;
   cursor: pointer;
 

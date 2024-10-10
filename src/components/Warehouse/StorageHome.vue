@@ -6,6 +6,7 @@ import StorageEditCount from "@/components/Warehouse/StorageEditCount.vue";
 import StorageAddSection from "@/components/Warehouse/StorageAddSection.vue";
 import EditModal from '@/components/Warehouse/StorageEditTable.vue';
 import StorageInfoModal from "@/components/Warehouse/StorageInfoModal.vue";
+import { editorSession } from '../../ts/client/state';
 
 const storageData = ref([]);
 const selectedComments = ref([]);
@@ -160,7 +161,7 @@ const updateData = async (updatedDevice) => {
             <td colspan="3" class="table-header">
               <div style="display: flex; align-items: center; justify-content:center; gap: 5px; cursor: default">
                 {{ device.type }}
-                <img @click="editType(device)" src="/edit.svg" alt="">
+                <img v-if="editorSession.value.role === 'Администратор'" @click="editType(device)" src="/edit.svg" alt="">
               </div>
             </td>
           </tr>
