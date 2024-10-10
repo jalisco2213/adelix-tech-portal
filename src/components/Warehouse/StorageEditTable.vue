@@ -1,5 +1,6 @@
 <script setup>
-import {ref, watch} from 'vue';
+import { ref, watch } from 'vue';
+import { supabase } from '../../ts/client/supabase';
 
 const props = defineProps(['device']);
 const emit = defineEmits(['close', 'save']);
@@ -21,7 +22,7 @@ watch(() => props.device, (newDevice) => {
 
 const addDevice = () => {
   if (newDevice.value) {
-    devices.value.push({name: newDevice.value, count: '0'});
+    devices.value.push({ name: newDevice.value, count: '0' });
     newDevice.value = '';
   }
 };
@@ -30,11 +31,38 @@ const removeDevice = (index) => {
   devices.value.splice(index, 1);
 };
 
+async function deleteDeviceType(typeKey) {
+  const { value: confirmed } = await Swal.fire({
+    title: `Вы действительно хотите удалить таблицу ${typeKey}?`,
+    text: "Данные таблицы потеряются и их нельзя будет вернуть!",
+    icon: "warning",
+    dangerMode: true,
+    showCancelButton: true
+  });
+
+  if (confirmed) {
+    const { data, error } = await supabase
+      .from('storage')
+      .delete()
+      .eq('type', typeKey);
+
+    if (error) {
+      await Swal.fire("Ошибка", "Не удалось удалить тип устройства.", "error");
+    } else {
+      await Swal.fire("Успех", `Таблица ${typeKey} удалена`, "success");
+      window.location.reload();
+    }
+  } else {
+    await Swal.fire("Отмена", "Удаление отменено.", "info");
+  }
+}
+
+
 const saveChanges = () => {
   const updatedDevice = {
     type: typeKey.value,
     devices: devices.value.reduce((acc, device) => {
-      acc[device.name] = [{count: String(device.count)}];
+      acc[device.name] = [{ count: String(device.count) }];
       return acc;
     }, {})
   };
@@ -48,7 +76,10 @@ const saveChanges = () => {
   <div class="modal-overlay" @click="$emit('close')">
     <div class="modal-content" @click.stop>
       <div class="modal-info">
-        <h2>Таблица: {{ typeKey }}</h2>
+        <h2>
+          Таблица: {{ typeKey }}
+          <img style="width: 30px; height: 40px; position: absolute; top: 3px; right: 3px;" src="/delete.svg" class="delete-column-btn" @click="deleteDeviceType(typeKey)">
+        </h2>
 
         <br>
 
@@ -57,14 +88,14 @@ const saveChanges = () => {
           <ul>
             <li v-for="(device, index) in devices" :key="index">
               {{ device.name }}
-              <input v-model="device.count" type="number" min="0"/>
+              <input v-model="device.count" type="number" min="0" />
               <button class="remove-btn" @click="removeDevice(index)">Удалить</button>
             </li>
           </ul>
         </div>
 
         <div class="add-device">
-          <input v-model="newDevice" type="text" placeholder="Добавить новое устройство"/>
+          <input v-model="newDevice" type="text" placeholder="Добавить новое устройство" />
           <button class="add-btn" @click="addDevice">Добавить Устройство</button>
         </div>
 
@@ -90,6 +121,20 @@ const saveChanges = () => {
   align-items: center;
   animation: fadeIn 0.3s ease;
   z-index: 1000;
+}
+
+.delete-column-btn {
+  background: #dc3545;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  margin-left: 10px;
+
+  &:hover {
+    background: #c82333;
+  }
 }
 
 .modal-content {
@@ -170,7 +215,8 @@ const saveChanges = () => {
   }
 }
 
-.add-btn, .remove-btn {
+.add-btn,
+.remove-btn {
   background: linear-gradient(135deg, #007bff, #0056b3);
   border: none;
   color: white;
@@ -226,6 +272,7 @@ const saveChanges = () => {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -236,6 +283,7 @@ const saveChanges = () => {
     transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;

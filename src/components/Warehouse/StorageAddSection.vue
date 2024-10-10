@@ -38,25 +38,28 @@ async function submitData() {
 
   if (error) {
     console.error('Ошибка при вставке данных:', error);
-    Swal.fire({
+    await Swal.fire({
       icon: 'error',
       title: 'Ошибка!',
       text: 'Не удалось вставить данные. Попробуйте еще раз.',
     });
   } else {
     console.log('Данные вставлены:', data);
-    Swal.fire({
+    await Swal.fire({
       icon: 'success',
       title: 'Успех!',
       text: 'Данные успешно добавлены!',
     });
     closeModal();
+
+    window.location.reload();
   }
 }
 </script>
 
 <template>
-  <img v-if="editorSession.value.role === 'Администратор'" class="addSection" src="/add.svg" @click="openModal" alt="Добавить устройство" />
+  <img v-if="editorSession.value.role === 'Администратор'" class="addSection" src="/add.svg" @click="openModal"
+    alt="Добавить устройство" />
   <div v-if="isVisible" class="modal-overlay" @click.self="closeModal">
     <div class="modal-content">
       <h2>Добавить категорию</h2>
@@ -86,9 +89,11 @@ async function submitData() {
   0% {
     transform: rotate(0deg) scale(1);
   }
+
   50% {
     transform: rotate(180deg) scale(1.1);
   }
+
   100% {
     transform: rotate(360deg) scale(1.2);
   }

@@ -30,23 +30,7 @@ const changePassword = async () => {
 };
 
 const uploadAvatar = async (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const { data, error } = await supabase.storage
-      .from('avatar')
-      .upload(`avatars/${editorSession.value.id}-${file.name}`, file);
-
-    if (data) {
-      const { publicURL, error: urlError } = supabase.storage
-        .from('avatar')
-        .getPublicUrl(data.path);
-
-      if (publicURL) {
-        editorSession.value.avatar = publicURL;
-      }
-    }
-  }
-
+  alert('Временно не доступно');
 };
 
 const closeModal = () => {
