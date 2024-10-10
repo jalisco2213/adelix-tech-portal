@@ -1,11 +1,11 @@
 <script setup>
 import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
-import { applyRedirects } from './ts/client/redirect'
+// import { applyRedirects } from './ts/client/redirect'
 
-onMounted(() => {
-  applyRedirects();
-});
+// onMounted(() => {
+//   applyRedirects();
+// });
 </script>
 
 <template>
