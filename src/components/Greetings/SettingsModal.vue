@@ -52,7 +52,7 @@ const closeModal = () => {
             <div v-if="activeTab === 'password'">
               <h2>Смена пароля</h2>
               <p style="font-size: 11px; margin-top: 5px;">После смены пароля потребуется повторная авторизация.</p>
-              <input type="password" placeholder="Новый пароль" v-model="newPassword" />
+              <input type="text" placeholder="Новый пароль" v-model="newPassword" />
               <button @click="changePassword">Сохранить</button>
             </div>
           </transition>
@@ -151,7 +151,7 @@ const closeModal = () => {
     cursor: pointer;
   }
 
-  input[type="password"],
+  input[type="text"],
   input[type="file"] {
     margin-top: 10px;
     width: 93%;

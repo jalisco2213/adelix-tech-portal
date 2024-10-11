@@ -85,6 +85,13 @@ onMounted(async () => {
                 <span class="nav-link_text">Шильды</span>
               </RouterLink>
             </li>
+
+            <li>
+              <RouterLink class="nav-link" to="/repository" exact :class="{ 'active-link': $route.path === '/repository' }">
+                <img src="/repository.svg" alt="">
+                <span class="nav-link_text">Хранилище</span>
+              </RouterLink>
+            </li>
           </ul>
         </nav>
 

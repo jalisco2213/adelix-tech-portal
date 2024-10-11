@@ -1,7 +1,7 @@
 <script setup>
-import {ref, watch} from 'vue';
-import {supabase} from '../../ts/client/supabase';
-import {editorSession} from "@/ts/client/state";
+import { ref, watch } from 'vue';
+import { supabase } from '../../ts/client/supabase';
+import { editorSession } from "@/ts/client/state";
 
 const props = defineProps(['device']);
 const emit = defineEmits(['close', 'save']);
@@ -23,7 +23,7 @@ watch(() => props.device, (newDevice) => {
 
 const addDevice = () => {
   if (newDevice.value) {
-    devices.value.push({name: newDevice.value, count: '0'});
+    devices.value.push({ name: newDevice.value, count: '0' });
     newDevice.value = '';
   }
 };
@@ -33,7 +33,7 @@ const removeDevice = (index) => {
 };
 
 async function deleteDeviceType(typeKey) {
-  const {value: confirmed} = await Swal.fire({
+  const { value: confirmed } = await Swal.fire({
     title: `Вы действительно хотите удалить таблицу ${typeKey}?`,
     text: "Данные таблицы потеряются и их нельзя будет вернуть!",
     icon: "warning",
@@ -42,7 +42,7 @@ async function deleteDeviceType(typeKey) {
   });
 
   if (confirmed) {
-    const {data, error} = await supabase
+    const { data, error } = await supabase
       .from('storage')
       .delete()
       .eq('type', typeKey);
@@ -63,7 +63,7 @@ const saveChanges = () => {
   const updatedDevice = {
     type: typeKey.value,
     devices: devices.value.reduce((acc, device) => {
-      acc[device.name] = [{count: String(device.count)}];
+      acc[device.name] = [{ count: String(device.count) }];
       return acc;
     }, {})
   };
@@ -87,20 +87,21 @@ const saveChanges = () => {
           <h3>Устройства:</h3>
           <ul>
             <li v-for="(device, index) in devices" :key="index">
-              {{ device.name }}
-              <input v-model="device.count" type="number" min="0"/>
+              <input v-model="device.name" type="text" class="device-name-input" placeholder="Имя устройства" />
+              <input v-model="device.count" type="number" min="0" class="device-count-input" />
               <button class="remove-btn" @click="removeDevice(index)">Удалить</button>
             </li>
           </ul>
         </div>
 
         <div class="add-device">
-          <input v-model="newDevice" type="text" placeholder="Добавить новое устройство"/>
+          <input v-model="newDevice" type="text" placeholder="Добавить новое устройство" />
           <button class="add-btn" @click="addDevice">Добавить Устройство</button>
         </div>
 
         <div class="modal-actions">
-          <button @click="deleteDeviceType(typeKey)" class="cancel-btn" v-if="editorSession.value.role === 'Администратор'">
+          <button @click="deleteDeviceType(typeKey)" class="cancel-btn"
+            v-if="editorSession.value.role === 'Администратор'">
             <img src="/delete.svg">
             Удалить таблицу <strong> {{ typeKey }}</strong>
           </button>
@@ -138,6 +139,34 @@ const saveChanges = () => {
 
   &:hover {
     background: #c82333;
+  }
+}
+
+.device-name-input {
+  flex-grow: 2;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin-right: 10px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+}
+
+.device-count-input {
+  width: 80px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin-right: 10px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
   }
 }
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Navigation from "../components/Navigation.vue";
-import StorageHome from "../components/Warehouse/StorageHome.vue";
 import Greetings from "../components/Greetings/Greetings.vue";
+import Repository from "../components/Repository/Repository.vue";
 </script>
 
 <template>
@@ -11,7 +11,8 @@ import Greetings from "../components/Greetings/Greetings.vue";
 
     <div class="container">
       <Greetings/>
-      <StorageHome/>
+
+      <Repository/>
     </div>
 
   </div>

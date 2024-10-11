@@ -12,13 +12,13 @@ const routes = [
   {
     path: '/shields',
     name: 'shields',
-    component: () => import('@/views/ShieldsView.vue'),
+    component: () => import('../views/ShieldsView.vue'),
     meta: { requiresAuth: true},
   },
   {
     path: '/protocols',
     name: 'protocols',
-    component: () => import('@/views/ProtocolsView.vue'),
+    component: () => import('../views/ProtocolsView.vue'),
     meta: { requiresAuth: true},
   },
   {
@@ -31,6 +31,12 @@ const routes = [
     path: '/registration',
     name: 'registration',
     component: () => import('../views/RegistrationView.vue'),
+    meta: { requiresAuth: true},
+  },
+  {
+    path: '/repository',
+    name: 'repository',
+    component: () => import('../views/RepositoryView.vue'),
     meta: { requiresAuth: true},
   },
 ];
