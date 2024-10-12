@@ -1,5 +1,5 @@
 <template>
-  <div class="folder-view">
+  <div class="folder-view w96">
     <h1>Папки</h1>
     <div class="folders">
       <div class="folder" v-for="folder in folders" :key="folder.id">
@@ -41,7 +41,7 @@ const fetchFolders = async () => {
           id: file.name,
           name: file.name
         })),
-        isOpen: false // состояние для сворачивания/разворачивания
+        isOpen: false
       };
     });
 
@@ -52,7 +52,7 @@ const fetchFolders = async () => {
 };
 
 const toggleFolder = (folder) => {
-  folder.isOpen = !folder.isOpen; // переключение состояния
+  folder.isOpen = !folder.isOpen; 
 };
 
 onMounted(() => {
@@ -63,24 +63,24 @@ onMounted(() => {
 <style scoped>
 .folder-view {
   padding: 20px;
-  background-color: #f3f4f6; /* светлый фон */
+  background-color: #f3f4f6; 
   border-radius: 10px;
 }
 
 .folders {
   display: flex;
-  flex-direction: column; /* вертикальное расположение */
+  flex-direction: column; 
 }
 
 .folder {
-  background: #ffffff; /* белый фон папки */
-  border: 1px solid #d1d5db; /* светлая граница */
-  margin: 10px 0; /* верх и низ для отступа между папками */
-  padding: 16px; /* немного больше отступ */
-  border-radius: 8px; /* закругленные углы */
-  cursor: pointer; /* курсор указывает на кликабельность */
-  transition: background-color 0.3s, box-shadow 0.3s; /* анимация фона и тени */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* легкая тень */
+  background: #ffffff; 
+  border: 1px solid #d1d5db; 
+  margin: 10px 0; 
+  padding: 16px; 
+  border-radius: 8px; 
+  cursor: pointer; 
+  transition: background-color 0.3s, box-shadow 0.3s; 
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); 
 }
 
 .folder:hover {
@@ -89,10 +89,10 @@ onMounted(() => {
 }
 
 .folder-icon {
-  width: 20px; /* ширина иконки папки */
-  height: 20px; /* высота иконки папки */
-  margin-right: 8px; /* отступ справа от иконки */
-  vertical-align: middle; /* выравнивание по центру */
+  width: 20px;
+  height: 20px; 
+  margin-right: 8px; 
+  vertical-align: middle; 
 }
 
 .files {
@@ -102,15 +102,15 @@ onMounted(() => {
 .file {
   padding: 8px; 
   border-radius: 4px; 
-  display: flex; /* чтобы иконка и текст были на одной линии */
-  align-items: center; /* вертикальное выравнивание по центру */
+  display: flex; 
+  align-items: center; 
 }
 
 .file-icon {
-  width: 16px; /* ширина иконки файла */
-  height: 16px; /* высота иконки файла */
-  margin-right: 8px; /* отступ справа от иконки */
-  vertical-align: middle; /* выравнивание по центру */
+  width: 16px; 
+  height: 16px; 
+  margin-right: 8px; 
+  vertical-align: middle; 
 }
 
 .file:hover {

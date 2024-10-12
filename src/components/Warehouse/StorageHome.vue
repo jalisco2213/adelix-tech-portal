@@ -159,7 +159,7 @@ const updateData = async (updatedDevice) => {
 </script>
 
 <template>
-  <div class="storage-container">
+  <div class="storage-container w96">
     <div class="header">
       <div class="header-title">
         <img src="/storage.svg" alt="Storage Icon" />
@@ -239,7 +239,6 @@ const updateData = async (updatedDevice) => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
   border-radius: 12px;
 }
 

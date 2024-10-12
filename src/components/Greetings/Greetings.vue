@@ -65,7 +65,7 @@ const closeSettings = () => {
 </script>
 
 <template>
-  <div class="greetings" :class="{ 'hidden': !isNavVisible }">
+  <div class="greetings w96" :class="{ 'hidden': !isNavVisible }">
     <div class="greetings-title">
       <p id="account">👋 Здравствуй, {{ editorSession.value.username }}</p>
     </div>
@@ -109,14 +109,13 @@ const closeSettings = () => {
 
 <style lang="scss">
 .greetings {
-  margin-bottom: 20px;
   transition: transform 0.5s ease;
   transform-origin: top;
   position: sticky;
   z-index: 10;
   top: 0;
+  margin: 0 auto 20px;
   display: flex;
-  width: 100%;
   align-items: center;
   justify-content: space-between;
   height: 80px;

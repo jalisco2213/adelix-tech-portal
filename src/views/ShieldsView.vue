@@ -18,12 +18,10 @@ let isCheck = ref(false);
 const isClosing = ref(false);
 let isLoading = ref(false);
 
-// Function to update device data
 const handleUpdateData = (data) => {
   imgData.value = data;
 };
 
-// Function to handle quantity changes
 const handleQuantityChange = (deviceId, quantity) => {
   const device = devices.value.find(d => d.id === deviceId);
   if (device) {
@@ -34,7 +32,6 @@ const handleQuantityChange = (deviceId, quantity) => {
   }
 };
 
-// Helper functions to update device properties
 const updateSerialNumbers = (device) => {
   if (device.serialNumbers.length < device.quantity) {
     for (let i = device.serialNumbers.length; i < device.quantity; i++) {
@@ -55,12 +52,10 @@ const updateUkrainianFlags = (device) => {
   }
 };
 
-// Computed property for selected devices
 const selectedDevices = computed(() => {
   return devices.value.filter(device => device.selected && device.quantity > 0);
 });
 
-// Function to show PDF sample
 const showSample = async () => {
   isLoading.value = true;
   const pdf = new jsPDF('l', 'mm', 'a3');
@@ -98,7 +93,6 @@ const showSample = async () => {
   isLoading.value = false;
 };
 
-// Function to find free space in the PDF
 const findFreeSpace = (imgWidth, imgHeight, pageWidth, pageHeight, margin, padding, positions) => {
   for (let y = margin; y <= pageHeight - imgHeight - margin; y += padding) {
     for (let x = margin; x <= pageWidth - imgWidth - margin; x += padding) {
@@ -114,7 +108,6 @@ const findFreeSpace = (imgWidth, imgHeight, pageWidth, pageHeight, margin, paddi
   return null;
 };
 
-// Group devices by type
 const groupedDevices = computed(() => {
   return devices.value.reduce((acc, device) => {
     if (!acc[device.type]) {
@@ -125,13 +118,11 @@ const groupedDevices = computed(() => {
   }, {});
 });
 
-// Hide modal function
 const hideModal = () => {
   isModalVisible.value = false;
   pdfPreview.value = null;
 };
 
-// Show and hide shields modal
 const showShieldsModal = (deviceId) => {
   const device = devices.value.find(d => d.id === deviceId);
   if (device) {
@@ -159,7 +150,7 @@ const hideShieldsModal = (deviceId) => {
     <div class="container">
       <Greetings />
 
-      <div class="shields-container">
+      <div class="shields-container w96">
         <div class="header">
           <div class="header-title">
             <img src="/sticker.svg" alt="Storage Icon" />
