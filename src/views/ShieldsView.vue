@@ -1,16 +1,16 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { jsPDF } from "jspdf";
+import { supabase } from '../ts/client/supabase';
 import html2canvas from 'html2canvas';
 import DeviceOption from "@/components/Shields/DeviceOption.vue";
 import DeviceDisplay from "@/components/Shields/DeviceDisplay.vue";
 import ModalReview from "@/components/Shields/ModalReview.vue";
-import devicesData from '../data/devices.json';
 import ModalLoader from "@/components/Shields/Utils/ModalLoader.vue";
 import Navigation from "@/components/Navigation.vue";
 import Greetings from "@/components/Greetings/Greetings.vue";
 
-const devices = ref(devicesData);
+const devices = ref([]);
 const imgData = ref({});
 let pdfPreview = ref(null);
 let isModalVisible = ref(false);
@@ -20,6 +20,18 @@ let isLoading = ref(false);
 
 const handleUpdateData = (data) => {
   imgData.value = data;
+};
+
+const fetchDevices = async () => {
+  const { data, error } = await supabase
+    .from('mark_shields')
+    .select('*');
+
+  if (error) {
+    console.error('Ошибка получения данных:', error);
+  } else {
+    devices.value = data;
+  }
 };
 
 const handleQuantityChange = (deviceId, quantity) => {
@@ -59,8 +71,8 @@ const selectedDevices = computed(() => {
 const showSample = async () => {
   isLoading.value = true;
   const pdf = new jsPDF('l', 'mm', 'a3');
-  const margin = 2;
-  const padding = 2;
+  const margin = 5;
+  const padding = 1;
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
   let positions = [];
@@ -140,6 +152,10 @@ const hideShieldsModal = (deviceId) => {
     }
   }, 200);
 };
+
+onMounted(() => {
+  fetchDevices();
+});
 </script>
 
 <template>

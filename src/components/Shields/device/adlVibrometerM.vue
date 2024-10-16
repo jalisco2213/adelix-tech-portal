@@ -1,5 +1,5 @@
 <script setup>
-import {defineEmits} from 'vue';
+import { defineEmits } from 'vue';
 
 const emit = defineEmits(['updateData']);
 
@@ -8,6 +8,7 @@ const props = defineProps({
   label: String,
   serial: String,
   isUkrainian: Boolean,
+  isTurkey: Boolean,
   labelUkrainian: String,
   serialType: String,
 });
@@ -24,29 +25,69 @@ let date = new Date().getFullYear();
             <img v-if="!isUkrainian" class="logo" src="/logo.png" alt="logo">
             <img v-else class="logo ukraine" src="/logo.png" alt="logo">
 
-            <p v-if="!isUkrainian" class="adelix-portable">
+            <p v-if="!isUkrainian && !isTurkey" class="adelix-portable">
               <span class="adelix">ADELIX</span> PORTABLE <br> VIBRATION METER
+
+            <pre style="text-align: center;" v-if="isTurkey">Made in Turkey</pre>
             </p>
 
-            <p v-else class="ukrainian-text">
+            <p v-if="!isUkrainian && isTurkey" class="adelix-portable_turkey">
+              <span class="adelix">ADELIX</span> PORTABLE <br> VIBRATION METER
+
+            <pre style="text-align: center;">Made in Turkey</pre>
+            </p>
+
+            <p v-if="isUkrainian" class="ukrainian-text">
               <span class="small-text">ПОРТАТИВНИЙ ВІБРОМЕТР</span> <br>
-              <div class="text-wrapper">
-                <p class="adelix-ukraine">ADELIX</p>
-                <p class="ukraine">UKRAINE</p>
-              </div>
+            <div class="text-wrapper">
+              <p class="adelix-ukraine">ADELIX</p>
+              <p class="ukraine">UKRAINE</p>
+            </div>
             </p>
 
             <img class="bluetooth" src="/bluetooth.png" alt="bluetooth">
           </div>
 
-          <div class="vibrometer-footer">
+          <div v-if="!isUkrainian && !isTurkey" class="vibrometer-footer">
             <div class="vibrometer-footer_content">
               <p class="id">{{ id }}</p>
 
               <div class="vibrometer-footer-serial">
                 <p v-if="!isUkrainian" class="sn">S/N &nbsp; </p>
                 <p v-else class="sn ukraine">№ &nbsp; </p>
-                <span class="serial">{{serialType}}.{{ serial }}</span>
+                <span class="serial">{{ serialType }}.{{ serial }}</span>
+              </div>
+
+              <div class="vibrometer-footer-year">
+                {{ date }}
+              </div>
+            </div>
+          </div>
+
+          <div v-if="!isUkrainian && isTurkey" class="vibrometer-footer_turkey">
+            <div class="vibrometer-footer_content">
+              <p class="id">{{ id }}</p>
+
+              <div class="vibrometer-footer-serial">
+                <p v-if="!isUkrainian" class="sn">S/N &nbsp; </p>
+                <p v-else class="sn ukraine">№ &nbsp; </p>
+                <span class="serial">{{ serialType }}.{{ serial }}</span>
+              </div>
+
+              <div class="vibrometer-footer-year">
+                {{ date }}
+              </div>
+            </div>
+          </div>
+
+          <div v-if="isUkrainian" class="vibrometer-footer">
+            <div class="vibrometer-footer_content">
+              <p class="id">{{ id }}</p>
+
+              <div class="vibrometer-footer-serial">
+                <p v-if="!isUkrainian" class="sn">S/N &nbsp; </p>
+                <p v-else class="sn ukraine">№ &nbsp; </p>
+                <span class="serial">{{ serialType }}.{{ serial }}</span>
               </div>
 
               <div class="vibrometer-footer-year">
@@ -66,7 +107,7 @@ let date = new Date().getFullYear();
   width: 330px;
   height: 103px;
   background: #111;
-  border-radius: 5px;
+  border-radius: 10px;
 }
 
 .vibrometer-header {
@@ -85,11 +126,30 @@ let date = new Date().getFullYear();
   }
 
   .adelix-portable {
+    text-align: center;
     font-size: 17px;
     color: #eee;
     margin: 0;
     padding: 0;
     font-weight: 700;
+
+    .adelix {
+      color: #2b95ee;
+      font-weight: 900;
+    }
+  }
+
+  .adelix-portable_turkey {
+    text-align: center;
+    font-size: 14px;
+    color: #eee;
+    margin: 0;
+    padding: 0;
+    font-weight: 700;
+
+    pre {
+      font-size: 12px;
+    }
 
     .adelix {
       color: #2b95ee;
@@ -131,7 +191,62 @@ let date = new Date().getFullYear();
 }
 
 .vibrometer-footer {
-  padding: 5px 10px 10px;
+  padding: 6px 10px 10px;
+
+  .vibrometer-footer_content {
+    background: rgb(114, 114, 113);
+    padding: 5px 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+
+    .id {
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      font-size: 17px;
+      color: #2b95ee;
+    }
+
+    .vibrometer-footer-serial {
+      background: #eee;
+      border-radius: 15px;
+      padding: 2px 10px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+
+      .sn {
+        font-weight: 500;
+        font-size: 12px;
+        color: #111;
+
+        &.ukraine {
+          font-weight: 700;
+        }
+      }
+
+      .serial {
+        font-weight: 700;
+        font-size: 12px;
+      }
+    }
+
+    .vibrometer-footer-year {
+      background: #eee;
+      font-weight: 700;
+      border-radius: 15px;
+      font-size: 12px;
+      padding: 2px 10px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+.vibrometer-footer_turkey {
+  padding: 0 10px;
 
   .vibrometer-footer_content {
     background: rgb(114, 114, 113);

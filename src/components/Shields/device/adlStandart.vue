@@ -1,5 +1,5 @@
 <script setup>
-import {defineEmits} from 'vue';
+import { defineEmits } from 'vue';
 
 const emit = defineEmits(['updateData']);
 
@@ -8,6 +8,7 @@ const props = defineProps({
   label: String,
   serial: String,
   isUkrainian: Boolean,
+  isTurkey: Boolean,
   labelUkrainian: String,
   serialType: String,
   artN: String
@@ -23,14 +24,17 @@ let date = new Date().getFullYear();
         <div class="du-info">
           <div class="du-content">
             <div class="du-header">
-              <p v-if="!isUkrainian" style="padding-top: 10px; font-size: 13px; font-weight: bold;" v-html="label.replace(/\n/g, '<br>')"></p>
-              <p v-else style="padding-top: 10px; font-size: 13px; font-weight: bold;" v-html="labelUkrainian.replace(/\n/g, '<br>')"></p>
+              <p v-if="!isUkrainian" style="padding-top: 10px; font-size: 13px; font-weight: bold;"
+                v-html="label.replace(/\n/g, '<br>')"></p>
+              <p v-else style="padding-top: 10px; font-size: 13px; font-weight: bold;"
+                v-html="labelUkrainian.replace(/\n/g, '<br>')"></p>
 
-
-              <h1 v-if="!isUkrainian" style="padding: 7px 0 10px; line-height: 1;">
-                <p style="font-weight: 800; margin-top: 10px; letter-spacing: 1px; color: rgb(43, 149, 238);">ADELIX</p>
-                <p style="font-size: 25px; letter-spacing: 1px; margin: 7.5px; font-weight: 800;">{{ id }}</p>
+              <h1 v-if="!isUkrainian" style="padding: 3px 0 0;">
+                <p style="font-weight: 800; letter-spacing: 1px; color: rgb(43, 149, 238);">ADELIX</p>
+                <p style="font-size: 25px; letter-spacing: 1px; font-weight: 800;">{{ id }}</p>
+                <pre style="font-weight: 300; font-size: 14px; padding: 5px;" v-if="isTurkey">Made in Turkey</pre>
               </h1>
+
 
               <h1 v-else style="padding: 7px 0 10px; line-height: 1;">
                 <p style="font-weight: 800; letter-spacing: 1px; color: rgb(43, 149, 238);">ADELIX</p>
@@ -42,7 +46,7 @@ let date = new Date().getFullYear();
             <div class="du-center">
               <div class="du-main">
                 <div>
-                  <label for="serial">{{isUkrainian ? 'Сер. №' : 'S/N'}}</label>
+                  <label for="serial">{{ isUkrainian ? 'Сер. №' : 'S/N' }}</label>
                   <input style="width: 120px; font-size: 17px;" type="text" :value="`${serialType}.${serial}`" readonly>
                 </div>
 
@@ -54,14 +58,17 @@ let date = new Date().getFullYear();
 
               <div style="margin-top: 5px;" class="du-part">
                 <label for="part">{{ isUkrainian ? 'Парт №:' : 'Art/N:' }}</label>
-                <input v-model="props.artN" type="text" style="font-size: 17px; width: 100%; margin-bottom: 8px;" id="part">
+                <input v-model="props.artN" type="text" style="font-size: 17px; width: 100%; margin-bottom: 8px;"
+                  id="part">
               </div>
             </div>
 
             <div class="du-footer"
-                 style="display: flex; gap: 10px; justify-content: space-between; align-items: center;">
+              style="display: flex; gap: 10px; justify-content: space-between; align-items: center;">
               <img style="width: 130px; height: 55px; " src="/logo.png" alt="logo">
               <img style="width: 60px" src="/qrcode.png" alt="qr">
+
+
             </div>
           </div>
         </div>

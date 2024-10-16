@@ -33,41 +33,30 @@ const continueSerialNumbers = () => {
     <div class="modal-content" @click.stop :class="{ closing: isClosing }">
       <div style="overflow-y: auto; max-height: 100%; height: 100%; padding: 5px">
         <span style="position: absolute; cursor: pointer; top: 0; font-size: 40px; right: 40px" class="close-button"
-              @click="close">×</span>
+          @click="close">×</span>
         <div>
           <div style="display: flex; align-items: center; margin-bottom: 10px;">
             <p>Количество шильдов для <b>{{ device.id }}</b>:</p>
-            <input
-              class="pointerShields"
-              type="number"
-              min="0"
-              v-model.number="device.quantity"
-              @input="updateQuantity"
-            />
+            <input class="pointerShields" type="number" min="0" v-model.number="device.quantity"
+              @input="updateQuantity" />
           </div>
 
-          <ModalLoader v-if="device.quantity === 0" style="display: flex; justify-content:center; align-items: center; margin: auto; height: 41vh"/>
+          <ModalLoader v-if="device.quantity === 0"
+            style="display: flex; justify-content:center; align-items: center; margin: auto; height: 41vh" />
 
-          <img
-            v-if="device.quantity > 1"
-            style="width: 30px; cursor: pointer; position: absolute; right: 70px; top: 10px"
-            src="/svg/repeat.svg"
-            alt="repeat"
-            @click="continueSerialNumbers"
-          />
+          <img v-if="device.quantity > 1"
+            style="width: 30px; cursor: pointer; position: absolute; right: 70px; top: 10px" src="/svg/repeat.svg"
+            alt="repeat" @click="continueSerialNumbers" />
         </div>
 
         <div class="shields-input">
           <div v-for="(serial, index) in device.quantity" :key="index" class="serial-input">
             <label>S/N №{{ index + 1 }}:</label>
-            <input
-              class="shields-serial"
-              type="text"
-              v-model="device.serialNumbers[index]"
-              placeholder="Серийный номер"
-            />
+            <input class="shields-serial" type="text" v-model="device.serialNumbers[index]"
+              placeholder="Серийный номер" />
 
-            <SwitchCountry v-model:country="device.isUkrainian[index]"/>
+            <SwitchCountry v-model:markedByManufacturer="device.isTurkey[index]"
+              v-model:country="device.isUkrainian[index]" />
           </div>
         </div>
       </div>
@@ -109,6 +98,7 @@ const continueSerialNumbers = () => {
     0% {
       transform: translateY(50px);
     }
+
     100% {
       transform: translateY(0);
     }
@@ -118,6 +108,7 @@ const continueSerialNumbers = () => {
     0% {
       transform: translateY(0);
     }
+
     100% {
       transform: translateY(200px);
     }

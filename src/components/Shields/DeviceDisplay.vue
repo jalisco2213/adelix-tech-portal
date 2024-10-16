@@ -46,6 +46,7 @@ const handleUpdateData = (data) => {
         :serial="serial"
         :serialType="device.serialType"
         :isUkrainian="device.isUkrainian[index]"
+        :isTurkey="device.isTurkey[index]"
         :artN="device.artN"
         :class="device.className"
         @updateData="handleUpdateData"

@@ -41,7 +41,6 @@ let date = new Date().getFullYear();
               функцією вимірювання температури</span>
             </p>
 
-
             <img style="height: 30px;" src="/bluetooth.png" alt="logo">
           </div>
 
