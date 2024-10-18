@@ -1,5 +1,5 @@
 <script setup>
-import {defineEmits} from 'vue';
+import { defineEmits } from 'vue';
 
 const emit = defineEmits(['updateData']);
 
@@ -10,13 +10,14 @@ const props = defineProps({
   isUkrainian: Boolean,
   labelUkrainian: String,
   serialType: String,
+  isTurkey: Boolean,
 });
 </script>
 
 <template>
   <div :class="`${id}-container`">
     <div class="shields-container">
-      <div class="uci-sensor">
+      <div v-if="!isTurkey" class="uci-sensor">
 
         <div class="uci-header">
           <h1 style="color: #eee">{{ serialType }}</h1>
@@ -27,7 +28,18 @@ const props = defineProps({
         </div>
 
         <div class="uci-footer">
-          <h1 style="color: #eee">№{{serial}}</h1>
+          <h1 style="color: #eee">№{{ serial }}</h1>
+        </div>
+      </div>
+
+      <div v-else class="uci-sensor_turkey">
+
+        <div class="uci-header">
+          <h1 style="color: #eee">{{ serialType.replace('ADL ', '') }}</h1>
+        </div>
+
+        <div class="uci-footer">
+          <h1 style="color: #eee">№{{ serial }}</h1>
         </div>
       </div>
     </div>
@@ -35,7 +47,8 @@ const props = defineProps({
 </template>
 
 <style scoped lang="scss">
-.uci-sensor {
+.uci-sensor,
+.uci-sensor_turkey {
   user-select: none;
   border: 1px solid #111111;
   width: 300px;
@@ -50,6 +63,19 @@ const props = defineProps({
   color: #2B2A29;
   font-weight: 900;
   font-size: 18px;
+}
+
+.uci-sensor_turkey {
+  gap: 5px !important;
+
+  .uci-header {
+    margin-top: 20px;
+    font-size: 40px;
+  }
+
+  .uci-footer {
+    font-size: 20px !important;
+  }
 }
 
 .uci-main {
