@@ -1,5 +1,5 @@
 <script setup>
-import {defineEmits} from 'vue';
+import { defineEmits } from 'vue';
 
 const emit = defineEmits(['updateData']);
 
@@ -24,11 +24,14 @@ let date = new Date().getFullYear();
 
       <div class="vibrometr-right">
         <div class="vibrometr-mark">
-          <h1 style="font-size: 25.5px; margin: 0; padding: 0; color: #eee; text-align: center;">{{ id }}</h1>
+          <h1 v-if="!isUkrainian" style="font-size: 18px; margin: 0; padding: 0; color: #eee; text-align: center;">{{ id }}</h1>
+          <h1 v-else style="font-size: 25.5px; margin: 0; padding: 0; color: #eee; text-align: center;">{{ id }}</h1>
 
           <p v-if="!isUkrainian"
-             style="font-size: 15px; text-align: center; color: #eee; margin: 0 0 0 7.5px; padding: 0;">
-            S/N {{ serialType }}.{{ serial }} &nbsp; {{ date }}</p>
+            style="font-size: 12px; text-align: center; color: #eee; margin: 0 0 0 7.5px; padding: 0;">
+            <span style="font-weight: 600;"> S/N {{ serialType }}.{{ serial }} &nbsp; {{ date }} </span> <br>
+          <pre>Made in Turkey </pre>
+          </p>
 
           <p v-else style="font-size: 15px; text-align: center; color: #eee; margin: 0 0 0 7.5px; padding: 0;">
             № {{ serialType }}.{{ serial }} &nbsp; {{ date }}</p>
@@ -45,12 +48,12 @@ let date = new Date().getFullYear();
             </div>
 
             <div v-if="!isUkrainian" class="vibrometr-power-subtitle"
-                 style="font-size: 15px; line-height: 1; color: #eee; font-weight: 500;">
+              style="font-size: 15px; line-height: 1; color: #eee; font-weight: 500;">
               Power on / <br> Measuring
             </div>
 
             <div v-else class="vibrometr-power-subtitle"
-                 style="font-size: 15px; line-height: 1; color: #eee; font-weight: 500;">
+              style="font-size: 15px; line-height: 1; color: #eee; font-weight: 500;">
               Живлення / <br> Вимірювання
             </div>
           </div>
@@ -74,11 +77,11 @@ let date = new Date().getFullYear();
 
       <div class="vibrometr-arrow">
         <span v-if="!isUkrainian">
-        ADELIX &nbsp; &nbsp; {{ label }}
+          ADELIX &nbsp; &nbsp; {{ label }}
         </span>
 
         <span v-else>
-        ADELIX &nbsp; &nbsp; {{ labelUkrainian }}
+          ADELIX &nbsp; &nbsp; {{ labelUkrainian }}
         </span>
       </div>
     </div>
@@ -212,5 +215,4 @@ let date = new Date().getFullYear();
     font-size: 15px;
   }
 }
-
 </style>

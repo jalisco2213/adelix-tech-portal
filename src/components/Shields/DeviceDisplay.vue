@@ -1,5 +1,5 @@
 <script setup>
-import {computed} from "vue";
+import { computed } from "vue";
 import adlStandard from "@/components/Shields/device/adlStandart.vue";
 import adlVibrometrP from "@/components/Shields/device/adlVibrometrP.vue";
 import sensorUci from "@/components/Shields/device/sensorUci.vue";
@@ -36,21 +36,10 @@ const handleUpdateData = (data) => {
 
 <template>
   <div class="device-display">
-      <component
-        v-for="(serial, index) in device.serialNumbers"
-        :key="index"
-        :is="componentToRender"
-        :id="device.id"
-        :label="device.label"
-        :labelUkrainian="device.labelUkrainian"
-        :serial="serial"
-        :serialType="device.serialType"
-        :isUkrainian="device.isUkrainian[index]"
-        :isTurkey="device.isTurkey[index]"
-        :artN="device.artN"
-        :class="device.className"
-        @updateData="handleUpdateData"
-      />
+    <component v-for="(serial, index) in device.serialNumbers" :key="index" :is="componentToRender" :id="device.id"
+      :label="device.label" :labelUkrainian="device.labelUkrainian" :serial="serial" :serialType="device.serialType"
+      :isUkrainian="device.isUkrainian[index]" :isTurkey="device.isTurkey[index]" :artN="device.artN"
+      :class="device.className" @updateData="handleUpdateData" />
   </div>
 </template>
 
