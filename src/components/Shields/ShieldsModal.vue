@@ -26,6 +26,11 @@ const continueSerialNumbers = () => {
     });
   }
 };
+
+const continueTurkey = () => {
+  props.device.isTurkey = Array(props.device.quantity).fill(true);
+};
+
 </script>
 
 <template>
@@ -43,6 +48,10 @@ const continueSerialNumbers = () => {
 
           <ModalLoader v-if="device.quantity === 0"
             style="display: flex; justify-content:center; align-items: center; margin: auto; height: 41vh" />
+
+          <img v-if="device.quantity > 1"
+            style="width: 30px; cursor: pointer; position: absolute; right: 110px; top: 10px" src="/turkey.svg"
+            alt="repeat" @click="continueTurkey" />
 
           <img v-if="device.quantity > 1"
             style="width: 30px; cursor: pointer; position: absolute; right: 70px; top: 10px" src="/svg/repeat.svg"
