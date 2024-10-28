@@ -88,7 +88,57 @@ const updateComment = async (serial, comment) => {
   }
 };
 
-onMounted(fetchDeviceShields);
+const toggleSerialStatus = async (serial) => {
+  const updatedStatus = selectedStatus.value.map(status => {
+    if (status.serial === serial) {
+      return { ...status, status: status.status === 'active' ? 'none' : 'active' };
+    }
+    return status;
+  });
+
+  selectedStatus.value = updatedStatus;
+
+  const fieldToUpdate = selectedStatusType.value === 'eng' ? 'status_eng' : 'status_uk';
+
+  const { error } = await supabase
+    .from('shields_log')
+    .update({
+      [fieldToUpdate]: updatedStatus
+    })
+    .eq('device', selectedDevice.value);
+
+  if (error) {
+    console.error('Error toggling serial status:', error);
+  } else {
+    console.log('Serial status toggled successfully');
+  }
+};
+
+const subscribeToDeviceShields = () => {
+  const channel = supabase
+    .channel('postgresChangesChannel')
+    .on('postgres_changes', {
+      event: 'UPDATE',
+      schema: 'public',
+      table: 'shields_log'
+    }, async payload => {
+      const updatedShield = payload.new;
+      const index = deviceShields.value.findIndex(shield => shield.id === updatedShield.id);
+      if (index !== -1) {
+        deviceShields.value[index] = updatedShield;
+      } else {
+        deviceShields.value.push(updatedShield);
+      }
+    })
+    .subscribe();
+};
+
+
+
+onMounted(() => {
+  fetchDeviceShields();
+  subscribeToDeviceShields();
+});
 </script>
 
 <template>
@@ -153,6 +203,7 @@ onMounted(fetchDeviceShields);
                 <th>Серийный</th>
                 <th>Статус</th>
                 <th>Комментарий</th>
+                <th>Действия</th>
               </tr>
             </thead>
             <tbody>
@@ -166,6 +217,12 @@ onMounted(fetchDeviceShields);
                 </td>
                 <td>
                   <textarea v-model="status.comment" @blur="updateComment(status.serial, status.comment)"></textarea>
+                </td>
+                <td class="actions-img">
+                  <div>
+                    <img src="/achive.svg" alt="archive" @click="toggleSerialStatus(status.serial)" />
+                    <img src="/delete.svg" alt="">
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -220,6 +277,20 @@ onMounted(fetchDeviceShields);
 
           &:hover {
             background-color: #e1e1e1;
+          }
+
+          .actions-img {
+            div {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              gap: 5px;
+
+              img {
+                width: 30px;
+                cursor: pointer;
+              }
+            }
           }
         }
       }
