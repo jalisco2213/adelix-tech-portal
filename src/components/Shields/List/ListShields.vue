@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { supabase } from '@/ts/client/supabase';
+import * as XLSX from 'xlsx';
 
 const deviceShields = ref([]);
 const showModal = ref(false);
@@ -70,6 +71,28 @@ const filteredStatus = computed(() => {
 
   return filtered.sort((a, b) => a.serial - b.serial);
 });
+
+const exportToExcel = () => {
+  const header = ["#", "Прибор", "Статус (англ.)", "Статус (укр.)"];
+
+  const csvData = [
+    header,
+    ...deviceShields.value.map(shield => [
+      shield.id,
+      shield.device,
+      countStatuses(shield.status_eng).active + ' активных, ' + countStatuses(shield.status_eng).none + ' неактивных',
+      countStatuses(shield.status_uk).active + ' активных, ' + countStatuses(shield.status_uk).none + ' неактивных'
+    ])
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet(csvData);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Shields Data');
+
+  const date = new Date().toISOString().split('T')[0];
+  const filename = `${date}_shields-data.xlsx`;
+  XLSX.writeFile(wb, filename);
+};
 
 const updateComment = async (serial, comment) => {
   const fieldToUpdate = selectedStatusType.value === 'eng' ? 'status_eng' : 'status_uk';
@@ -148,8 +171,11 @@ onMounted(() => {
   <div class="storage-container w96">
     <div class="header">
       <div class="header-title">
-        <img src="/listshields.svg" alt="shields Icon" />
-        Лист шильдов
+        <img src="/sticker.svg" alt="Storage Icon" />
+        Шильды
+      </div>
+      <div class="header-controls">
+        <img @click="exportToExcel" class="export-button" src="/excel.svg" alt="">
       </div>
     </div>
     <div class="table-container">
@@ -196,7 +222,8 @@ onMounted(() => {
         <p style="color: #495057; font-size: 14px;">Активные: {{ countStatuses(selectedStatus).active }}</p>
         <p style="color: #495057; font-size: 14px;">Неактивные: {{ countStatuses(selectedStatus).none }}</p>
 
-        <input type="text" v-model="searchTerm" placeholder="Поиск по серийному номеру или тексту" class="search-input" />
+        <input type="text" v-model="searchTerm" placeholder="Поиск по серийному номеру или тексту"
+          class="search-input" />
 
         <div class="table-container">
           <table class="styled-table">
