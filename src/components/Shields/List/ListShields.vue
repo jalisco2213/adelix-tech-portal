@@ -57,13 +57,18 @@ const countStatuses = (statuses) => {
 };
 
 const filteredStatus = computed(() => {
-  if (!selectedStatus.value || !searchTerm.value) return selectedStatus.value;
+  if (!selectedStatus.value || !searchTerm.value) {
+    return [...selectedStatus.value].sort((a, b) => a.serial - b.serial);
+  }
 
   const searchTermNum = Number(searchTerm.value);
-  return selectedStatus.value.filter(status => {
+  const filtered = selectedStatus.value.filter(status => {
     const serialAsString = String(status.serial);
-    return serialAsString.includes(searchTerm.value) || status.serial === searchTermNum;
+    const commentMatches = status.comment.toLowerCase().includes(searchTerm.value.toLowerCase());
+    return serialAsString.includes(searchTerm.value) || status.serial === searchTermNum || commentMatches;
   });
+
+  return filtered.sort((a, b) => a.serial - b.serial);
 });
 
 const updateComment = async (serial, comment) => {
@@ -133,8 +138,6 @@ const subscribeToDeviceShields = () => {
     .subscribe();
 };
 
-
-
 onMounted(() => {
   fetchDeviceShields();
   subscribeToDeviceShields();
@@ -193,7 +196,7 @@ onMounted(() => {
         <p style="color: #495057; font-size: 14px;">Активные: {{ countStatuses(selectedStatus).active }}</p>
         <p style="color: #495057; font-size: 14px;">Неактивные: {{ countStatuses(selectedStatus).none }}</p>
 
-        <input type="text" v-model="searchTerm" placeholder="Поиск по серийному номеру" class="search-input" />
+        <input type="text" v-model="searchTerm" placeholder="Поиск по серийному номеру или тексту" class="search-input" />
 
         <div class="table-container">
           <table class="styled-table">
