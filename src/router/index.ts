@@ -39,6 +39,12 @@ const routes = [
     component: () => import('../views/RepositoryView.vue'),
     meta: { requiresAuth: true},
   },
+  {
+    path: '/list-shields',
+    name: 'list-shields',
+    component: () => import('../views/ListShieldsView.vue'),
+    meta: { requiresAuth: true},
+  },
 ];
 
 const router = createRouter({

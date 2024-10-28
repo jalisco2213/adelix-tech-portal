@@ -24,7 +24,7 @@ const handleUpdateData = (data) => {
 
 const fetchDevices = async () => {
   const { data, error } = await supabase
-    .from('mark_shields')
+    .from('device')
     .select('*');
 
   if (error) {

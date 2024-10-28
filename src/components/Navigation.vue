@@ -7,6 +7,12 @@ import { editorSession } from '../ts/client/state';
 let isCollapsed = ref(false);
 let logoHide = ref(false);
 
+const showDropdown = ref(false);
+
+function toggleDropdown() {
+  showDropdown.value = !showDropdown.value;
+}
+
 function hideNavigation() {
   const navigationHide = document.querySelector('.navigation-container');
   const textHide = document.querySelectorAll('.nav-link_text');
@@ -79,15 +85,33 @@ onMounted(async () => {
                 <span class="nav-link_text">Протоколы</span>
               </RouterLink>
             </li> -->
-            <li>
-              <RouterLink class="nav-link" to="/shields" exact :class="{ 'active-link': $route.path === '/shields' }">
+
+            <div class="dropdown" :class="{ open: showDropdown }">
+              <li @click="toggleDropdown" class="nav-link" :class="{
+                'dropdown-active': showDropdown ? 'active-link' : '',
+                'active-link': ['/shields', '/list-shields'].includes($route.path)
+              }">
                 <img src="/sticker.svg" alt="">
                 <span class="nav-link_text">Шильды</span>
-              </RouterLink>
-            </li>
+              </li>
+
+              <ul v-if="showDropdown" style="margin-top: 0 !important; padding: 0;" class="dropdown-content open">
+                <RouterLink class="nav-link" to="/shields" exact :class="{ 'active-link': $route.path === '/shields' }">
+                  <img src="/generation.svg" alt="">
+                  <span class="nav-link_text">Генерация</span>
+                </RouterLink>
+
+                <RouterLink class="nav-link" to="/list-shields" exact
+                  :class="{ 'active-link': $route.path === '/list-shields' }">
+                  <img src="/listshields.svg" alt="">
+                  <span class="nav-link_text">Список</span>
+                </RouterLink>
+              </ul>
+            </div>
 
             <li>
-              <RouterLink class="nav-link" to="/repository" exact :class="{ 'active-link': $route.path === '/repository' }">
+              <RouterLink class="nav-link" to="/repository" exact
+                :class="{ 'active-link': $route.path === '/repository' }">
                 <img src="/repository.svg" alt="">
                 <span class="nav-link_text">Хранилище</span>
               </RouterLink>
@@ -230,19 +254,6 @@ h1 {
   }
 }
 
-.dropdown-content_link {
-  max-width: 100%;
-  padding: 10px 10px;
-  display: flex;
-  align-items: center;
-  transition: 0.1s ease-in-out;
-  font-size: 13px;
-
-  @media (max-width: 1000px) {
-    font-size: 11px;
-  }
-}
-
 img {
   margin-right: 10px;
   width: 25px;
@@ -277,9 +288,33 @@ nav {
   }
 }
 
-.dropdown-content {
+.dropdown {
+  position: relative;
+  display: block;
   cursor: pointer;
-  background: #f7f7f7;
+
+  &.open {
+    border-radius: 30px;
+    background: #e0e0e0;
+  }
+}
+
+.dropdown-active {
+  background-color: #e0e0e0;
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-content {
+  background-color: #f7f7f7;
+  overflow: hidden;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
+  margin-top: 10px;
+  padding: 0 10px;
+  cursor: pointer;
   border-radius: 10px;
   font-size: 14px;
   text-align: center;
@@ -287,21 +322,33 @@ nav {
   animation-duration: 0.3s;
   animation-fill-mode: both;
 
-  li {
-    margin-bottom: 10px;
+  &_link {
+    padding: 10px 15px;
+    color: #444;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    max-width: 100%;
+    padding: 10px 10px;
+    display: flex;
+    align-items: center;
+    transition: 0.1s ease-in-out;
 
-    a {
-      color: #888;
-
-      &:hover {
-        color: #444;
-      }
-
-      &:not(:last-child) {
-        border-bottom: 2px solid #e0e0e0;
-      }
+    & &:hover {
+      background-color: #e0e0e0;
+      color: #111;
     }
   }
+
+  &.open {
+    opacity: 1;
+    max-height: 500px;
+    display: block;
+    border-radius: 30px;
+  }
+}
+
+.active-link {
+  border-radius: 8px;
 }
 
 .navigation-hide {
