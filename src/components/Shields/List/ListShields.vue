@@ -165,6 +165,61 @@ onMounted(() => {
   fetchDeviceShields();
   subscribeToDeviceShields();
 });
+
+const newSerial = ref('');
+const newComment = ref('');
+
+const addShield = async () => {
+  if (!newSerial.value) {
+    alert('Введите серийный номер.');
+    return;
+  }
+
+  const fieldToUpdate = selectedStatusType.value === 'eng' ? 'status_eng' : 'status_uk';
+
+  const newStatus = { serial: newSerial.value, status: 'active', comment: newComment.value };
+
+  const { error } = await supabase
+    .from('shields_log')
+    .update({
+      [fieldToUpdate]: [
+        ...selectedStatus.value,
+        newStatus
+      ]
+    })
+    .eq('device', selectedDevice.value);
+
+  if (error) {
+    console.error('Ошибка при добавлении шильда:', error);
+  } else {
+    console.log('Шильд добавлен успешно');
+
+    selectedStatus.value.push(newStatus);
+
+    newSerial.value = '';
+    newComment.value = '';
+  }
+};
+
+const deleteShield = async (serial) => {
+  const fieldToUpdate = selectedStatusType.value === 'eng' ? 'status_eng' : 'status_uk';
+
+  const updatedStatus = selectedStatus.value.filter(status => status.serial !== serial);
+
+  const { error } = await supabase
+    .from('shields_log')
+    .update({
+      [fieldToUpdate]: updatedStatus
+    })
+    .eq('device', selectedDevice.value);
+
+  if (error) {
+    console.error('Ошибка при удалении шильда:', error);
+  } else {
+    console.log('Шильд удалён успешно');
+    selectedStatus.value = updatedStatus;
+  }
+};
 </script>
 
 <template>
@@ -217,10 +272,22 @@ onMounted(() => {
 
     <div v-if="showModal" class="modal-overlay">
       <div class="modal-content">
-        <span class="close" @click="toggleModal([], '')">&times;</span>
-        <h2 style="color: #495057">Серийные номера для: {{ selectedDevice }}</h2>
-        <p style="color: #495057; font-size: 14px;">Активные: {{ countStatuses(selectedStatus).active }}</p>
-        <p style="color: #495057; font-size: 14px;">Неактивные: {{ countStatuses(selectedStatus).none }}</p>
+        <div class="modal-header">
+          <span class="close" @click="toggleModal([], '')">&times;</span>
+          <h2 style="color: #495057">Серийные номера для: {{ selectedDevice }}</h2>
+          <div class="navigation-info">
+            <div>
+              <p style="color: #495057; font-size: 14px;">Активные: {{ countStatuses(selectedStatus).active }}</p>
+              <p style="color: #495057; font-size: 14px;">Неактивные: {{ countStatuses(selectedStatus).none }}</p>
+            </div>
+
+            <div class="add-serial">
+              <textarea type="text" v-model="newSerial" class="" placeholder="Серийный номер"></textarea>
+              <textarea v-model="newComment" placeholder="Комментарий" class="comment-input"></textarea>
+              <button @click="addShield" class="add-button">+</button>
+            </div>
+          </div>
+        </div>
 
         <input type="text" v-model="searchTerm" placeholder="Поиск по серийному номеру или тексту"
           class="search-input" />
@@ -251,7 +318,7 @@ onMounted(() => {
                 <td class="actions-img">
                   <div>
                     <img src="/achive.svg" alt="archive" @click="toggleSerialStatus(status.serial)" />
-                    <img src="/delete.svg" alt="">
+                    <img src="/delete.svg" alt="" @click="deleteShield(status.serial)" style="cursor: pointer;" />
                   </div>
                 </td>
               </tr>
@@ -264,6 +331,46 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
+.modal-header {
+  background: #ffffff;
+  border: 1px solid #495057;
+  border-radius: 20px;
+  position: sticky;
+  top: -10px;
+  padding: 10px
+}
+
+.navigation-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+
+  .add-serial {
+    display: flex;
+    justify-content: end;
+
+    textarea {
+      width: 35%;
+      padding: 0;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+  }
+}
+
 .storage-container {
   padding: 20px;
   border-radius: 8px;

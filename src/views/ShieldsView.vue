@@ -72,7 +72,7 @@ const showSample = async () => {
   isLoading.value = true;
   const pdf = new jsPDF('l', 'mm', 'a3');
   const margin = 5;
-  const padding = 1;
+  const padding = 2;
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
   let positions = [];
