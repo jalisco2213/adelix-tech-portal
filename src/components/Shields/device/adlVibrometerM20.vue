@@ -9,6 +9,7 @@ const props = defineProps({
   serial: String,
   isUkrainian: Boolean,
   labelUkrainian: String,
+  isTurkey: Boolean,
   serialType: String,
   artN: String
 });
@@ -21,25 +22,34 @@ let date = new Date().getFullYear();
     <div class="shields-container">
       <div class="M20-container">
         <div class="M20-info">
+          <div class="cut-border"></div>
+
           <div class="M20-header"
             style="padding: 8px 10px 10px; margin-bottom: 3px; border-bottom: 2px solid #2b95ee; display: flex; align-items: center; justify-content: space-between; gap: 5px;">
             <img v-if="!isUkrainian" style="width: 75px;" src="/logo.png" alt="logo">
             <img v-else style="width: 75px;" src="/logo.png" alt="logo">
 
-
-            <p v-if="!isUkrainian"
+            <p v-if="!isUkrainian && !isTurkey"
               style="color: #eee; margin: 0; font-size: 15px; padding: 0; font-weight: 700; text-align: center;">
               PORTABLE VIBRATION METER <br>
               <span style="font-size: 10px;"><span style="color: rgb(43, 149, 238); font-size: 11px">ADELIX</span> with
                 temperature measurement function</span>
-                <pre style="font-size: 11px;">Made in Turkey</pre>
             </p>
 
-            <p v-else
+            <p v-if="isUkrainian"
               style="color: #eee; margin: 0; font-size: 15px; padding: 0; font-weight: 700; text-align: center;">
               ПОРТАТИВНИЙ ВІБРОМЕТР<br>
               <span style="font-size: 10px;"><span style="color: rgb(43, 149, 238); font-size: 11px">ADELIX</span> з
                 функцією вимірювання температури</span>
+            </p>
+
+            <p v-if="!isUkrainian && isTurkey"
+              style="color: #eee; margin: 0; font-size: 15px; padding: 0; font-weight: 700; text-align: center;">
+              PORTABLE VIBRATION METER <br>
+              <span style="font-size: 10px;"><span style="color: rgb(43, 149, 238); font-size: 11px">ADELIX</span> with
+                temperature measurement function</span>
+
+            <pre style="font-size: 11px;">Made in Turkey</pre>
             </p>
 
             <img style="height: 30px;" src="/bluetooth.png" alt="logo">
@@ -63,7 +73,10 @@ let date = new Date().getFullYear();
             </div>
 
             <div class="M20-right" style="display: flex; align-items: center; height: 100%;">
-              <img style="width: 200px; display: flex; align-items: center;" src="/m20-eng.png" alt="">
+              <img v-if="!isUkrainian" style="width: 200px; display: flex; align-items: center;" src="/m20-eng.png"
+                alt="">
+              <img v-if="isUkrainian" style="width: 215px; display: flex; align-items: center;" src="/m20-ukr.png"
+                alt="">
             </div>
           </div>
         </div>
@@ -74,14 +87,25 @@ let date = new Date().getFullYear();
 
 <style lang="scss" scoped>
 .M20-info {
+  position: relative;
   border: 1px solid #111;
   width: 410px;
   height: 130px;
   background: #161616;
-  border-radius: 10px;
+  border-radius: 25px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 5px;
+}
+
+.cut-border {
+  width: 404px;
+  height: 123px;
+  border: 1px solid rgb(255, 250, 253);
+  border-radius: 30px;
+  position: absolute;
+  top: 3px;
+  left: 2px;
 }
 </style>

@@ -25,7 +25,7 @@ const emit = defineEmits(['update:country', 'update:markedByManufacturer']);
       </div>
     </div>
 
-    <div class="checkbox-container">
+    <div class="checkbox-container" v-if="!props.country">
       <label>
         <input type="checkbox" :checked="props.markedByManufacturer"
           @change="emit('update:markedByManufacturer', $event.target.checked)" />
