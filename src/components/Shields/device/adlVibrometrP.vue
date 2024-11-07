@@ -10,6 +10,7 @@ const props = defineProps({
   isUkrainian: Boolean,
   labelUkrainian: String,
   serialType: String,
+  isTurkey: Boolean
 });
 
 let date = new Date().getFullYear();
@@ -24,16 +25,34 @@ let date = new Date().getFullYear();
 
       <div class="vibrometr-right">
         <div class="vibrometr-mark">
-          <h1 v-if="!isUkrainian" style="font-size: 18px; margin: 0; padding: 0; color: #eee; text-align: center;">{{ id }}</h1>
-          <h1 v-else style="font-size: 25.5px; margin: 0; padding: 0; color: #eee; text-align: center;">{{ id }}</h1>
+          <h1 style="font-size: 18px; margin: 0; padding: 0; color: #eee; text-align: center;"
+            v-if="!isUkrainian && isTurkey">
+            {{ id }}
+          </h1>
 
-          <p v-if="!isUkrainian"
+          <h1 style="font-size: 25.5px; margin: 0; padding: 0; color: #eee; text-align: center;"
+            v-if="!isUkrainian && !isTurkey">
+            {{ id }}
+          </h1>
+
+          <h1 style="font-size: 25.5px; margin: 0; padding: 0; color: #eee; text-align: center;"
+            v-if="isUkrainian && !isTurkey">
+            {{ id }}
+          </h1>
+
+          <p v-if="!isUkrainian && isTurkey"
             style="font-size: 12px; text-align: center; color: #eee; margin: 0 0 0 7.5px; padding: 0;">
             <span style="font-weight: 600;"> S/N {{ serialType }}.{{ serial }} &nbsp; {{ date }} </span> <br>
           <pre>Made in Turkey </pre>
           </p>
 
-          <p v-else style="font-size: 15px; text-align: center; color: #eee; margin: 0 0 0 7.5px; padding: 0;">
+          <p v-if="!isUkrainian && !isTurkey"
+            style="font-size: 14px; text-align: center; color: #eee; margin: 0 0 0 7.5px; padding: 0;">
+            <span> S/N {{ serialType }}.{{ serial }} &nbsp; {{ date }} </span>
+          </p>
+
+          <p v-if="isUkrainian && !isTurkey"
+            style="font-size: 14px; text-align: center; color: #eee; margin: 0 0 0 7.5px; padding: 0; ">
             № {{ serialType }}.{{ serial }} &nbsp; {{ date }}</p>
         </div>
 
