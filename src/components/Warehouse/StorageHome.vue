@@ -219,12 +219,6 @@ const updateData = async (updatedDevice) => {
 
     </div>
 
-    <div class="pagination-controls">
-      <button :disabled="currentPage === 1" @click="currentPage--">Назад</button>
-      <span>Страница {{ currentPage }} из {{ totalPages }}</span>
-      <button :disabled="currentPage === totalPages" @click="currentPage++">Вперед</button>
-    </div>
-
     <StorageInfoModal v-if="isModalVisible" :device="selectedDevice" @close="closeModal" />
   </div>
 </template>
@@ -307,7 +301,7 @@ const updateData = async (updatedDevice) => {
 
   th,
   td {
-    padding: 12px 10px;
+    padding: 7px 10px;
     text-align: center;
     font-size: 16px;
     color: #495057;
@@ -329,12 +323,12 @@ const updateData = async (updatedDevice) => {
     background-color: #e9ecef;
     font-weight: bold;
     font-size: 18px;
-    padding: 16px;
+    padding: 10px;
     text-transform: uppercase;
   }
 
   img {
-    width: 24px;
+    width: 23px;
     cursor: pointer;
     transition: transform 0.3s;
 
