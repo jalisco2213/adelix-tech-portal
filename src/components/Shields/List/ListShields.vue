@@ -11,6 +11,7 @@ const searchTerm = ref('');
 const selectedStatusType = ref('');
 const sortColumn = ref('');
 const sortDirection = ref('asc');
+const deviceSearchTerm = ref('');
 
 const fetchDeviceShields = async () => {
   const { data, error } = await supabase
@@ -71,6 +72,28 @@ const filteredStatus = computed(() => {
 
   return filtered.sort((a, b) => a.serial - b.serial);
 });
+
+const filteredDeviceShields = computed(() => {
+  const filteredByDevice = deviceShields.value.filter(shield => {
+    return shield.device.toLowerCase().includes(deviceSearchTerm.value.toLowerCase());
+  });
+
+  if (!selectedStatus.value || !searchTerm.value) {
+    return filteredByDevice;
+  }
+
+  const searchTermNum = Number(searchTerm.value);
+  return filteredByDevice.filter(shield => {
+    const filteredStatuses = shield.status_eng.filter(status => {
+      const serialAsString = String(status.serial);
+      const commentMatches = status.comment.toLowerCase().includes(searchTerm.value.toLowerCase());
+      return serialAsString.includes(searchTerm.value) || status.serial === searchTermNum || commentMatches;
+    });
+
+    return filteredStatuses.length > 0;
+  });
+});
+
 
 const exportToExcel = () => {
   const header = ["#", "Прибор", "Статус (англ.)", "Статус (укр.)"];
@@ -234,6 +257,10 @@ const deleteShield = async (serial) => {
       </div>
     </div>
     <div class="table-container">
+      <div class="device-search-container">
+        <input type="text" v-model="deviceSearchTerm" placeholder="Поиск по прибору" class="device-search-input" />
+      </div>
+
       <table class="styled-table">
         <thead>
           <tr>
@@ -250,16 +277,14 @@ const deleteShield = async (serial) => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="shield in deviceShields" :key="shield.id">
+          <tr v-for="shield in filteredDeviceShields" :key="shield.id">
             <td>{{ shield.id }}</td>
             <td>{{ shield.device }}</td>
-
             <td>
               <span><b>{{ countStatuses(shield.status_eng).active }}</b> активных, </span>
               <span><b>{{ countStatuses(shield.status_eng).none }}</b> неактивных </span>
               <button class="info-button" @click="toggleModal(shield.status_eng, shield.device, 'eng')">❓</button>
             </td>
-
             <td>
               <span><b>{{ countStatuses(shield.status_uk).active }}</b> активных, </span>
               <span><b>{{ countStatuses(shield.status_uk).none }}</b> неактивных </span>
@@ -338,6 +363,18 @@ const deleteShield = async (serial) => {
   position: sticky;
   top: -10px;
   padding: 10px
+}
+
+.device-search-container {
+
+  .device-search-input {
+    border: none;
+    border-bottom: 1px solid #111;
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    outline: none;
+  }
 }
 
 .navigation-info {

@@ -101,14 +101,16 @@ function displayError(message) {
       </div>
       <h2 class="login-title">Добро пожаловать</h2>
 
-      <hr class="divider"/>
+      <hr class="divider" />
 
       <div class="input-container">
-        <input type="text" v-model="email" class="input-field" placeholder="Логин" required>
+        <input type="text" @keydown.enter="loginAccount" v-model="email" class="input-field" placeholder="Логин"
+          required>
       </div>
 
       <div class="input-container">
-        <input type="password" v-model="password" class="input-field" placeholder="Пароль" required>
+        <input type="password" @keydown.enter="loginAccount" v-model="password" class="input-field" placeholder="Пароль"
+          required>
       </div>
 
       <div class="button-container">
@@ -228,8 +230,13 @@ function displayError(message) {
 }
 
 @keyframes lds-dual-ring {
-  0% { transform: rotate(0); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 480px) {
@@ -251,4 +258,3 @@ function displayError(message) {
   }
 }
 </style>
-

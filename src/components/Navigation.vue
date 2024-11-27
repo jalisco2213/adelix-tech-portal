@@ -243,7 +243,7 @@ h1 {
   color: #444;
 
   &:hover {
-    background: #e0e0e0;
+    background: #eee;
     border-radius: 100px;
     transition: 0.1s ease-in-out;
   }
@@ -308,7 +308,6 @@ nav {
 .dropdown-content {
   background-color: #f7f7f7;
   overflow: hidden;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
   max-height: 0;
   opacity: 0;
   transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
@@ -334,7 +333,7 @@ nav {
     transition: 0.1s ease-in-out;
 
     & &:hover {
-      background-color: #e0e0e0;
+      background-color: #eee;
       color: #111;
     }
   }
@@ -344,6 +343,7 @@ nav {
     max-height: 500px;
     display: block;
     border-radius: 30px;
+    background: #e0e0e0;
   }
 }
 
