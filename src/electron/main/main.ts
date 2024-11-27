@@ -21,6 +21,7 @@ function createWindow() {
     webPreferences: {
       preload: join(__dirname, '../preload/preload.js'),
     },
+    icon: join(__dirname, '../../../../public/logotypeadelix.ico')
   });
 
   mainWindow.maximize();
