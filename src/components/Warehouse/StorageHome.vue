@@ -14,8 +14,6 @@ const isModalVisible = ref(false);
 const isEditModalVisible = ref(false);
 const selectedDevice = ref('');
 const searchQuery = ref('');
-const currentPage = ref(1);
-const itemsPerPage = ref(5);
 const deviceTypeFilter = ref('');
 const currentEditData = ref(null);
 
@@ -72,11 +70,6 @@ const closeEditModal = () => {
   isEditModalVisible.value = false;
 };
 
-const sortedStorageData = computed(() => {
-  const data = filteredStorageData.value.slice();
-  return data;
-});
-
 const filteredStorageData = computed(() => {
   let data = storageData.value;
 
@@ -107,20 +100,10 @@ const filteredStorageData = computed(() => {
   return data;
 });
 
-const paginatedData = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return sortedStorageData.value.slice(start, end);
-});
-
-const totalPages = computed(() => {
-  return Math.ceil(sortedStorageData.value.length / itemsPerPage.value);
-});
-
 const exportToExcel = () => {
   const csvData = [
     ["Тип", "Название", "Количество"],
-    ...paginatedData.value.flatMap(device => {
+    ...filteredStorageData.value.flatMap(device => {
       if (!device.devices) return [];
       return Object.entries(device.devices).map(([typeKey, typeItems]) => {
         const count = typeItems[0]?.count || 0;
@@ -170,7 +153,6 @@ const updateData = async (updatedDevice) => {
           <option value="">Все типы</option>
           <option v-for="device in storageData" :key="device.type" :value="device.type">{{ device.type }}</option>
         </select>
-        <input type="number" v-model="itemsPerPage" min="1" class="items-per-page-input" />
         <input type="text" v-model="searchQuery" placeholder="Поиск" class="search-input" />
         <img @click="exportToExcel" class="export-button" src="/excel.svg" alt="">
         <StorageAddSection />
@@ -187,7 +169,7 @@ const updateData = async (updatedDevice) => {
           </tr>
         </thead>
         <tbody>
-          <template v-for="(device, index) in paginatedData" :key="index">
+          <template v-for="(device, index) in filteredStorageData" :key="index">
             <tr>
               <td colspan="3" class="table-header">
                 <div style="display: flex; align-items: center; justify-content:center; gap: 5px; cursor: default">
@@ -216,7 +198,6 @@ const updateData = async (updatedDevice) => {
 
     <div v-if="isEditModalVisible">
       <EditModal :device="currentEditData" @close="closeEditModal" @save="updateData" />
-
     </div>
 
     <StorageInfoModal v-if="isModalVisible" :device="selectedDevice" @close="closeModal" />
@@ -224,16 +205,138 @@ const updateData = async (updatedDevice) => {
 </template>
 
 <style scoped lang="scss">
-.low-stock {
-  color: red;
-  font-weight: 600;
-}
-
 .storage-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   border-radius: 12px;
+  padding: 20px;
+  width: 96%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+
+    img {
+      width: 32px;
+      height: 32px;
+    }
+  }
+
+  .header-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .filter-select,
+  .items-per-page-input,
+  .search-input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #dcdfe3;
+    border-radius: 8px;
+    transition: box-shadow 0.3s, border-color 0.3s;
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+      border-color: #007bff;
+    }
+  }
+
+  .export-button {
+    cursor: pointer;
+    width: 32px;
+    transition: transform 0.3s;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+}
+
+.storage {
+  width: 100%;
+  background-color: #fff;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  border: 1px solid #111;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.storage-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    background-color: #f1f3f5;
+
+    th {
+      text-transform: uppercase;
+      font-size: 14px;
+      font-weight: bold;
+      color: #6c757d;
+      padding: 12px 10px;
+    }
+  }
+
+  tbody {
+    tr {
+      &:nth-child(even) {
+        background-color: #f9fafb;
+      }
+
+      &:hover {
+        background-color: #e9f7ff;
+      }
+    }
+
+    td {
+      text-align: center;
+      padding: 12px 10px;
+      font-size: 14px;
+      color: #495057;
+      border-bottom: 1px solid #dee2e6;
+
+      &.low-stock {
+        color: #dc3545;
+        font-weight: bold;
+      }
+
+      img {
+        cursor: pointer;
+        width: 20px;
+        transition: transform 0.3s;
+
+        &:hover {
+          transform: scale(1.2);
+        }
+      }
+    }
+
+    .table-header {
+      background-color: #e9ecef;
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 10px 0;
+      text-transform: uppercase;
+      color: #495057;
+    }
+  }
 }
 
 .pagination-controls {
@@ -243,97 +346,22 @@ const updateData = async (updatedDevice) => {
   gap: 10px;
 
   button {
-    padding: 5px 10px;
+    padding: 8px 16px;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
+    font-size: 14px;
     background-color: #007bff;
     color: white;
     cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #0056b3;
+    }
 
     &:disabled {
       background-color: #ccc;
       cursor: not-allowed;
-    }
-  }
-}
-
-.sort-select {
-  font-family: "Montserrat", sans-serif;
-  padding: 8px 12px;
-  font-size: 14px;
-  border: 1px solid #ced4da;
-  border-radius: 8px;
-  outline: none;
-  transition: border-color 0.3s;
-
-  &:focus {
-    border-color: #007bff;
-  }
-}
-
-.search-input {
-  padding: 8px 12px;
-  font-size: 14px;
-  border: 1px solid #ced4da;
-  border-radius: 8px;
-  width: 250px;
-  outline: none;
-  transition: border-color 0.3s;
-
-  &:focus {
-    border-color: #007bff;
-  }
-}
-
-.storage {
-  width: 100%;
-  background: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border: 1px solid #111;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  overflow: auto;
-}
-
-.storage-table {
-  width: 100%;
-  border-collapse: collapse;
-
-  th,
-  td {
-    padding: 7px 10px;
-    text-align: center;
-    font-size: 16px;
-    color: #495057;
-    border-bottom: 1px solid #E0E0E0;
-  }
-
-  th {
-    background-color: #f1f3f5;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-
-  td {
-    background-color: #ffffff;
-    transition: background-color 0.3s;
-  }
-
-  .table-header {
-    background-color: #e9ecef;
-    font-weight: bold;
-    font-size: 18px;
-    padding: 10px;
-    text-transform: uppercase;
-  }
-
-  img {
-    width: 23px;
-    cursor: pointer;
-    transition: transform 0.3s;
-
-    &:hover {
-      transform: scale(1.1);
     }
   }
 }
