@@ -3,7 +3,6 @@ import { RouterLink, RouterView } from 'vue-router'
 import { ref, onMounted } from 'vue';
 import ArrowUp from "@/components/ArrowUp.vue";
 import { editorSession } from '../ts/client/state';
-import { version } from '../../package.json';
 
 let isCollapsed = ref(false);
 let logoHide = ref(false);
@@ -65,8 +64,6 @@ onMounted(async () => {
         <img src="/ADL.png" alt="logo" class="logo-img" :style="{ display: !isCollapsed ? 'flex' : 'none' }">
         <img src="/adlLogo.png" alt="" class="logo-img_hide" v-if="logoHide"
           :style="{ display: isCollapsed ? 'flex' : 'none' }">
-
-        <span class="version">v. {{ version }}</span>
 
         <div class="line-nav">
           <div></div>
@@ -183,15 +180,6 @@ onMounted(async () => {
   }
 }
 
-.version {
-  font-weight: 100;
-  font-style: oblique;
-  text-align: center;
-  margin: auto;
-  display: flex;
-  justify-content: center;
-}
-
 .navigation-profile {
   border-top: 1px solid #111;
   padding: 10px;
@@ -280,7 +268,7 @@ nav {
   width: 160px;
   height: 60px;
   display: flex;
-  margin: 25px auto 10px auto;
+  margin: 25px auto 20px auto;
   justify-content: center;
 
   @media (max-width: 1000px) {

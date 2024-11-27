@@ -10,11 +10,11 @@ export const checkAndApplyUpdates = (): void => {
   });
 
   let progressBar: ProgressBar | undefined;
-
+  
   autoUpdater.setFeedURL({
     provider: 'github',
     owner: 'jalisco2213',
-    repo: 'adelix-po',
+    repo: 'adelix-po'
   });
 
   autoUpdater.on('update-available', () => {
@@ -22,15 +22,15 @@ export const checkAndApplyUpdates = (): void => {
       .showMessageBox({
         type: 'info',
         title: 'Доступно обновление',
-        message: 'Доступно новое обновление. Начать загрузку?',
-        buttons: ['Да', 'Нет'],
+        message: 'Доступно новое обновление. Хотите обновить сейчас?',
+        buttons: ['Обновить', 'Нет'],
       })
       .then((res) => {
         if (res.response === 0) {
           autoUpdater.downloadUpdate();
           progressBar = new ProgressBar({
             indeterminate: false,
-            text: 'Загрузка обновления...',
+            text: 'Подготовка данных...',
             detail: 'Подождите...',
             abortOnError: true,
             closeOnComplete: false,
@@ -38,27 +38,27 @@ export const checkAndApplyUpdates = (): void => {
               alwaysOnTop: true,
             },
           });
+
+          progressBar
+            .on('completed', function () {
+              if (progressBar) {
+                progressBar.detail = 'Обновления загружены. Готовим установку.';
+              }
+            })
+            .on('progress', function (value: number) {
+              if (progressBar) {
+                progressBar.detail = `Значение ${value} из ${progressBar.getOptions().maxValue}...`;
+              }
+            });
         }
       })
-      .catch((err) => {
-        dialog.showErrorBox('Ошибка', 'Ошибка при загрузке обновления: ' + err);
-      });
+      .catch((err) => dialog.showErrorBox('Ошибка', 'Ошибка при загрузке обновления: ' + err));
   });
 
   autoUpdater.on('download-progress', (progressObj) => {
     if (progressBar) {
       progressBar.value = progressObj.percent;
-      progressBar.detail = `Загружено ${progressObj.transferred} из ${progressObj.total} байт`;
     }
-  });
-
-  autoUpdater.on('update-downloaded', () => {
-    if (progressBar) {
-      progressBar.close();
-      progressBar = undefined;
-    }
-
-    autoUpdater.quitAndInstall(false, true);
   });
 
   autoUpdater.on('error', (err) => {
@@ -70,5 +70,24 @@ export const checkAndApplyUpdates = (): void => {
       progressBar.close();
       progressBar = undefined;
     }
+  });
+
+  autoUpdater.on('update-downloaded', () => {
+    if (progressBar) {
+      progressBar.close();
+      progressBar = undefined;
+    }
+    dialog
+      .showMessageBox({
+        type: 'info',
+        title: 'Обновление готово',
+        message: 'Обновление загружено. Хотите выйти и перезапустить?',
+        buttons: ['Выйти', 'Позже'],
+      })
+      .then((res) => {
+        if (res.response === 0) {
+          autoUpdater.quitAndInstall(false, true);
+        }
+      });
   });
 };
