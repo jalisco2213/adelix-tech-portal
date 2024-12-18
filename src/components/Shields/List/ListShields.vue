@@ -84,7 +84,7 @@ const filteredDeviceShields = computed(() => {
 
   const searchTermNum = Number(searchTerm.value);
   return filteredByDevice.filter(shield => {
-    const filteredStatuses = shield.status_eng.filter(status => {
+    const filteredStatuses = (shield.status_eng || []).filter(status => {
       const serialAsString = String(status.serial);
       const commentMatches = status.comment.toLowerCase().includes(searchTerm.value.toLowerCase());
       return serialAsString.includes(searchTerm.value) || status.serial === searchTermNum || commentMatches;
