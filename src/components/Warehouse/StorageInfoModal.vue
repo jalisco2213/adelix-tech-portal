@@ -89,6 +89,7 @@ function formatTimestamp(timestamp) {
     font-size: 14px;
     color: #495057;
     padding: 10px 0;
+    font-variant-numeric: tabular-nums;
     border-bottom: 1px solid #e9ecef;
 
     &:last-child {
