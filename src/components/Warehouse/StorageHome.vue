@@ -1,12 +1,12 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { supabase } from '@/ts/client/supabase';
+import {ref, computed, onMounted} from 'vue';
+import {supabase} from '@/ts/client/supabase';
 import * as XLSX from 'xlsx';
 import StorageEditCount from "@/components/Warehouse/StorageEditCount.vue";
 import StorageAddSection from "@/components/Warehouse/StorageAddSection.vue";
 import EditModal from '@/components/Warehouse/StorageEditTable.vue';
 import StorageInfoModal from "@/components/Warehouse/StorageInfoModal.vue";
-import { editorSession } from '../../ts/client/state';
+import {editorSession} from '../../ts/client/state';
 
 const storageData = ref([]);
 const selectedComments = ref([]);
@@ -46,7 +46,7 @@ onMounted(async () => {
     })
     .subscribe();
 
-  const { data, error } = await supabase.from('storage').select('*').order('id', { ascending: true });
+  const {data, error} = await supabase.from('storage').select('*').order('id', {ascending: true});
   if (error) console.error(error);
   storageData.value = data;
 });
@@ -89,7 +89,7 @@ const filteredStorageData = computed(() => {
         return acc;
       }, {});
 
-      return Object.keys(filteredDevices).length > 0 ? { type: device.type, devices: filteredDevices } : null;
+      return Object.keys(filteredDevices).length > 0 ? {type: device.type, devices: filteredDevices} : null;
     }).filter(device => device !== null);
   }
 
@@ -127,15 +127,15 @@ async function editType(device) {
 }
 
 const updateData = async (updatedDevice) => {
-  const { error } = await supabase
+  const {error} = await supabase
     .from('storage')
-    .update({ type: updatedDevice.type, devices: updatedDevice.devices })
-    .match({ type: updatedDevice.type });
+    .update({type: updatedDevice.type, devices: updatedDevice.devices})
+    .match({type: updatedDevice.type});
 
   if (error) {
     return;
   } else {
-    const { data, error: fetchError } = await supabase.from('storage').select('*').order('id', { ascending: true });
+    const {data, error: fetchError} = await supabase.from('storage').select('*').order('id', {ascending: true});
     storageData.value = data;
   }
 };
@@ -145,7 +145,7 @@ const updateData = async (updatedDevice) => {
   <div class="storage-container w96">
     <div class="header">
       <div class="header-title">
-        <img src="/storage.svg" alt="Storage Icon" />
+        <img src="/storage.svg" alt="Storage Icon"/>
         Склад
       </div>
       <div class="header-controls">
@@ -153,54 +153,54 @@ const updateData = async (updatedDevice) => {
           <option value="">Все типы</option>
           <option v-for="device in storageData" :key="device.type" :value="device.type">{{ device.type }}</option>
         </select>
-        <input type="text" v-model="searchQuery" placeholder="Поиск" class="search-input" />
+        <input type="text" v-model="searchQuery" placeholder="Поиск" class="search-input"/>
         <img @click="exportToExcel" class="export-button" src="/excel.svg" alt="">
-        <StorageAddSection />
+        <StorageAddSection/>
       </div>
     </div>
 
     <div class="storage">
       <table class="storage-table">
         <thead>
-          <tr>
-            <th>Название</th>
-            <th>Количество</th>
-            <th>История</th>
-          </tr>
+        <tr>
+          <th>Название</th>
+          <th>Количество</th>
+          <th>История</th>
+        </tr>
         </thead>
         <tbody>
-          <template v-for="(device, index) in filteredStorageData" :key="index">
+        <template v-for="(device, index) in filteredStorageData" :key="index">
+          <tr>
+            <td colspan="3" class="table-header">
+              <div style="display: flex; align-items: center; justify-content:center; gap: 5px; cursor: default">
+                {{ device.type }}
+                <img v-if="editorSession.value.role === 'Администратор'" @click="editType(device)" src="/edit.svg"
+                     alt="">
+              </div>
+            </td>
+          </tr>
+          <template v-for="(typeItems, typeKey) in device.devices" :key="typeKey">
             <tr>
-              <td colspan="3" class="table-header">
-                <div style="display: flex; align-items: center; justify-content:center; gap: 5px; cursor: default">
-                  {{ device.type }}
-                  <img v-if="editorSession.value.role === 'Администратор'" @click="editType(device)" src="/edit.svg"
-                    alt="">
-                </div>
+              <td>{{ typeKey }}</td>
+              <td>
+                <StorageEditCount :device="device" :count="typeItems[0].count" :typeKey="typeKey"
+                                  :type="device.type"/>
+              </td>
+              <td>
+                <img src="/info.svg" @click="openModal(typeItems[0].comment, typeKey)"/>
               </td>
             </tr>
-            <template v-for="(typeItems, typeKey) in device.devices" :key="typeKey">
-              <tr>
-                <td>{{ typeKey }}</td>
-                <td>
-                  <StorageEditCount :device="device" :count="typeItems[0].count" :typeKey="typeKey"
-                    :type="device.type" />
-                </td>
-                <td>
-                  <img src="/info.svg" @click="openModal(typeItems[0].comment, typeKey)" />
-                </td>
-              </tr>
-            </template>
           </template>
+        </template>
         </tbody>
       </table>
     </div>
 
     <div v-if="isEditModalVisible">
-      <EditModal :device="currentEditData" @close="closeEditModal" @save="updateData" />
+      <EditModal :device="currentEditData" @close="closeEditModal" @save="updateData"/>
     </div>
 
-    <StorageInfoModal v-if="isModalVisible" :device="selectedDevice" @close="closeModal" />
+    <StorageInfoModal v-if="isModalVisible" :device="selectedDevice" @close="closeModal"/>
   </div>
 </template>
 
@@ -243,6 +243,7 @@ const updateData = async (updatedDevice) => {
   .filter-select,
   .items-per-page-input,
   .search-input {
+    font-family: "Montserrat", sans-serif;
     padding: 10px;
     font-size: 14px;
     border: 1px solid #dcdfe3;
@@ -295,18 +296,14 @@ const updateData = async (updatedDevice) => {
 
   tbody {
     tr {
-      &:nth-child(even) {
-        background-color: #f9fafb;
-      }
-
       &:hover {
-        background-color: #e9f7ff;
+        background-color: #f9fafb;
       }
     }
 
     td {
       text-align: center;
-      padding: 12px 10px;
+      padding: 8px 10px;
       font-size: 14px;
       color: #495057;
       border-bottom: 1px solid #dee2e6;
