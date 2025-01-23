@@ -32,7 +32,7 @@ const logOperation = async (operation, info, historyCount, count, cause) => {
 const addDevice = async () => {
   const {value: quantity} = await Swal.fire({
     title: 'Введите количество для добавления',
-    input: 'number',
+    input: 'text',
     icon: "warning",
     inputPlaceholder: 'Введите количество',
     showCancelButton: true,
@@ -49,7 +49,7 @@ const addDevice = async () => {
     const {value: cause} = await Swal.fire({
       title: "Введите комментарий",
       icon: "warning",
-      input: 'number',
+      input: 'text',
       inputPlaceholder: 'В случае отсутствия - прочерк',
       showCancelButton: true,
       confirmButtonText: 'Удалить',
@@ -98,7 +98,7 @@ const removeDevice = async () => {
     const {value: cause} = await Swal.fire({
       title: "Введите комментарий",
       icon: "warning",
-      input: 'number',
+      input: 'text',
       inputPlaceholder: 'В случае отсутствия - пропустить',
       showCancelButton: true,
       confirmButtonText: 'Удалить',
