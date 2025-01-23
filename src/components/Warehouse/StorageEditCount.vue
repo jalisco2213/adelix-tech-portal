@@ -11,7 +11,7 @@ const props = defineProps({
   typeKey: String,
 });
 
-const logOperation = async (operation, info, historyCount, count) => {
+const logOperation = async (operation, info, historyCount, count, cause) => {
   const {error} = await supabase
     .from('logs')
     .insert([{
@@ -21,6 +21,7 @@ const logOperation = async (operation, info, historyCount, count) => {
       timestamp: new Date().toISOString(),
       historyCount: historyCount,
       count: count.toString(),
+      comment: cause,
     }]);
 
   if (error) {
@@ -45,6 +46,16 @@ const addDevice = async () => {
   });
 
   if (quantity) {
+    const {value: cause} = await Swal.fire({
+      title: "Введите комментарий",
+      icon: "warning",
+      input: 'number',
+      inputPlaceholder: 'В случае отсутствия - прочерк',
+      showCancelButton: true,
+      confirmButtonText: 'Удалить',
+      cancelButtonText: 'Отмена',
+    })
+
     const newCount = parseInt(props.count) + parseInt(quantity);
 
     const {data, error} = await supabase
@@ -60,7 +71,7 @@ const addDevice = async () => {
     if (error) {
       await Swal.fire('Ошибка', error.message, 'error');
     } else {
-      await logOperation('add', props.typeKey, newCount, quantity);
+      await logOperation('add', props.typeKey, newCount, quantity, cause);
       await Swal.fire('Успех', 'Прибор добавлен!', 'success');
       window.location.reload();
     }
@@ -84,6 +95,16 @@ const removeDevice = async () => {
   });
 
   if (quantity) {
+    const {value: cause} = await Swal.fire({
+      title: "Введите комментарий",
+      icon: "warning",
+      input: 'number',
+      inputPlaceholder: 'В случае отсутствия - пропустить',
+      showCancelButton: true,
+      confirmButtonText: 'Удалить',
+      cancelButtonText: 'Отмена',
+    })
+
     const newCount = parseInt(props.count) - parseInt(quantity);
 
     if (newCount < 0) {
@@ -104,7 +125,7 @@ const removeDevice = async () => {
     if (error) {
       await Swal.fire('Ошибка', error.message, 'error');
     } else {
-      await logOperation('remove', props.typeKey, newCount, quantity);
+      await logOperation('remove', props.typeKey, newCount, quantity, cause);
       await Swal.fire('Успех', 'Прибор удалён!', 'success');
       window.location.reload();
     }

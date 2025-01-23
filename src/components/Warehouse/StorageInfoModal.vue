@@ -51,7 +51,10 @@ function formatTimestamp(timestamp) {
             <span>{{ log.username }}</span>
             <span class="operation" :class="{ take: log.operations === 'remove', put: log.operations === 'add' }">
               {{ log.operations === 'remove' ? ' взял' : ' положил' }} <strong>
-              {{ log.count}} шт {{ selectedDevice }}.</strong> Остаток на складе: <strong>{{ log.historyCount }} шт.</strong>
+              {{ log.count }} шт {{ selectedDevice }}.</strong> Остаток на складе: <strong>
+              {{ log.historyCount}} шт.</strong> <br>
+              <strong>Комментарий:</strong> {{ log.comment || '-' }}
+
             </span>
           </p>
         </li>
