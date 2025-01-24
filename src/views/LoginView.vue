@@ -1,8 +1,8 @@
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { supabase } from "@/ts/client/supabase";
-import { editorSession } from "@/ts/client/state";
+import {ref, onMounted} from 'vue';
+import {useRouter} from 'vue-router';
+import {supabase} from "@/ts/client/supabase";
+import {editorSession} from "@/ts/client/state";
 import ErrorMessage from '../components/reaction/ErrorMessage.vue';
 import AcceptMessage from '../components/reaction/AcceptMessageMixin.vue';
 
@@ -16,7 +16,7 @@ let acceptMessage = ref('');
 
 async function getEmailByUsername(username) {
   try {
-    const { data, error } = await supabase
+    const {data, error} = await supabase
       .from('users').select('email').eq('username', username).single();
     return data ? data.email : null;
   } catch (error) {
@@ -27,7 +27,7 @@ async function getEmailByUsername(username) {
 
 async function getLoggedInUser(userid) {
   try {
-    const { data: playerData, error: playerError } = await supabase
+    const {data: playerData, error: playerError} = await supabase
       .from('users').select('*').eq('id', userid).single();
 
     if (playerError) {
@@ -62,7 +62,7 @@ async function loginAccount() {
     return;
   }
 
-  const { error, data } = await supabase.auth.signInWithPassword({
+  const {error, data} = await supabase.auth.signInWithPassword({
     email: foundEmail,
     password: password.value,
   });
@@ -70,6 +70,9 @@ async function loginAccount() {
   if (error) {
     displayError('Неверно указан пароль.');
   } else {
+    localStorage.setItem('email', email.value);
+    localStorage.setItem('password', password.value);
+
     acceptMessage.value = 'Успешно';
     const userID = data?.user?.id;
     if (userID) {
@@ -88,8 +91,14 @@ function displayError(message) {
   ring.value = false;
   loginForm.value = true;
   errorMessage.value = message;
-  setTimeout(() => { errorMessage.value = '' }, 3000);
+  setTimeout(() => {
+    errorMessage.value = ''
+  }, 3000);
 }
+
+onMounted(() => {
+  email.value = localStorage.getItem('email') || '';
+});
 </script>
 
 <template>
@@ -101,16 +110,16 @@ function displayError(message) {
       </div>
       <h2 class="login-title">Добро пожаловать</h2>
 
-      <hr class="divider" />
+      <hr class="divider"/>
 
       <div class="input-container">
         <input type="text" @keydown.enter="loginAccount" v-model="email" class="input-field" placeholder="Логин"
-          required>
+               required>
       </div>
 
       <div class="input-container">
         <input type="password" @keydown.enter="loginAccount" v-model="password" class="input-field" placeholder="Пароль"
-          required>
+               required>
       </div>
 
       <div class="button-container">
@@ -121,8 +130,8 @@ function displayError(message) {
     </div>
   </div>
 
-  <AcceptMessage v-if="acceptMessage" :acceptMessage="acceptMessage" />
-  <ErrorMessage v-if="errorMessage" :errorMessage="errorMessage" />
+  <AcceptMessage v-if="acceptMessage" :acceptMessage="acceptMessage"/>
+  <ErrorMessage v-if="errorMessage" :errorMessage="errorMessage"/>
 </template>
 
 <style lang="scss" scoped>
