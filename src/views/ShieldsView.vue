@@ -70,7 +70,7 @@ const selectedDevices = computed(() => {
 
 const showSample = async () => {
   isLoading.value = true;
-  const pdf = new jsPDF('l', 'mm', 'a3');
+  const pdf = new jsPDF('l', 'mm', 'a4');
   const margin = 5;
   const padding = 2;
   const pageWidth = pdf.internal.pageSize.getWidth();

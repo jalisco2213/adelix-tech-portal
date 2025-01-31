@@ -1,6 +1,6 @@
 {
   "name": "adelix-tech-portal",
-  "version": "1.5.8",
+  "version": "1.5.9",
   "author": "jalisco2213",
   "main": "dist/electron/main/main.js",
   "scripts": {
